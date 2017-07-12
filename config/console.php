@@ -1,5 +1,5 @@
 <?php
-defined('YII_ENV') or define('YII_ENV', 'prod');
+
 
 Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
 
