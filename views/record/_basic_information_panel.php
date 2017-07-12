@@ -167,7 +167,7 @@ $propertyType = [
         if ($lastNote) {
             $creatorObj = $lastNote->getCreator();
             $tempNoteCreator = $creatorObj->one();
-?            $tempProfile = $tempNoteCreator->getProfile();
+            $tempProfile = $tempNoteCreator->getProfile();
             $tempNoteCreatorProfile = $tempProfile->one();
             $noteCreator = $tempNoteCreatorProfile->name;
             $noteDatePublished = $lastNote->date_created;
