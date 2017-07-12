@@ -26,8 +26,8 @@ class m170707_150600_create_tbl_property_record extends Migration
             'guarantee_provider'        => $this->string(),
             'guarantee_number'          => $this->float(),
             'date_guarantee_issued'     => $this->dateTime(),
-            'date_created'              => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
-            'date_updated'              => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
+            'date_created'              => $this->dateTime(),
+            'date_updated'              => $this->dateTime()
        ]);
     }
 

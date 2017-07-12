@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "tbl_owner".
@@ -77,6 +79,17 @@ class Owner extends \yii\db\ActiveRecord
         /*delete the property owner record */
         PropertyOwner::deleteAll(['owner_id' => $this->id]);
         return parent::beforeDelete();
+    }
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'date_created',
+                'updatedAtAttribute' => 'date_updated',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
     }
 
 }

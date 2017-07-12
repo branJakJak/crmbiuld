@@ -228,7 +228,9 @@ use yii\helpers\Html;
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="/img/user.png"  class="img-circle" alt="User Image" style="height: 17px;"/>
-                        <span class="hidden-xs"><?= Yii::$app->user->getIdentity()->username?></span>
+                        <span class="hidden-xs">
+                            <?= @Yii::$app->user->getIdentity()->username?>
+                        </span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
@@ -236,7 +238,7 @@ use yii\helpers\Html;
                             <img src="/img/user.png"  class="img-circle" alt="User Image" style="height: 80px"/>
 
                             <p>
-                                <?= Yii::$app->user->getIdentity()->username?>
+                                <?= @Yii::$app->user->getIdentity()->username?>
 
                                 <small>
                                     Today is : <?= Yii::$app->formatter->asDate(new DateTime())?>

@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "tbl_property_owner".
@@ -65,6 +68,17 @@ class PropertyOwner extends \yii\db\ActiveRecord
     public function getOwner()
     {
         return $this->hasOne(Owner::className(), ['id' => 'owner_id']);
+    }
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'date_created',
+                'updatedAtAttribute' => 'date_updated',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
     }
 
 }

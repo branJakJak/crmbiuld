@@ -10,8 +10,8 @@ class m170707_150625_create_tbl_property_owner extends Migration
             'id' => $this->primaryKey(),
             'property_id' => $this->integer(),
             'owner_id' => $this->integer(),
-            'date_created' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
-            'date_updated' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
+            'date_created' => $this->dateTime(),
+            'date_updated' => $this->dateTime()
         ]);
     }
 

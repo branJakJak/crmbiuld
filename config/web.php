@@ -39,13 +39,13 @@ $config = [
             'showScriptName' => false,
             'enablePrettyUrl' => true,
             'rules' => array(
-                '<controller:\w+>/<id:\d+>' => '<controller>/view',
-                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
                 '/site/logout' => '/user/logout',
                 '/record/view/<id:\d+>' => '/record/view',
                 '/record/update/<id:\d+>' => '/record/update',
                 '/owner/delete/<id:\d+>' => '/owner/delete',
+                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ),
         ],        
         'db' => require(__DIR__ . '/db-prod.php'),
@@ -73,8 +73,16 @@ if (YII_ENV === 'dev') {
 $config['modules']['user'] = [
     'class' =>  'dektrium\user\Module',
     'enableConfirmation' => false,
-    'admins'=>['admin']
+    'admins'=>['admin'],
+    'controllerMap' => [
+        'registration' => [
+            'class' => \dektrium\user\controllers\RegistrationController::className(),
+            'layout' => '@app/views/layouts/main-login.php',
+        ],
+    ],
 ];
+
+
 $config['modules']['gridview'] = [
     'class' => \kartik\grid\Module::className()
 ];

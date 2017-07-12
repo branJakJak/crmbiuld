@@ -11,8 +11,8 @@ class m170707_150716_create_tbl_property_notes extends Migration
             'property_id'   => $this->integer(),
             'content'       => $this->text(),
             'created_by'    => $this->integer(),
-            'date_created'  => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
-            'date_updated'  => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
+            'date_created'  => $this->dateTime(),
+            'date_updated'  => $this->dateTime(),
         ]);
     }
 

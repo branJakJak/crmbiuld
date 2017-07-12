@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "tbl_property_images".
@@ -58,5 +60,16 @@ class PropertyImages extends \yii\db\ActiveRecord
     public function getProperty()
     {
         return $this->hasOne(PropertyRecord::className(), ['id' => 'property_id']);
+    }
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'date_created',
+                'updatedAtAttribute' => 'date_updated',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
     }
 }

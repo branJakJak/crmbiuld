@@ -19,7 +19,7 @@ class m170709_181021_property_images_relationship extends Migration
 
     public function safeDown()
     {
-
+        $this->dropForeignKey('property_image_relationship', 'tbl_property_image');
     }
 
 }

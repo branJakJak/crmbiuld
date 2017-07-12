@@ -3,6 +3,9 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "tbl_property_record".
@@ -49,10 +52,11 @@ class PropertyRecord extends \yii\db\ActiveRecord
     const PROPERTY_STATUS_REJECTED = 'Rejected';
     const PROPERTY_STATUS_APPROVED = 'Approved';
     const PROPERTY_STATUS_WORK_IN_PROGRESS = 'Work in Progress';
-    const PROPERTY_STATUS_APPRAISAL_COMPLETE  = 'Appraisal Complete';
+    const PROPERTY_STATUS_APPRAISAL_COMPLETE = 'Appraisal Complete';
     const PROPERTY_STATUS_APPROVED_BY_CHARTERED_SURVEYOR = 'Approved by Chartered Surveyor';
     const PROPERTY_STATUS_PASSED_TO_SOLICITOR = 'Passed to Solicitor';
     const PROPERTY_STATUS_ALL_JOBS = 'All Jobs';
+
     /**
      * @inheritdoc
      */
@@ -75,10 +79,10 @@ class PropertyRecord extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['number_of_bedrooms','approximate_year_of_build','created_by'], 'integer'],
-            [['date_of_cwi', 'date_guarantee_issued', 'appraisal_completed','date_created', 'date_updated'], 'safe'],
+            [['number_of_bedrooms', 'approximate_year_of_build', 'created_by'], 'integer'],
+            [['date_of_cwi', 'date_guarantee_issued', 'appraisal_completed', 'date_created', 'date_updated'], 'safe'],
             [['guarantee_number'], 'number'],
-            [['insulation_type', 'postcode', 'address1', 'address2', 'address3', 'zipcode', 'town', 'country', 'property_type', 'installer', 'product_installed', 'system_designer', 'guarantee_provider','status','approximate_build'], 'string', 'max' => 255],
+            [['insulation_type', 'postcode', 'address1', 'address2', 'address3', 'zipcode', 'town', 'country', 'property_type', 'installer', 'product_installed', 'system_designer', 'guarantee_provider', 'status', 'approximate_build'], 'string', 'max' => 255],
         ];
     }
 
@@ -154,5 +158,16 @@ class PropertyRecord extends \yii\db\ActiveRecord
     public function getPropertyPreAppraisalImages()
     {
         return $this->hasMany(PropertyPreAppraisalImages::className(), ['property_id' => 'id']);
+    }
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'date_created',
+                'updatedAtAttribute' => 'date_updated',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
     }
 }
