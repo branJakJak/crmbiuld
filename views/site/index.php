@@ -77,7 +77,7 @@ foreach ($availableUsersRes as $currentAvailableUser) {
             </div>
 
             <?= $form->field($filterModel, 'address1',['template' => "<div class=\"col-lg-4\">{label}{input}{error}{hint}</div>"]) ?>
-            <?= $form->field($filterModel, 'zipcode',['template' => "<div class=\"col-lg-4\">{label}{input}{error}{hint}</div>"]) ?>
+            <?= $form->field($filterModel, 'postcode',['template' => "<div class=\"col-lg-4\">{label}{input}{error}{hint}</div>"]) ?>
 
             <?= $form
                 ->field($filterModel, 'insulation_type',['template' => "<div class=\"col-lg-4\">{label}{input}{error}{hint}</div>"])
@@ -183,7 +183,7 @@ foreach ($availableUsersRes as $currentAvailableUser) {
                     'date_created:datetime',
                     'appraisal_completed:date',
                     'address1',
-                    'zipcode',
+                    'postcode',
                     'insulation_type',
                     [
                         'label' => 'Created by',

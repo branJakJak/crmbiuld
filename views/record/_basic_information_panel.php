@@ -47,7 +47,7 @@ $propertyType = [
         </h4>
         <br>
         <?= $form->field($propertyRecord, 'insulation_type')->dropDownList(['CWI' => 'CWI', 'EWI' => 'EWI']) ?>
-        <?= $form->field($propertyRecord, 'zipcode') ?>
+        <?= $form->field($propertyRecord, 'postcode') ?>
         <?= $form->field($propertyRecord, 'address1') ?>
         <?= $form->field($propertyRecord, 'town') ?>
         <?= $form->field($propertyRecord, 'property_type')->dropDownList($propertyType) ?>

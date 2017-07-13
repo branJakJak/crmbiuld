@@ -41,7 +41,7 @@ $insulationType = [
                 ->field($preCreatedRecord, 'insulation_type')
                 ->dropDownList($insulationType)
             ?>
-            <?= $form->field($preCreatedRecord, 'zipcode') ?>
+            <?= $form->field($preCreatedRecord, 'postcode') ?>
             <?= $form->field($preCreatedRecord, 'address1') ?>
             <?= $form->field($preCreatedRecord, 'town') ?>
             <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>

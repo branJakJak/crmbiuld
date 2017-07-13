@@ -22,7 +22,7 @@ class FilterPropertyRecordForm extends Model
     public $date_created;
     public $appraisal_completed;
     public $address1;
-    public $zipcode;
+    public $postcode;
     public $insulation_type;
     public $created_by_username;
     public $latest_note;
@@ -35,7 +35,7 @@ class FilterPropertyRecordForm extends Model
             'date_created' => 'Date created',
             'appraisal_completed' => 'Appraisal completed',
             'address1' => 'Address',
-            'zipcode' => 'Zipcode',
+            'postcode' => 'Postcode',
             'insulation_type' => 'Insulation',
             'created_by_username' => 'Created by',
             'latest_note' => 'Latest note',
@@ -47,7 +47,7 @@ class FilterPropertyRecordForm extends Model
     public function rules()
     {
         return [
-            [['filterQuery','date_created','appraisal_completed','address1','zipcode','insulation_type','created_by_username','latest_note','status'],'string'],
+            [['filterQuery','date_created','appraisal_completed','address1','postcode','insulation_type','created_by_username','latest_note','status'],'string'],
             ['filterQuery','safe']
         ];
     }
@@ -66,7 +66,7 @@ class FilterPropertyRecordForm extends Model
                 ['like', 'tbl_property_record.status', $this->filterQuery],
                 ['like', 'tbl_property_record.address1', $this->filterQuery],
                 ['like', 'tbl_property_record.insulation_type', $this->filterQuery],
-                ['like', 'tbl_property_record.zipcode', $this->filterQuery],
+                ['like', 'tbl_property_record.postcode', $this->filterQuery],
                 ['like', 'tbl_property_notes.content', $this->filterQuery],
                 ['like', 'profile.name', $this->filterQuery]
             ]);
@@ -84,7 +84,7 @@ class FilterPropertyRecordForm extends Model
                 ['like', 'tbl_property_record.status', $this->status],
                 ['like', 'tbl_property_record.address1', $this->address1],
                 ['like', 'tbl_property_record.insulation_type', $this->insulation_type],
-                ['like', 'tbl_property_record.zipcode', $this->zipcode],
+                ['like', 'tbl_property_record.postcode', $this->postcode],
                 ['like', 'tbl_property_notes.content', $this->latest_note],
                 ['like', 'profile.name', $this->created_by_username]
             ]);
