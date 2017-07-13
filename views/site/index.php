@@ -6,6 +6,8 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use derekisbusy\panel\PanelWidget;
 use kartik\export\ExportMenu;
+use kartik\widgets\Select2;
+use yii\web\View;
 
 
 /* @var $this yii\web\View */
@@ -14,16 +16,16 @@ use kartik\export\ExportMenu;
 /* @var $insulationCollection array */
 
 $statusCollection = [
-    \app\models\PropertyRecord::PROPERTY_STATUS_NOT_SUBMITTED,
-    \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_SUPERVISOR_APPROVAL,
-    \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_ADMIN_APPROVAL,
-    \app\models\PropertyRecord::PROPERTY_STATUS_REJECTED,
-    \app\models\PropertyRecord::PROPERTY_STATUS_APPROVED,
-    \app\models\PropertyRecord::PROPERTY_STATUS_WORK_IN_PROGRESS,
-    \app\models\PropertyRecord::PROPERTY_STATUS_APPRAISAL_COMPLETE,
-    \app\models\PropertyRecord::PROPERTY_STATUS_APPROVED_BY_CHARTERED_SURVEYOR,
-    \app\models\PropertyRecord::PROPERTY_STATUS_PASSED_TO_SOLICITOR,
-    \app\models\PropertyRecord::PROPERTY_STATUS_ALL_JOBS
+    \app\models\PropertyRecord::PROPERTY_STATUS_NOT_SUBMITTED => \app\models\PropertyRecord::PROPERTY_STATUS_NOT_SUBMITTED,
+    \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_SUPERVISOR_APPROVAL => \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_SUPERVISOR_APPROVAL,
+    \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_ADMIN_APPROVAL => \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_ADMIN_APPROVAL,
+    \app\models\PropertyRecord::PROPERTY_STATUS_REJECTED => \app\models\PropertyRecord::PROPERTY_STATUS_REJECTED,
+    \app\models\PropertyRecord::PROPERTY_STATUS_APPROVED => \app\models\PropertyRecord::PROPERTY_STATUS_APPROVED,
+    \app\models\PropertyRecord::PROPERTY_STATUS_WORK_IN_PROGRESS => \app\models\PropertyRecord::PROPERTY_STATUS_WORK_IN_PROGRESS,
+    \app\models\PropertyRecord::PROPERTY_STATUS_APPRAISAL_COMPLETE => \app\models\PropertyRecord::PROPERTY_STATUS_APPRAISAL_COMPLETE,
+    \app\models\PropertyRecord::PROPERTY_STATUS_APPROVED_BY_CHARTERED_SURVEYOR => \app\models\PropertyRecord::PROPERTY_STATUS_APPROVED_BY_CHARTERED_SURVEYOR,
+    \app\models\PropertyRecord::PROPERTY_STATUS_PASSED_TO_SOLICITOR => \app\models\PropertyRecord::PROPERTY_STATUS_PASSED_TO_SOLICITOR,
+    \app\models\PropertyRecord::PROPERTY_STATUS_ALL_JOBS => \app\models\PropertyRecord::PROPERTY_STATUS_ALL_JOBS,
 ];
 $availableUsersRes = \dektrium\user\models\Profile::find()->select("name")->asArray()->all();
 $availableUser = [];
@@ -31,11 +33,23 @@ foreach ($availableUsersRes as $currentAvailableUser) {
     $availableUser[] = $currentAvailableUser['name'];
 }
 
-
+ 
+ $jsScript = <<<EOL
+        $("#toggleFilterTab").click(function(event) {
+            $("#tab-filter-toggle").toggle('slow');
+        });
+EOL;
+$this->registerJs($jsScript,View::POS_READY,'toggle-script');
 
 
 ?>
+<style type="text/css">
+    #select2-filterpropertyrecordform-status-container {
+        margin-top: 0px;
+    }
+</style>
 <div class="site-index">
+ 
     <?php
         echo PanelWidget::begin([
             'title'=>'Browse Jobs',
@@ -44,8 +58,10 @@ foreach ($availableUsersRes as $currentAvailableUser) {
         ])
     ?>
     <?php $this->beginBlock('quick_filter_block')?>
+
         <?php $form = ActiveForm::begin(); ?>
         <?= $form->field($filterModel, 'filterQuery')->textInput(['placeholder'=>'Search'])->label('') ?>
+        <input type="hidden" name="scenario" class="form-control" value="quick-filter-form">
         <div class="form-group">
             <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
         </div>
@@ -54,7 +70,7 @@ foreach ($availableUsersRes as $currentAvailableUser) {
 
     <?php $this->beginBlock('fine_filter_block')?>
         <?php $form = ActiveForm::begin(); ?>
-
+        <input type="hidden" name="scenario" class="form-control" value="fine-filter-form">
         <div >
 
             <div class="col-lg-4">
@@ -135,7 +151,33 @@ foreach ($availableUsersRes as $currentAvailableUser) {
     <?php $this->endBlock()?>
 
     <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <?php $form = ActiveForm::begin(['id'=>'status-filter-form']); ?>
+                <input type="hidden" name="scenario" class="form-control" value="status-filter-form">
+                <?=
+                    Select2::widget([
+                        'model' => $filterModel,
+                        'attribute' => 'status',
+                        'data' => $statusCollection,
+                        'options' => ['placeholder' => 'Filter as you type ...'],
+                        'pluginOptions' => [
+                            'allowClear' => true,
+                        ],
+                        'pluginEvents'=>[
+                            'change'=>'function(e){
+                                jQuery("#status-filter-form").submit()
+                            }'
+                        ],
+                    ]);
+                ?>
+            <?php ActiveForm::end(); ?>
+        </div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="toggleFilterTab" style="margin: 20px;margin-left:0px;" class='btn btn-link'> 
+            <i class="fa fa-caret-square-o-down" aria-hidden="true"></i>
+            Other Filter</div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id='tab-filter-toggle' style='display: none'>
             <?php
             echo Tabs::widget([
                 'items' => [

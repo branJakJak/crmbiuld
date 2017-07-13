@@ -56,6 +56,9 @@ class SiteController extends Controller
         if ($filterModel->load(Yii::$app->request->post())) {
             if ($filterModel->validate()) {
                 //search and return the result
+                if (isset($_POST['scenario'])) {
+                    $filterModel->scenario = $_POST['scenario'];
+                }
                 $dataProvider = $filterModel->search();
             }
         }

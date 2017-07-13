@@ -58,7 +58,7 @@ class FilterPropertyRecordForm extends Model
         $dbQuery->leftJoin('user','user.id = tbl_property_record.created_by');
         $dbQuery->leftJoin('profile','profile.user_id = user.id');
 
-        if (isset($this->filterQuery) && !empty($this->filterQuery)) {
+        if ( $this->scenario === 'quick-filter-form') {
             $dbQuery->andFilterWhere([
                 'or',
                 ['like', 'tbl_property_record.date_created', $this->filterQuery],
@@ -70,7 +70,7 @@ class FilterPropertyRecordForm extends Model
                 ['like', 'tbl_property_notes.content', $this->filterQuery],
                 ['like', 'profile.name', $this->filterQuery]
             ]);
-        } else {
+        } else if($this->scenario === 'fine-filter-form') {
             if(isset($this->appraisal_completed) && !empty($this->appraisal_completed)){
                 $tempDt = new DateTime($this->appraisal_completed);
                 $this->appraisal_completed = $tempDt->format("Y-m-d");
@@ -90,6 +90,10 @@ class FilterPropertyRecordForm extends Model
             ]);
             $dbQuery->orWhere(['date(tbl_property_record.appraisal_completed)' => $this->appraisal_completed]);
             $dbQuery->orWhere(['date(tbl_property_record.date_created)' => $this->date_created]);
+        } else if( $this->scenario === 'status-filter-form') {
+            if(!empty($this->status)){
+                $dbQuery->where(['status'=> $this->status ] );
+            }
         }
         return new ActiveDataProvider(['query'=>$dbQuery]);
     }
