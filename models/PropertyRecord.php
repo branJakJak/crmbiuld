@@ -44,7 +44,7 @@ use yii\db\Expression;
  */
 class PropertyRecord extends \yii\db\ActiveRecord
 {
-    public $country = "United Kingdom";
+//    public $country = "United Kingdom";
 
     const PROPERTY_STATUS_NOT_SUBMITTED = 'Not Submitted';
     const PROPERTY_STATUS_PENDING_SUPERVISOR_APPROVAL = 'Pending Supervisor Approval';
@@ -100,7 +100,7 @@ class PropertyRecord extends \yii\db\ActiveRecord
             'address3' => 'Address3',
             'zipcode' => 'Zipcode',
             'town' => 'City/Town',
-            'country' => 'Country',
+            'country' => 'County',
             'property_type' => 'Property Type',
             'number_of_bedrooms' => 'Number Of Bedrooms',
             'approximate_year_of_build' => 'Approximate Year Of Build',

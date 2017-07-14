@@ -2,11 +2,16 @@
 use yii\widgets\Breadcrumbs;
 use dmstr\widgets\Alert;
 
+/* @var $this \yii\web\View */
+$this->registerJs('jQuery(".sidebar-toggle").click()',\yii\web\View::POS_READY)
+
 ?>
 <div class="content-wrapper">
     <section class="content-header">
         <?php if (isset($this->blocks['content-header'])) { ?>
-            <h1><?= $this->blocks['content-header'] ?></h1>
+            <h1>
+                <?php //echo $this->blocks['content-header'] ?>
+            </h1>
         <?php } else { ?>
             <h1>
                 <?php
@@ -35,7 +40,7 @@ use dmstr\widgets\Alert;
     </section>
 </div>
 
-<footer class="main-footer">
+<footer class="main-footer hidden">
     <div class="pull-right hidden-xs">
         <b>Version</b> 2.0
     </div>

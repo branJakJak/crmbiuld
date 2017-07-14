@@ -28,7 +28,7 @@ use yii\db\Expression;
  */
 class Owner extends \yii\db\ActiveRecord
 {
-    public $country = "United Kingdom";
+//    public $country = "United Kingdom";
     /**
      * @inheritdoc
      */
@@ -68,7 +68,7 @@ class Owner extends \yii\db\ActiveRecord
             'address3' => 'Address3',
             'postalcode' => 'Postalcode',
             'town' => 'City/Town',
-            'country' => 'Country',
+            'country' => 'County',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
         ];

@@ -47,9 +47,43 @@ $this->registerJs($jsScript,View::POS_READY,'toggle-script');
     #select2-filterpropertyrecordform-status-container {
         margin-top: 0px;
     }
+    #w8 > div {
+        text-align: right;
+    }
 </style>
 <div class="site-index">
- 
+
+    <div class="row">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <?= Html::a("Create a New Record",\yii\helpers\Url::to("/record/create"),['class'=>'btn btn-info btn-lg']) ?>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <?php $form = ActiveForm::begin(['id'=>'status-filter-form']); ?>
+            <input type="hidden" name="scenario" class="form-control" value="status-filter-form">
+            <?=
+            Select2::widget([
+                'model' => $filterModel,
+                'attribute' => 'status',
+                'data' => $statusCollection,
+                'options' => ['placeholder' => 'Filter as you type ...'],
+                'pluginOptions' => [
+                    'allowClear' => true,
+                ],
+                'pluginEvents'=>[
+                    'change'=>'function(e){
+                                jQuery("#status-filter-form").submit()
+                            }'
+                ],
+            ]);
+            ?>
+            <?php ActiveForm::end(); ?>
+        </div>
+        <br>
+
+    </div>
+    <br>
     <?php
         echo PanelWidget::begin([
             'title'=>'Browse Jobs',
@@ -151,33 +185,13 @@ $this->registerJs($jsScript,View::POS_READY,'toggle-script');
     <?php $this->endBlock()?>
 
     <div class="row">
-        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            <?php $form = ActiveForm::begin(['id'=>'status-filter-form']); ?>
-                <input type="hidden" name="scenario" class="form-control" value="status-filter-form">
-                <?=
-                    Select2::widget([
-                        'model' => $filterModel,
-                        'attribute' => 'status',
-                        'data' => $statusCollection,
-                        'options' => ['placeholder' => 'Filter as you type ...'],
-                        'pluginOptions' => [
-                            'allowClear' => true,
-                        ],
-                        'pluginEvents'=>[
-                            'change'=>'function(e){
-                                jQuery("#status-filter-form").submit()
-                            }'
-                        ],
-                    ]);
-                ?>
-            <?php ActiveForm::end(); ?>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 hidden">
             <div id="toggleFilterTab" style="margin: 20px;margin-left:0px;" class='btn btn-link'> 
             <i class="fa fa-caret-square-o-down" aria-hidden="true"></i>
-            Other Filter</div>
+            Other Filter
+            </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id='tab-filter-toggle' style='display: none'>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id='tab-filter-toggle' >
             <?php
             echo Tabs::widget([
                 'items' => [
@@ -198,10 +212,14 @@ $this->registerJs($jsScript,View::POS_READY,'toggle-script');
     <div class="row">
 
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <strong style="font-size: 28px;">
+                Export Data
+            </strong>
+            <br>
             <?php
-            echo ExportMenu::widget([
-                'dataProvider' => $dataProvider
-            ]);
+                echo ExportMenu::widget([
+                    'dataProvider' => $dataProvider
+                ]);
             ?>
         </div>
 
@@ -214,15 +232,15 @@ $this->registerJs($jsScript,View::POS_READY,'toggle-script');
                 'dataProvider' => $dataProvider,
                 'columns' => [
                     [
-                        'label' => ' ',
+                        'label' => 'ID',
                         'value' => function($currentModel){
                             /* @var $currentModel \app\models\PropertyRecord*/
-                            return Html::a('View',['/record/update','id'=>$currentModel->id ]);
+                            return Html::a($currentModel->id,['/record/update','id'=>$currentModel->id ]);
                         },
                         'attribute'=>'id',
                         'format'=>'html'
                     ],
-                    'date_created:datetime',
+                    'date_created:date',
                     'appraisal_completed:date',
                     'address1',
                     'postcode',
