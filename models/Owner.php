@@ -67,7 +67,7 @@ class Owner extends \yii\db\ActiveRecord
             'address2' => 'Address2',
             'address3' => 'Address3',
             'postalcode' => 'Postalcode',
-            'town' => 'Town',
+            'town' => 'City/Town',
             'country' => 'Country',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
