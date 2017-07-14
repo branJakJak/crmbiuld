@@ -99,7 +99,7 @@ class PropertyRecord extends \yii\db\ActiveRecord
             'address2' => 'Address2',
             'address3' => 'Address3',
             'zipcode' => 'Zipcode',
-            'town' => 'Town',
+            'town' => 'City/Town',
             'country' => 'Country',
             'property_type' => 'Property Type',
             'number_of_bedrooms' => 'Number Of Bedrooms',
