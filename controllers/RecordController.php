@@ -20,12 +20,15 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\debug\models\timeline\DataProvider;
 use yii\filters\AccessControl;
+use yii\helpers\FileHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 use yii\web\UploadedFile;
+use ZipArchive;
 
 class RecordController extends Controller
 {
@@ -34,16 +37,86 @@ class RecordController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','update'],
+                'only' => ['create','update','downloadDocument'],
                 'rules' => [
                     [
-                        'actions' => ['create','update'],
+                        'actions' => ['create','update','downloadDocument'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
                 ],
             ],
         ];
+    }
+
+    /**
+     * @param $record_id
+     * @throws NotFoundHttpException
+     * @internal param PropertyRecord $propertyRecord
+     * @internal param PropertyRecord $currentPropertyDocument
+     */
+    public function actionDownloadDocument($record_id){
+
+        //get property record , if it exists
+        $propertyRecord = PropertyRecord::findOne($record_id);
+        if($propertyRecord){
+            // get all documents by this property record
+            $propertyDocuments = $propertyRecord->getPropertyDocuments()->all();
+            $tempArchiveFile = sprintf("Record-%s-%s-%s.zip", $record_id, date("Y-m-d"), uniqid());
+            $tempArchiveFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tempArchiveFile;
+            touch($tempArchiveFile);
+            $zipArchive = new \ZipArchive();
+            $zipArchive->open($tempArchiveFile, \ZipArchive::CREATE);
+            foreach ($propertyDocuments as $currentPropertyDocument){
+                $documentFileName = $currentPropertyDocument->document_name;
+                $documentFileLocation = Yii::getAlias("@upload_document_path").DIRECTORY_SEPARATOR.$documentFileName;
+                $zipArchive->addFile($documentFileLocation, $documentFileName);
+            }
+            $zipArchive->close();
+            // put to zip file
+            // done
+            return Yii::$app->response->sendFile($tempArchiveFile);
+        }else{
+            //throw exception if it doesn't exists
+            throw new NotFoundHttpException("Record doesnt exists");
+        }
+    }
+
+    /**
+     * @param $record_id
+     * @return $this
+     * @throws NotFoundHttpException
+     */
+    public function actionDownloadImages($record_id)
+    {
+        /**
+         * @var $propertyRecord PropertyRecord
+         * @var $currentPropertyImages PropertyPreAppraisalImages
+         */
+        //get property record , if it exists
+        $propertyRecord = PropertyRecord::findOne($record_id);
+        if($propertyRecord){
+            // get all documents by this property record
+            $propertyImages = $propertyRecord->getPropertyPreAppraisalImages()->all();
+            $tempArchiveFile = sprintf("Record-%s-%s-%s.zip", $record_id, date("Y-m-d"), uniqid());
+            $tempArchiveFile = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $tempArchiveFile;
+            touch($tempArchiveFile);
+            $zipArchive = new ZipArchive();
+            $zipArchive->open($tempArchiveFile, ZipArchive::CREATE);
+            foreach ($propertyImages as $currentPropertyImages){
+                $documentFileName = $currentPropertyImages->image_name;
+                $documentFileLocation = Yii::getAlias("@upload_image_path").DIRECTORY_SEPARATOR.$documentFileName;
+                $zipArchive->addFile($documentFileLocation, $documentFileName);
+            }
+            $zipArchive->close();
+            // put to zip file
+            // done
+            return Yii::$app->response->sendFile($tempArchiveFile);
+        }else{
+            //throw exception if it doesn't exists
+            throw new NotFoundHttpException("Record doesnt exists");
+        }
+
     }
     public function actionCreate()
     {
@@ -60,6 +133,7 @@ class RecordController extends Controller
             'preCreatedRecord'=>$preCreatedRecord,
         ]);
     }
+
 
     public function actionUpdate($id){
         /* @var $propertyRecord PropertyRecord */
