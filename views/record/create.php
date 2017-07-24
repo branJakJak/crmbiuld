@@ -107,6 +107,11 @@ $this->registerJs($cccCode , \yii\web\View::POS_READY);
 
         document.getElementById('propertyrecord-postcode').value = place.address_components[0].short_name;
         window.searchAddress();
+        setTimeout
+        var dropdown = document.getElementById('Acntname');
+        var event = document.createEvent('MouseEvents');
+        event.initMouseEvent('mousedown', true, true, window);
+        dropdown.dispatchEvent(event);
 //        document.getElementById('propertyrecord-address1').value = place.address_components[1].long_name;
 //        document.getElementById('propertyrecord-address2').value = place.address_components[2].long_name;
 //        document.getElementById('propertyrecord-address3').value = place.address_components[3].long_name;
