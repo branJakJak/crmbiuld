@@ -19,7 +19,7 @@ use yii\helpers\Html;
 <?php
 $downloadAllBtn = Html::a("Download All", \yii\helpers\Url::to(["/record/download-images", "record_id" => $propertyRecord->id]), ['class' => 'pull-right btn btn-success']);
 echo PanelWidget::begin([
-    'title'=>'Upload',
+    'title'=>'Upload'.$downloadAllBtn,
     'type'=>'default',
     'widget'=>false,
 ])
