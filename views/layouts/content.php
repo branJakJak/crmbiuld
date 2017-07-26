@@ -6,6 +6,17 @@ use dmstr\widgets\Alert;
 $this->registerJs('jQuery(".sidebar-toggle").click()',\yii\web\View::POS_READY)
 
 ?>
+<style type="text/css">
+    body > div.wrapper > header > nav > div > ul > li.dropdown.messages-menu.open > ul > li.footer {
+        padding-top: 0px;
+        background-color: transparent;
+    }
+    body > div.wrapper > header > nav > div > ul > li.dropdown.messages-menu.open > ul > li.footer > a {
+        padding: 17px 17px;
+        border-bottom: none;
+    }
+
+</style>
 <div class="content-wrapper">
     <section class="content-header">
         <?php if (isset($this->blocks['content-header'])) { ?>

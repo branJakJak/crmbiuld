@@ -4,6 +4,9 @@ use yii\helpers\Url;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
+
+$userCount = \dektrium\user\models\User::find()->count();
+$userCollection = \dektrium\user\models\User::find()->all();
 ?>
 
 <header class="main-header">
@@ -21,84 +24,35 @@ use yii\helpers\Url;
             <ul class="nav navbar-nav">
 
                 <!-- Messages: style can be found in dropdown.less-->
-                <li class="dropdown messages-menu hidden">
+                <li class="dropdown messages-menu ">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="fa fa-envelope-o"></i>
-                        <span class="label label-success">4</span>
+                        <i class="fa fa-user-o"></i>
+                        <span class="label label-success"> <?= $userCount ?> </span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header">You have 4 messages</li>
+                        <li class="header">There are <?= $userCount ?> user(s)</li>
                         <li>
                             <!-- inner menu: contains the actual data -->
                             <ul class="menu">
-                                <li><!-- start message -->
-                                    <a href="#">
-                                        <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user2-160x160.jpg" class="img-circle" alt="User Image"/>
-                                        </div>
-                                        <h4>
-                                            Support Team
-                                            <small><i class="fa fa-clock-o"></i> 5 mins</small>
-                                        </h4>
-                                        <p>Why not buy a new awesome theme?</p>
-                                    </a>
-                                </li>
+                                <?php foreach ($userCollection as $curreentUser): ?>
+                                    <li>
+                                        <a href="#">
+                                            <div class="pull-left">
+                                                <img src="/img/user.png" class="img-circle" alt="User Image" />
+                                            </div>
+                                            <h4>
+                                                <?= Html::encode($curreentUser->username) ?>
+                                            </h4>
+                                            <p>
+                                                Member since <small><i class="fa fa-clock-o"></i> <?= Html::encode(Yii::$app->formatter->asDate($curreentUser->created_at)) ?></small>
+                                            </p>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
                                 <!-- end message -->
-                                <li>
-                                    <a href="#">
-                                        <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user-160x160.png" class="img-circle"
-                                                 alt="user image"/>
-                                        </div>
-                                        <h4>
-                                            AdminLTE Design Team
-                                            <small><i class="fa fa-clock-o"></i> 2 hours</small>
-                                        </h4>
-                                        <p>Why not buy a new awesome theme?</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user4-128x128.jpg" class="img-circle"
-                                                 alt="user image"/>
-                                        </div>
-                                        <h4>
-                                            Developers
-                                            <small><i class="fa fa-clock-o"></i> Today</small>
-                                        </h4>
-                                        <p>Why not buy a new awesome theme?</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user3-128x128.jpg" class="img-circle"
-                                                 alt="user image"/>
-                                        </div>
-                                        <h4>
-                                            Sales Department
-                                            <small><i class="fa fa-clock-o"></i> Yesterday</small>
-                                        </h4>
-                                        <p>Why not buy a new awesome theme?</p>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <div class="pull-left">
-                                            <img src="<?= $directoryAsset ?>/img/user4-128x128.jpg" class="img-circle"
-                                                 alt="user image"/>
-                                        </div>
-                                        <h4>
-                                            Reviewers
-                                            <small><i class="fa fa-clock-o"></i> 2 days</small>
-                                        </h4>
-                                        <p>Why not buy a new awesome theme?</p>
-                                    </a>
-                                </li>
                             </ul>
                         </li>
-                        <li class="footer"><a href="#">See All Messages</a></li>
+                        <li class="footer"><a href="/user/admin">Manage Users</a></li>
                     </ul>
                 </li>
                 <li class="dropdown notifications-menu  hidden">
@@ -264,7 +218,7 @@ use yii\helpers\Url;
                                 <a href="#" class="btn btn-default btn-flat">Profile</a>
                             </div>
                             <div class="pull-right">
-                                <a href="<?= Url::to(['site/logout'])?>" data-method="post" class='btn btn-default btn-flat'>
+                                <a href="<?= Url::to(['/site/logout'])?>" data-method="post" class='btn btn-default btn-flat'>
                                     Sign out
                                 </a>
                             </div>

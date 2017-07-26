@@ -23,6 +23,7 @@ use yii\db\Expression;
  * @property string $postalcode
  * @property string $town
  * @property string $country
+ * @property string $date_of_birth
  * @property string $date_created
  * @property string $date_updated
  */
@@ -43,7 +44,7 @@ class Owner extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['date_created', 'date_updated'], 'safe'],
+            [['date_of_birth','date_created', 'date_updated'], 'safe'],
             [[ 'email_address'], 'email'],
             [['title', 'firstname', 'lastname', 'company_name', 'email_address', 'mobile_number', 'phone_number', 'address1', 'address2', 'address3', 'postalcode', 'town', 'country'], 'string', 'max' => 255],
         ];
@@ -69,6 +70,7 @@ class Owner extends \yii\db\ActiveRecord
             'postalcode' => 'Postalcode',
             'town' => 'City/Town',
             'country' => 'County',
+            'date_of_birth' => 'Birthday',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
         ];

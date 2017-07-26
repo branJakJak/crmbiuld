@@ -8,6 +8,10 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
+        'authManager' => [
+            'class' => 'yii\rbac\PhpManager',
+            'defaultRoles' => ['agent'],
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'bE4jHIZlsBvoS6QDRiyvbg7UGTEbYEA3',
@@ -35,12 +39,13 @@ $config = [
                 ],
             ],
         ],
+
         'urlManager' => [
             'class' => 'yii\web\UrlManager',
             'showScriptName' => false,
             'enablePrettyUrl' => true,
             'rules' => array(
-                '/site/logout' => '/user/logout',
+//                '/site/logout' => '/user/logout',
                 '/record/view/<id:\d+>' => '/record/view',
                 '/record/update/<id:\d+>' => '/record/update',
                 '/owner/delete/<id:\d+>' => '/owner/delete',

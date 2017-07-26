@@ -24,10 +24,16 @@ class PropertyNotesController extends Controller
                 'only' => ['index','view','create','update','delete'],
                 'rules' => [
                     [
-                        'actions' => ['index','view','create','update','delete'],
+                        'actions' => ['index','view','create'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['update','delete'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+
                 ]
             ]
         ];

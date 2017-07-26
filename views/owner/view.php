@@ -14,6 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h3> Property owner : <?= Html::encode($this->title) ?></h3>
     <p class="">
+        <?php if(Yii::$app->user->can('admin')): ?>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
         <?= Html::a('Delete', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
@@ -22,6 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+        <?php endif; ?>
     </p>
 
     <?= DetailView::widget([
@@ -35,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'email_address:email',
             'mobile_number',
             'phone_number',
+            'date_of_birth',
             'address1',
             'address2',
             'address3',

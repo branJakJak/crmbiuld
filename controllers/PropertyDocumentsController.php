@@ -24,9 +24,14 @@ class PropertyDocumentsController extends Controller
                 'only' => ['index','view','create','download','update','delete'],
                 'rules' => [
                     [
-                        'actions' => ['index','view','create','download','update','delete'],
+                        'actions' => ['index','view','create','download'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['index','update','delete'],
+                        'allow' => true,
+                        'roles' => ['admin'],
                     ],
                 ],
             ]

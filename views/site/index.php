@@ -273,7 +273,25 @@ $this->registerJs($jsScript,View::POS_READY,'toggle-script');
                             return $lastNote;
                         },
                     ],
-                    'status'
+                    'status',
+                    [
+                        'label' => 'Clients',
+                        'value' => function($currentModel){
+                            /* @var $currentModel \app\models\PropertyRecord */
+                            /* @var $currentPropertyOwner \app\models\PropertyOwner */
+                            $propertyOwnersCollection = [];
+                            $propertyOwners = $currentModel->getPropertyOwners()->all();
+                            foreach ($propertyOwners as $currentPropertyOwner){
+                                $currentOwner = $currentPropertyOwner->getOwner()->one();
+                                $ownerFullName = sprintf("%s. %s %s", $currentOwner->title, $currentOwner->firstname, $currentOwner->lastname);
+                                $tempContainer = Html::a($ownerFullName, ['/owner/view', 'id' => $currentOwner->id]);
+                                $propertyOwnersCollection[] = $tempContainer;
+                            }
+                            return implode(",<br>",$propertyOwnersCollection);
+                        },
+                        'format'=>'raw'
+                    ],
+
                 ],
             ]);
 

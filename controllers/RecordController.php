@@ -160,7 +160,16 @@ class RecordController extends Controller
 
         /*property owner*/
         $owner = new Owner();
+        $owner->postalcode = $propertyRecord->postcode;
+        $owner->address1 = $propertyRecord->address1;
+        $owner->address2 = $propertyRecord->address2;
+        $owner->address3 = $propertyRecord->address3;
+        $owner->town = $propertyRecord->town;
+        $owner->country = $propertyRecord->country;
         if ($owner->load(Yii::$app->request->post())) {
+            var_dump($owner->date_of_birth);
+            $owner->date_of_birth =date_create_from_format("d-M-Y" , $owner->date_of_birth);
+            $owner->date_of_birth = $owner->date_of_birth->format("Y-m-d H:i:s");
             if ($owner->save()) {
                 Yii::$app->getSession()->setFlash('success', 'New property owner added');
                 $propertyOwner = new PropertyOwner();

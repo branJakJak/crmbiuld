@@ -26,9 +26,14 @@ class OwnerController extends Controller
                 'only' => ['index', 'view', 'create', 'update', 'delete'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'actions' => ['view'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['index', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['admin'],
                     ],
                 ]
             ]

@@ -1,5 +1,7 @@
 <?php
 
+
+use dosamigos\datepicker\DatePicker;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -29,6 +31,17 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'mobile_number')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'phone_number')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'date_of_birth')->widget(
+        DatePicker::className(), [
+        'inline' => true,
+        'template' => '<div class="well well-sm" style="background-color: #fff; width:250px">{input}</div>',
+        'clientOptions' => [
+            'autoclose' => true,
+            'format' => 'dd-M-yyyy'
+        ]
+    ]);
+    ?>
 
     <?= $form->field($model, 'address1')->textInput(['maxlength' => true]) ?>
 
