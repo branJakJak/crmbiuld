@@ -199,6 +199,9 @@ $propertyType = [
         \kartik\date\DatePicker::widget([
             'model' => $propertyRecord,
             'attribute' => 'date_of_cwi',
+            'pluginOptions' =>[
+                'format'=>'dd/mm/yyyy'
+            ]
         ])
         ?>
         <br>
@@ -213,6 +216,10 @@ $propertyType = [
         \kartik\date\DatePicker::widget([
             'model' => $propertyRecord,
             'attribute' => 'date_guarantee_issued',
+            'pluginOptions' =>[
+                'format'=>'dd/mm/yyyy'
+            ]
+
         ])
         ?>
         <br>
