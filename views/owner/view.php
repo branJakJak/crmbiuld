@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'email_address:email',
             'mobile_number',
             'phone_number',
-            'date_of_birth:date',
+            'date_of_birth',
             'address1',
             'address2',
             'address3',

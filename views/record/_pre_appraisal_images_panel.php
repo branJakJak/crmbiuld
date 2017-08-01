@@ -15,16 +15,11 @@ use yii\helpers\Html;
 /* @var $preappraisalImage \app\models\PropertyPreAppraisalImages */
 
 ?>
-    <style type="text/css">
-        #w12 > div.panel-heading {
-            padding: 23px 20px;
-        }
-    </style>
+
 
 <?php
-$downloadAllBtn = Html::a("Download All", \yii\helpers\Url::to(["/record/download-images", "record_id" => $propertyRecord->id]), ['class' => 'pull-right btn btn-success']);
 echo PanelWidget::begin([
-    'title'=>'Upload'.$downloadAllBtn,
+    'title'=>'Upload',
     'type'=>'default',
     'widget'=>false,
 ])
