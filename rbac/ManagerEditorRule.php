@@ -48,16 +48,15 @@ class ManagerEditorRule extends Rule
                     break;
                 }
             }
-            \Yii::info(VarDumper::dumpAsString('Current logged in user is '. \Yii::$app->user->id));
-            \Yii::info(VarDumper::dumpAsString('Owner is '.$userModel->id));
-            \Yii::info(VarDumper::dumpAsString('Is owner of the record '));
-            \Yii::info(VarDumper::dumpAsString($isOwner));
-            \Yii::info(VarDumper::dumpAsString('Is not owner consultant '));
-            \Yii::info(VarDumper::dumpAsString(!$recordOwnedByConsultant ));
-            \Yii::info(VarDumper::dumpAsString('Is valid '));
-            \Yii::info(VarDumper::dumpAsString($isOwner && !$recordOwnedByConsultant));
+//            \Yii::info(VarDumper::dumpAsString('Current logged in user is '. \Yii::$app->user->id));
+//            \Yii::info(VarDumper::dumpAsString('Owner is '.$userModel->id));
+//            \Yii::info(VarDumper::dumpAsString('Is owner of the record '));
+//            \Yii::info(VarDumper::dumpAsString($isOwner));
+//            \Yii::info(VarDumper::dumpAsString('Is not owner consultant '));
+//            \Yii::info(VarDumper::dumpAsString(!$recordOwnedByConsultant ));
+//            \Yii::info(VarDumper::dumpAsString('Is valid '));
+//            \Yii::info(VarDumper::dumpAsString($isOwner && !$recordOwnedByConsultant));
         }
-
         return $isOwner && !$recordOwnedByConsultant;
     }
 }

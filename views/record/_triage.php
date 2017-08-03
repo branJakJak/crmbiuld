@@ -28,9 +28,9 @@ use yii\widgets\Pjax;
         ]);
         ?>
 
-
+        <?php $form = \yii\widgets\ActiveForm::begin()?>
         <?= FileUploadUI::widget([
-            'model' => $triageDocument    ,
+            'model' => $triageDocument,
             'attribute' => 'material_file_name',
             'url' => ['/record/update', 'id' => $propertyRecord->id],
             'gallery' => false,
@@ -51,11 +51,7 @@ use yii\widgets\Pjax;
                 //                            }',
             ],
         ]); ?>
-
-
-
-
-
+        <?php \yii\widgets\ActiveForm::end()?>
         <br >
         <?php Pjax::begin(['id' => 'triage_grid','timeout'=>10000]) ?>
         <?=

@@ -159,7 +159,7 @@ class RecordController extends Controller
         /*property record*/
         $propertyRecord = PropertyRecord::findOne(['id' => $id]);
         if(!$propertyRecord){
-            return new NotFoundHttpException('Sorry that record doesnt exists');
+            new NotFoundHttpException('Sorry that record doesnt exists');
         }
         if ( Yii::$app->user->can('Manager')) {
             if(!Yii::$app->user->can('managerPermission',['property_record' => $propertyRecord])) {
@@ -178,11 +178,10 @@ class RecordController extends Controller
             $propertyRecord->date_of_cwi = $dtTemp->format("Y-m-d H:i:s");
             $dtTemp = new DateTime($propertyRecord->date_guarantee_issued);
             $propertyRecord->date_guarantee_issued = $dtTemp->format("Y-m-d H:i:s");
-//            $propertyRecord->created_by = Yii::$app->user->getId();
             if ($propertyRecord->save()) {
                 Yii::$app->getSession()->setFlash('success', 'Record updated');
             }
-            return $this->refresh("#w18-tab0");
+            return $this->refresh("#basicInformationTab");
         }
         $dtTemp = new DateTime($propertyRecord->date_of_cwi);
         $propertyRecord->date_of_cwi = $dtTemp->format("m/d/Y");
@@ -198,9 +197,10 @@ class RecordController extends Controller
         $owner->town = $propertyRecord->town;
         $owner->country = $propertyRecord->country;
         if ($owner->load(Yii::$app->request->post())) {
-            var_dump($owner->date_of_birth);
-            $owner->date_of_birth =date_create_from_format("d-M-Y" , $owner->date_of_birth);
-            $owner->date_of_birth = $owner->date_of_birth->format("Y-m-d H:i:s");
+            if(isset($owner->date_of_birth) && !empty($owner->date_of_birth)){
+                $owner->date_of_birth =date_create_from_format("d-M-Y" , $owner->date_of_birth);
+                $owner->date_of_birth = $owner->date_of_birth->format("Y-m-d H:i:s");
+            }
             if ($owner->save()) {
                 Yii::$app->getSession()->setFlash('success', 'New property owner added');
                 $propertyOwner = new PropertyOwner();
@@ -209,7 +209,8 @@ class RecordController extends Controller
                 $propertyOwner->save();
                 $owner = new Owner();//clear attribs
             }
-            return $this->refresh("#w5-tab0");
+
+            return $this->refresh("#ownersTab");
         }
         /*property documents*/
         $propertyDocument = new PropertyDocuments();
@@ -272,6 +273,7 @@ class RecordController extends Controller
         $propertyNotesDataProvider = new ActiveDataProvider([
             'query' => PropertyNotes::find()->where(['property_id'=>$propertyRecord->id])->orderBy(['date_created'=>SORT_DESC])
         ]);
+
         if ($propertyNote->load(\Yii::$app->request->post())) {
             Yii::info(VarDumper::dumpAsString(Yii::$app->user->id).' userid is','application');
             $propertyNote->property_id = $propertyRecord->id;
@@ -281,19 +283,22 @@ class RecordController extends Controller
                 $propertyNote = new PropertyNotes();
             }else{
                 \Yii::$app->session->set("error", Html::errorSummary($propertyNote));
+
             }
-            return $this->refresh("#w21-tab4");
+            return $this->refresh("#w22-tab4");
         }
         $propertyOwnerDataProvider = new ActiveDataProvider(['query' => PropertyOwner::find()->where(['property_id'=>$propertyRecord->id])]);
-
         $triageDocument = new Triage();
+
         if ($triageDocument->load(Yii::$app->request->post())) {
             $uploadedTriageDocument = UploadedFile::getInstance($triageDocument, 'material_file_name');
+
             $triageDocument->property_record = $propertyRecord->id;
             $triageDocument->material_file_name = uniqid().'-'.$uploadedTriageDocument->name;
             /* save the uploaded document in safe place */
             $finalUploadName = Yii::getAlias('@triage_path') .  DIRECTORY_SEPARATOR.$triageDocument->material_file_name;
             $uploadedTriageDocument->saveAs($finalUploadName);
+
             /*save and return json*/
             if ($triageDocument->save()) {
                 if(Yii::$app->request->isAjax){
@@ -306,7 +311,7 @@ class RecordController extends Controller
                         ],
                     ]);
                 }
-            }else{
+            } else{
                 \Yii::$app->session->set("error", Html::errorSummary($triageDocument));
             }
         }
@@ -359,7 +364,7 @@ class RecordController extends Controller
             }
 
         }
-        return $this->redirect(Yii::$app->request->referrer.'#w21-tab2');
+        return $this->redirect(Yii::$app->request->referrer.'#w22-tab2');
     }
 
 }

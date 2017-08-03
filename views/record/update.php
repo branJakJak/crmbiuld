@@ -88,6 +88,9 @@ $this->registerJs($adjustPjaxSettings,\yii\web\View::POS_READY);
                         'propertyOwnerDataProvider'=>$propertyOwnerDataProvider
                     ]
                 ),
+                [
+                        'id'=>'basicInformationTab'
+                ]
             ],
             [
                 'label' => 'Documents',
@@ -99,6 +102,9 @@ $this->registerJs($adjustPjaxSettings,\yii\web\View::POS_READY);
                         'propertyRecord'=>$propertyRecord
                     ]
                 ),
+                [
+                    'id'=>'documentsTab'
+                ]
             ],
             [
                 'label' => 'Pre appraisal images',
@@ -110,11 +116,19 @@ $this->registerJs($adjustPjaxSettings,\yii\web\View::POS_READY);
                         'preappraisalImageDataProvider'=>$preappraisalImageDataProvider,
                     ]
                 ),
+                [
+                    'id'=>'preAppraisalImagesTab'
+                ]
+
             ],
             [
                 'label' => 'Images',
 //                'content' => $this->render('_property_images_panel'),
                 'content' => '',
+                [
+                    'id'=>'imagesTab'
+                ]
+
             ],
             [
                 'label' => 'Notes',
@@ -122,6 +136,10 @@ $this->registerJs($adjustPjaxSettings,\yii\web\View::POS_READY);
                     'propertyNote'=>$propertyNote,
                     'propertyNotesDataProvider'=>$propertyNotesDataProvider
                 ]),
+                [
+                    'id'=>'notesTab'
+                ]
+
             ],
             [
                 'label' => 'Triage',
@@ -130,6 +148,10 @@ $this->registerJs($adjustPjaxSettings,\yii\web\View::POS_READY);
                     'triageDocument'=>$triageDocument,
                     'triageDocumentDataProvider'=>$triageDocumentDataProvider
                 ]),
+                [
+                    'id'=>'triageTab'
+                ]
+
             ]
         ]
     ]);

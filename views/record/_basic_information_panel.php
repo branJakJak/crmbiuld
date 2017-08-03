@@ -131,6 +131,9 @@ $propertyType = [
                 [
                     'label' => 'Owners',
                     'content' => $this->blocks['list_of_owner'],
+                    [
+                            'id'=>'ownersTab'
+                    ]
                 ],
                 [
                     'label' => 'Create new owner',
