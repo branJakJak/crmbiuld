@@ -15,18 +15,6 @@ use yii\web\View;
 /* @var $form ActiveForm */
 /* @var $insulationCollection array */
 
-$statusCollection = [
-    \app\models\PropertyRecord::PROPERTY_STATUS_NOT_SUBMITTED => \app\models\PropertyRecord::PROPERTY_STATUS_NOT_SUBMITTED,
-    \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_SUPERVISOR_APPROVAL => \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_SUPERVISOR_APPROVAL,
-    \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_ADMIN_APPROVAL => \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_ADMIN_APPROVAL,
-    \app\models\PropertyRecord::PROPERTY_STATUS_REJECTED => \app\models\PropertyRecord::PROPERTY_STATUS_REJECTED,
-    \app\models\PropertyRecord::PROPERTY_STATUS_APPROVED => \app\models\PropertyRecord::PROPERTY_STATUS_APPROVED,
-    \app\models\PropertyRecord::PROPERTY_STATUS_WORK_IN_PROGRESS => \app\models\PropertyRecord::PROPERTY_STATUS_WORK_IN_PROGRESS,
-    \app\models\PropertyRecord::PROPERTY_STATUS_APPRAISAL_COMPLETE => \app\models\PropertyRecord::PROPERTY_STATUS_APPRAISAL_COMPLETE,
-    \app\models\PropertyRecord::PROPERTY_STATUS_APPROVED_BY_CHARTERED_SURVEYOR => \app\models\PropertyRecord::PROPERTY_STATUS_APPROVED_BY_CHARTERED_SURVEYOR,
-    \app\models\PropertyRecord::PROPERTY_STATUS_PASSED_TO_SOLICITOR => \app\models\PropertyRecord::PROPERTY_STATUS_PASSED_TO_SOLICITOR,
-    \app\models\PropertyRecord::PROPERTY_STATUS_ALL_JOBS => \app\models\PropertyRecord::PROPERTY_STATUS_ALL_JOBS,
-];
 $availableUsersRes = \dektrium\user\models\Profile::find()->select("name")->asArray()->all();
 $availableUser = [];
 foreach ($availableUsersRes as $currentAvailableUser) {
@@ -66,7 +54,7 @@ $this->registerJs($jsScript,View::POS_READY,'toggle-script');
             Select2::widget([
                 'model' => $filterModel,
                 'attribute' => 'status',
-                'data' => $statusCollection,
+                'data' => Yii::$app->params['statusCollection'],
                 'options' => ['placeholder' => 'Filter as you type ...'],
                 'pluginOptions' => [
                     'allowClear' => true,
@@ -165,7 +153,7 @@ $this->registerJs($jsScript,View::POS_READY,'toggle-script');
                 ->widget(Typeahead::classname(), [
                     'dataset' => [
                         [
-                            'local' => $statusCollection,
+                            'local' => Yii::$app->params['statusCollection'],
                         ]
                     ],
                     'pluginOptions' => ['highlight' => true],

@@ -12,5 +12,6 @@ $config = require(__DIR__ . '/../config/web.php');
 $app = new yii\web\Application($config);
 Yii::setAlias("@upload_document_path",Yii::getAlias('@app') . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'documents');
 Yii::setAlias("@upload_image_path",Yii::getAlias('@app') . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'images');
+Yii::setAlias("@triage_path",Yii::getAlias('@app') . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'triage');
 $app->run();
 

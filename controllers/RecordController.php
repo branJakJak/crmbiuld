@@ -11,10 +11,12 @@ namespace app\controllers;
 
 use app\models\Owner;
 use app\models\PropertyDocuments;
+use app\models\PropertyImages;
 use app\models\PropertyNotes;
 use app\models\PropertyOwner;
 use app\models\PropertyPreAppraisalImages;
 use app\models\PropertyRecord;
+use app\models\Triage;
 use DateTime;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -27,6 +29,7 @@ use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\web\UnauthorizedHttpException;
 use yii\web\UploadedFile;
 use ZipArchive;
 
@@ -37,13 +40,28 @@ class RecordController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['create','update','downloadDocument'],
+                'only' => ['create','update','downloadDocument','transferToTriage'],
                 'rules' => [
                     [
-                        'actions' => ['create','update','downloadDocument'],
+                        'actions' => ['create','update','downloadDocument','transferToTriage'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['admin','Admin'],
                     ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['Senior Manager'],
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['Manager','Consultant'],
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['Manager','Consultant'],
+                    ]
                 ],
             ],
         ];
@@ -51,6 +69,7 @@ class RecordController extends Controller
 
     /**
      * @param $record_id
+     * @return $this
      * @throws NotFoundHttpException
      * @internal param PropertyRecord $propertyRecord
      * @internal param PropertyRecord $currentPropertyDocument
@@ -142,6 +161,18 @@ class RecordController extends Controller
         if(!$propertyRecord){
             return new NotFoundHttpException('Sorry that record doesnt exists');
         }
+        if ( Yii::$app->user->can('Manager')) {
+            if(!Yii::$app->user->can('managerPermission',['property_record' => $propertyRecord])) {
+                throw new UnauthorizedHttpException("You are not allowed to edit this record");
+            }
+        }
+        if ( Yii::$app->user->can('Consultant')) {
+            if(!Yii::$app->user->can('editOwnRecordPermission',['property_record' => $propertyRecord])) {
+                throw new UnauthorizedHttpException("You are not allowed to edit this record");
+            }
+        }
+
+
         if ($propertyRecord->load(\Yii::$app->request->post())) {
             $dtTemp = new DateTime($propertyRecord->date_of_cwi);
             $propertyRecord->date_of_cwi = $dtTemp->format("Y-m-d H:i:s");
@@ -149,9 +180,9 @@ class RecordController extends Controller
             $propertyRecord->date_guarantee_issued = $dtTemp->format("Y-m-d H:i:s");
 //            $propertyRecord->created_by = Yii::$app->user->getId();
             if ($propertyRecord->save()) {
-                Yii::$app->getSession()->setFlash('success', 'Property detail updated');
+                Yii::$app->getSession()->setFlash('success', 'Record updated');
             }
-            $this->refresh("#w18-tab0");
+            return $this->refresh("#w18-tab0");
         }
         $dtTemp = new DateTime($propertyRecord->date_of_cwi);
         $propertyRecord->date_of_cwi = $dtTemp->format("m/d/Y");
@@ -178,8 +209,7 @@ class RecordController extends Controller
                 $propertyOwner->save();
                 $owner = new Owner();//clear attribs
             }
-            $this->refresh("#w5-tab0");
-
+            return $this->refresh("#w5-tab0");
         }
         /*property documents*/
         $propertyDocument = new PropertyDocuments();
@@ -248,15 +278,40 @@ class RecordController extends Controller
             $propertyNote->created_by = Yii::$app->user->id;
             if($propertyNote->save()){
                 \Yii::$app->session->set("success","New property note added" );
-
                 $propertyNote = new PropertyNotes();
-
             }else{
                 \Yii::$app->session->set("error", Html::errorSummary($propertyNote));
             }
-            $this->refresh("#w18-tab4");
+            return $this->refresh("#w21-tab4");
         }
         $propertyOwnerDataProvider = new ActiveDataProvider(['query' => PropertyOwner::find()->where(['property_id'=>$propertyRecord->id])]);
+
+        $triageDocument = new Triage();
+        if ($triageDocument->load(Yii::$app->request->post())) {
+            $uploadedTriageDocument = UploadedFile::getInstance($triageDocument, 'material_file_name');
+            $triageDocument->property_record = $propertyRecord->id;
+            $triageDocument->material_file_name = uniqid().'-'.$uploadedTriageDocument->name;
+            /* save the uploaded document in safe place */
+            $finalUploadName = Yii::getAlias('@triage_path') .  DIRECTORY_SEPARATOR.$triageDocument->material_file_name;
+            $uploadedTriageDocument->saveAs($finalUploadName);
+            /*save and return json*/
+            if ($triageDocument->save()) {
+                if(Yii::$app->request->isAjax){
+                    return Json::encode([
+                        'files' => [
+                            [
+                                'name' => $uploadedTriageDocument->name,
+                                'size' => $uploadedTriageDocument->size,
+                            ],
+                        ],
+                    ]);
+                }
+            }else{
+                \Yii::$app->session->set("error", Html::errorSummary($triageDocument));
+            }
+        }
+
+        $triageDocumentDataProvider = new ActiveDataProvider(['query' => Triage::find()->where(['property_record'=>$propertyRecord->id])]);
 
         return $this->render('update', [
             'propertyRecord' => $propertyRecord,
@@ -267,8 +322,44 @@ class RecordController extends Controller
             'propertyNotesDataProvider' => $propertyNotesDataProvider,
             'owner' => $owner,
             'propertyOwnerDataProvider' => $propertyOwnerDataProvider,
-            'propertyDocumentDataProvider' => $propertyDocumentDataProvider
+            'propertyDocumentDataProvider' => $propertyDocumentDataProvider,
+            'triageDocumentDataProvider' => $triageDocumentDataProvider,
+            'triageDocument' => $triageDocument
         ]);
+    }
+    public function actionTransferToTriage($propertyId){
+        if (isset($_POST['selection']) && !empty($_POST['selection'])) {
+            $preAppraisalImages = PropertyPreAppraisalImages::find()->where(['in', 'id', array_values($_POST['selection'])])->all();
+            $uploadImagePath = Yii::getAlias("@upload_image_path");
+            $triagePath = Yii::getAlias("@triage_path");
+            $successMessage = "";
+            $warningMessage = "";
+            $numProcessedFile = 0;
+            /* @var $currentPreAppraisalImage PropertyImages */
+            foreach ($preAppraisalImages as $currentPreAppraisalImage) {
+                $fileToCopy = $uploadImagePath . DIRECTORY_SEPARATOR . $currentPreAppraisalImage->image_name;
+                $destination = $triagePath . DIRECTORY_SEPARATOR . $currentPreAppraisalImage->image_name;
+                /*check if preappraisalimage is already in triage ; if not proceed*/
+                if(!Triage::find()->where(['material_file_name' => $currentPreAppraisalImage->image_name])->exists()){
+                    copy($fileToCopy, $destination);
+                    $triageFile = new Triage();
+                    $triageFile->property_record = intval($_POST['property_record']);
+                    $triageFile->material_file_name = $currentPreAppraisalImage->image_name;
+                    if ($triageFile->save()) {
+                        $numProcessedFile++;
+                    }
+                } else {
+                    $warningMessage .= sprintf("%s was already transfered", $currentPreAppraisalImage->image_name);
+                }
+            }
+
+            Yii::$app->getSession()->setFlash('success', sprintf("%s record(s) transfered" , $numProcessedFile));
+            if (isset($warningMessage) && !empty($warningMessage)) {
+                Yii::$app->getSession()->setFlash('warning', $warningMessage);
+            }
+
+        }
+        return $this->redirect(Yii::$app->request->referrer.'#w21-tab2');
     }
 
 }

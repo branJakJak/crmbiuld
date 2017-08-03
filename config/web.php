@@ -2,6 +2,8 @@
 
 $params = require(__DIR__ . '/params.php');
 
+
+
 $config = [
     'id' => 'CRM Build',
     'name' => 'CRM Build',
@@ -9,8 +11,7 @@ $config = [
     'bootstrap' => ['log'],
     'components' => [
         'authManager' => [
-            'class' => 'yii\rbac\PhpManager',
-            'defaultRoles' => ['agent'],
+            'class' => 'yii\rbac\PhpManager'
         ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -39,7 +40,13 @@ $config = [
                 ],
             ],
         ],
-
+        'view' => [
+            'theme' => [
+                'pathMap' => [
+                    '@dektrium/user/views' => '@app/views/user'
+                ],
+            ],
+        ],
         'urlManager' => [
             'class' => 'yii\web\UrlManager',
             'showScriptName' => false,
@@ -85,7 +92,51 @@ $config['modules']['user'] = [
             'class' => \dektrium\user\controllers\RegistrationController::className(),
             'layout' => '@app/views/layouts/main-login.php',
         ],
+        'admin' => [
+            'class' => \dektrium\user\controllers\AdminController::className(),
+            'on afterUpdate'  => function($event){
+                /* @var $event \dektrium\user\events\UserEvent */
+                /* @var $currentUserRole \yii\rbac\Role */
+                /*drop all roles attached to current user*/
+                $currentUser = $event->getUser();
+                $userRoles = Yii::$app->authManager->getRolesByUser($currentUser->id);
+                foreach ($userRoles as $currentUserRole) {
+                    Yii::$app->authManager->revoke($currentUserRole, $currentUser->id);
+                }
+                if(isset($_POST['role']) && !empty($_POST['role'])){
+                    $newRole = \yii\helpers\Html::encode($_POST['role']);
+                    if ($newRoleObj = Yii::$app->authManager->getRole($newRole)) {
+                        Yii::$app->authManager->assign($newRoleObj, $currentUser->id);
+                    }
+                }
+            }
+        ],
     ],
+    'modelMap' => [
+        'User' => [
+            'class' => \dektrium\user\models\User::className(),
+            'on afterCreate' => function ($eventArgs) {
+                /**
+                 * @var $recordCreated \dektrium\user\models\User
+                 * @var $authManager \yii\rbac\PhpManager
+                 */
+                $recordCreated = $eventArgs->sender;
+                $currentRole =\yii\helpers\Html::encode($_POST['role']);
+                $authManager = Yii::$app->authManager;
+                $currentRoleObj = $authManager->getRole($currentRole);
+                /*if not exist ; create one*/
+                if(!$currentRoleObj){
+                    $currentRoleObj = $authManager->createRole($currentRole);
+                    $authManager->add($currentRoleObj);
+                }
+                /*get role and assign the role */
+                $authManager->assign($currentRoleObj, $recordCreated->id);
+                Yii::$app->session->addFlash("success", "User $recordCreated->email is assigned as $currentRole ");
+
+            }
+        ],
+    ]
+
 ];
 
 

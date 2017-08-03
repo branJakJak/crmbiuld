@@ -33,7 +33,7 @@ class OwnerController extends Controller
                     [
                         'actions' => ['index', 'create', 'update', 'delete'],
                         'allow' => true,
-                        'roles' => ['admin'],
+                        'roles' => ['admin','Admin'],
                     ],
                 ]
             ]

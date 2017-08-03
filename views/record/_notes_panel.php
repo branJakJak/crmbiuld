@@ -35,8 +35,12 @@ echo PanelWidget::begin([
                 'label'=>'Created by',
                 'value'=>function($currentModel){
                     $creator = $currentModel->getCreator()->one();
-                    $creatorProfile = $creator->getProfile()->one();
-                    return $creatorProfile->name;
+                    $creatorName = '';
+                    if($creator){
+                        $creatorProfile = $creator->getProfile()->one();
+                        $creatorName = $creatorProfile->name;
+                    }
+                    return $creatorName;
                 },
             ],
             'date_created:datetime',

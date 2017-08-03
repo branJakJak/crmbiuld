@@ -14,13 +14,13 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log', 'gii'],
     'controllerNamespace' => 'app\commands',
+
     'modules' => [
         'gii' => 'yii\gii\Module',
     ],
     'components' => [
         'authManager' => [
             'class' => 'yii\rbac\PhpManager',
-            'defaultRoles' => ['agent'],
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',

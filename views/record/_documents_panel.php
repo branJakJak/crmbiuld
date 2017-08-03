@@ -8,6 +8,8 @@
 use derekisbusy\panel\PanelWidget;
 use dosamigos\fileupload\FileUploadUI;
 use yii\helpers\Html;
+use yii\widgets\Pjax;
+
 /* @var $this yii\web\View */
 /* @var $propertyRecord \app\models\PropertyRecord */
 /* @var $propertyDocument \app\models\PropertyDocuments */
@@ -46,7 +48,7 @@ use yii\helpers\Html;
                 'fileuploaddone' => 'function(e, data) {
                                         console.log(e);
                                         console.log(data);
-                                        window.location.reload()
+                                        $.pjax.reload({container:"#propertyDocumentsPjax"});
                                     }',
         //        'fileuploadfail' => 'function(e, data) {
         //                                console.log(e);
@@ -60,6 +62,7 @@ use yii\helpers\Html;
         <?php \yii\widgets\ActiveForm::end()?>
 
         <br >
+        <?php Pjax::begin(['id' => 'propertyDocumentsPjax','timeout'=>10000]) ?>
         <?=
         \yii\grid\GridView::widget([
             'dataProvider' => $propertyDocumentDataProvider,
@@ -91,6 +94,7 @@ use yii\helpers\Html;
             ],
         ]);
         ?>
+        <?php Pjax::end() ?>
 
 
         <?php
