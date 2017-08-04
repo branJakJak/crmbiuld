@@ -3,7 +3,7 @@ use yii\widgets\Breadcrumbs;
 use dmstr\widgets\Alert;
 
 /* @var $this \yii\web\View */
-$this->registerJs('jQuery(".sidebar-toggle").click()',\yii\web\View::POS_READY)
+//$this->registerJs('jQuery(".sidebar-toggle").click()',\yii\web\View::POS_READY)
 
 ?>
 <style type="text/css">
