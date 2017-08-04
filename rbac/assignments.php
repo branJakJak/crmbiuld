@@ -42,4 +42,19 @@ return [
     20 => [
         'Consultant',
     ],
+    2 => [
+        'Senior Manager',
+    ],
+    3 => [
+        'Manager',
+    ],
+    4 => [
+        'Manager',
+    ],
+    5 => [
+        'Consultant',
+    ],
+    6 => [
+        'Consultant',
+    ],
 ];
