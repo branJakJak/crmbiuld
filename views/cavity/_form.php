@@ -31,6 +31,7 @@ $this->registerJs('jQuery(".sidebar-toggle").click()',\yii\web\View::POS_READY)
                         $form->field($model, 'birthday')->widget(DatePicker::classname(), [
                             'options' => ['placeholder' => 'Enter birthday'],
                             'pluginOptions' => [
+                                'format' => 'dd/mm/yyyy',
                                 'autoclose'=>true
                             ]
                         ])
@@ -66,6 +67,7 @@ $this->registerJs('jQuery(".sidebar-toggle").click()',\yii\web\View::POS_READY)
                         $form->field($model, 'when_property_moved')->widget(DatePicker::classname(), [
                             'options' => ['placeholder' => 'Date when the property was moved'],
                             'pluginOptions' => [
+                                'format' => 'dd/mm/yyyy',
                                 'autoclose'=>true
                             ]
                         ])
@@ -90,8 +92,9 @@ $this->registerJs('jQuery(".sidebar-toggle").click()',\yii\web\View::POS_READY)
             ?>
             <?= 
                 $form->field($model, 'CWI_installation_date')->widget(DatePicker::classname(), [
-                            'options' => ['placeholder' => 'Enter birthday'],
+                            'options' => ['placeholder' => 'dd/mm/yyyy'],
                             'pluginOptions' => [
+                                'format' => 'dd/mm/yyyy',
                                 'autoclose'=>true
                             ]
                 ])
@@ -260,7 +263,10 @@ $this->registerJs('jQuery(".sidebar-toggle").click()',\yii\web\View::POS_READY)
         </div>
     </div>
     <?php endif ?>
-
+    <br >
+    <br >
+    <br >
+    <br >
     <!-- callback panel -->
     <div class="row">
         <div class="col-lg-3">
@@ -268,16 +274,19 @@ $this->registerJs('jQuery(".sidebar-toggle").click()',\yii\web\View::POS_READY)
         </div>
         <div class="col-lg-6">
           <?php
-                echo PanelWidget::begin([
-                    'title' => 'Callback Time',
-                    'type' => 'default',
-                    'widget' => false,
-                ])
+            $dtObj = date_create_from_format("d/m/Y H:i" ,$model->date_time_callback);
+            $tempDt = $dtObj->format("Y-m-d H:i");
+            echo PanelWidget::begin([
+                'title' => 'Callback Time : '.Yii::$app->formatter->asDatetime($tempDt ),
+                'type' => 'default',
+                'widget' => false,
+            ])
             ?>
             <?= 
                 $form->field($model, 'date_time_callback')->widget(\kartik\widgets\DateTimePicker::classname(), [
                         'options' => ['placeholder' => 'Callbacktime'],
                         'pluginOptions' => [
+                            'format' => 'dd/mm/yyyy h:i',
                             'autoclose'=>true,
                             'enabledHours'=>[9, 10, 11, 12, 13, 14, 15, 16, 17],
                             'daysOfWeekDisabled'=>[0,6],
@@ -298,5 +307,10 @@ $this->registerJs('jQuery(".sidebar-toggle").click()',\yii\web\View::POS_READY)
         </div>
     </div>
     <?php ActiveForm::end(); ?>
+
+    <br >
+    <br >
+    <br >
+    <br >
 </div>
 

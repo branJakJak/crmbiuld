@@ -839,7 +839,7 @@
                 "panel",
                 "yii2"
             ],
-            "time": "2015-10-31 23:15:21"
+            "time": "2015-10-31T23:15:21+00:00"
         },
         {
             "name": "dmstr/yii2-adminlte-asset",
@@ -1355,7 +1355,7 @@
                 "xlsx",
                 "yii2"
             ],
-            "time": "2017-06-20 19:38:22"
+            "time": "2017-06-20T19:38:22+00:00"
         },
         {
             "name": "kartik-v/yii2-grid",
@@ -1611,7 +1611,7 @@
                 "tabs",
                 "tabs-x"
             ],
-            "time": "2017-05-04 12:30:21"
+            "time": "2017-05-04T12:30:21+00:00"
         },
         {
             "name": "kartik-v/yii2-widget-activeform",

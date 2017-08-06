@@ -59,8 +59,9 @@ class Cavity extends \yii\db\ActiveRecord
     {
         return [
             [['birthday','when_property_moved', 'CWI_installation_date', 'date_created', 'date_updated'], 'safe'],
-            [['CWI_payment'], 'number'],
-            [['title', 'firstname', 'lastname', 'telephone_number', 'email_address', 'address1_cavity_installation', 'address2_cavity_installation', 'address3_cavity_installation', 'address_postcode_cavity_installation', 'address_town_cavity_installation', 'address_country_cavity_installation', 'CWI_installer', 'construction_type', 'property_exposure', 'after_CWI_installation_comment', 'suffered_issues_prior_to_CWI', 'work_to_rectify_CWI', 'incured_financial_expenses', 'document_copy', 'reported_issue_to_house_insurer', 'advice_about_suitability', 'date_time_callback'], 'string', 'max' => 255],
+            [['CWI_payment','telephone_number'], 'number'],
+            [['email_address'], 'email'],
+            [['title', 'firstname', 'lastname','address1_cavity_installation', 'address2_cavity_installation', 'address3_cavity_installation', 'address_postcode_cavity_installation', 'address_town_cavity_installation', 'address_country_cavity_installation', 'CWI_installer', 'construction_type', 'property_exposure', 'after_CWI_installation_comment', 'suffered_issues_prior_to_CWI', 'work_to_rectify_CWI', 'incured_financial_expenses', 'document_copy', 'reported_issue_to_house_insurer', 'advice_about_suitability', 'date_time_callback'], 'string', 'max' => 255],
         ];
     }
 
