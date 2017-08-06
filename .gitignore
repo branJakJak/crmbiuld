@@ -31,3 +31,4 @@ phpunit.phar
 /uploads/documents/*
 /uploads/images/*
 /uploads/triage/*
+/uploads/supporting_document_path/*
