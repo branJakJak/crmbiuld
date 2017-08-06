@@ -99,13 +99,46 @@ class CavityController extends Controller
         $model = $this->findModel($id);
         $supportingDocument = new CavitySupportingDocument();
         if ($model->load(Yii::$app->request->post())) {
-            /* @TODO - parse date and format */
+            $dtObj = date_create_from_format("d/m/Y" ,$model->birthday);
+            if($dtObj){
+                $model->birthday = $dtObj->format("Y-m-d H:i:s");
+            }
+            $dtObj = date_create_from_format("d/m/Y" ,$model->when_property_moved);
+            if($dtObj){
+                $model->when_property_moved = $dtObj->format("Y-m-d H:i:s");
+            }
+            $dtObj = date_create_from_format("d/m/Y" ,$model->CWI_installation_date);
+            if($dtObj){
+                $model->CWI_installation_date = $dtObj->format("Y-m-d H:i:s");
+            }
+            $dtObj = date_create_from_format("d/m/Y H:i" ,$model->date_time_callback);
+            if($dtObj){
+                $model->date_time_callback = $dtObj->format("Y-m-d H:i:s");
+            }
+
             if($model->save()){
                 Yii::$app->getSession()->setFlash('success', 'Supporting document created');
             }
 //            return $this->refresh();
         }
-        if ($supportingDocument->load(Yii::$app->request->post())) {
+        /*format the date output */
+        $dtObj = date_create_from_format("Y-m-d H:i:s" ,$model->birthday);
+        if($dtObj){
+            $model->birthday = $dtObj->format("d/m/Y");
+        }
+        $dtObj = date_create_from_format("Y-m-d H:i:s" ,$model->when_property_moved);
+        if($dtObj){
+            $model->when_property_moved = $dtObj->format("d/m/Y");
+        }
+        $dtObj = date_create_from_format("Y-m-d H:i:s" ,$model->CWI_installation_date);
+        if ($dtObj) {
+            $model->CWI_installation_date = $dtObj->format("d/m/Y");
+        }
+        $dtObj = date_create_from_format("Y-m-d H:i:s" ,$model->date_time_callback);
+        if($dtObj){
+            $model->date_time_callback = $dtObj->format("d/m/Y H:i");
+        }
+        if ($supportingDocument->load(Yii::$app->request->post()) && Yii::$app->request->isAjax) {
             /* save the uploaded file to uploads/supporting_documents folder*/
             $uploadedDocument = UploadedFile::getInstance($supportingDocument, 'document_name');
             $supportingDocument->document_name= uniqid().'-'.$uploadedDocument->name;
