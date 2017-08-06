@@ -275,7 +275,7 @@ $this->registerJs('jQuery(".sidebar-toggle").click()',\yii\web\View::POS_READY)
         <div class="col-lg-6">
           <?php
             $dtObj = date_create_from_format("d/m/Y H:i" ,$model->date_time_callback);
-            $appointmentDate = 'Not set';
+            $appointmentDate = 'Appointment not set';
             if ($dtObj) {
                 $tempDt = $dtObj->format("Y-m-d H:i");
                 $appointmentDate = Yii::$app->formatter->asDatetime($tempDt);
