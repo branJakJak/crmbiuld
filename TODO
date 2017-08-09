@@ -21,6 +21,7 @@ after QA it will then be marked pending to be QA by the admin
 @TODO - 
 cavity/accept
 
+
 @TODO - create a table 
 tbl_questionaire_property_record
 id
@@ -28,13 +29,18 @@ property_record_id
 cavity_form_id
 date_created
 date_updated
+@DONE
+
+
 
 @TODO
 > show delete button for property record . 
 make sure it also deletes the preappraisal images,  documents , etc.. 
+@DONE
 
 > show delete button for cavity questionaire
 make sure it also deletes the supporting documents
+@DONE
 
 @TODO
 > transfer the cavity form or change its layout 
