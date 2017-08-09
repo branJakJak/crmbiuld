@@ -34,4 +34,7 @@ return [
     'Admin' => [
         'type' => 1,
     ],
+    'Agent' => [
+        'type' => 1,
+    ],
 ];

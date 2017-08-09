@@ -57,4 +57,7 @@ return [
     6 => [
         'Consultant',
     ],
+    21 => [
+        'Agent',
+    ],
 ];

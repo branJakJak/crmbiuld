@@ -3,6 +3,7 @@
 use kartik\typeahead\Typeahead;
 use yii\bootstrap\Tabs;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use derekisbusy\panel\PanelWidget;
 use kartik\export\ExportMenu;
@@ -279,6 +280,28 @@ $this->registerJs($jsScript,View::POS_READY,'toggle-script');
                         },
                         'format'=>'raw'
                     ],
+                    [
+                        'class' => 'yii\grid\ActionColumn',
+                        'template' => '{delete}',//{view}{update}
+                        'buttons'=>[
+                            'delete'=>function($url , $model){
+                                return Html::a(
+                                    '<span class="glyphicon glyphicon-trash"></span>', 
+                                    Url::to(['record/delete','id'=>$model->id]),
+                                    [
+                                    'class' => 'btn',
+                                    'style' => 'color: red !important',
+                                    'data' => [
+                                        'confirm' => 'Are you sure you want to delete this item?',
+                                        'method' => 'post',
+                                    ],
+                            ]);
+
+                            }
+
+                        ],
+                    ],
+                    // ['class' => 'yii\grid\ActionColumn']
 
                 ],
             ]);

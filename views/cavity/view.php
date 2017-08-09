@@ -32,9 +32,11 @@ $this->registerJs($tooltip);
                     'method' => 'post',
                 ],
             ]) ?>
+            <?= Html::a('<i class="fa  fa-check-circle "></i> Accept', ['accept', 'id' => $model->id], ['class' => 'btn btn-success pull-right btn-lg']) ?>
         </p>
     </div>
 </div>
+<br >
 <div class="row">
     <div class="col-lg-6">
         <div class="cavity-view">

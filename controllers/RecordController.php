@@ -366,5 +366,30 @@ class RecordController extends Controller
         }
         return $this->redirect(Yii::$app->request->referrer.'#w22-tab2');
     }
-
+    public function actionDelete($id)
+    {
+        $modelFound = $this->findModel($id);
+        if ($modelFound) {
+            $modelFound->delete();
+            Yii::$app->session->addFlash('success', 'Record deleted');
+            return $this->redirect(\Yii::$app->getRequest()->getReferrer());
+        } else {
+            throw new NotFoundHttpException("Cant find record");
+        }
+    }
+    /**
+     * Finds the PropertyRecord model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return PropertyRecord the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = PropertyRecord::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
 }

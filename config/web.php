@@ -52,10 +52,11 @@ $config = [
             'showScriptName' => false,
             'enablePrettyUrl' => true,
             'rules' => array(
-//                '/site/logout' => '/user/logout',
+               '/not-submitted' => '/cavity',
                 '/record/view/<id:\d+>' => '/record/view',
                 '/record/update/<id:\d+>' => '/record/update',
                 '/owner/delete/<id:\d+>' => '/owner/delete',
+                '/cavity/accept//<id:\d+>' => '/cavity/accept',
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
@@ -111,6 +112,15 @@ $config['modules']['user'] = [
                 }
             }
         ],
+        'security'=>[
+            'class'=> \dektrium\user\controllers\SecurityController::className(),
+            'on afterLogin'=>function($model){
+                if (\Yii::$app->user->can('Agent')) {
+                    \Yii::$app->getResponse()->redirect(\yii\helpers\Url::to(["/questionaire"]),301)->send();
+                    exit(0);
+                }
+            }
+        ]
     ],
     'modelMap' => [
         'User' => [

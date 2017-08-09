@@ -2,22 +2,37 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'All records';
+$this->title = 'Not Submitted';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
+<h1>The following leads needs to be scrutinized</h1>
 <div class="cavity-index">
-    <p>
+    <?php if (\Yii::$app->user->can("admin")): ?>
+    <p class='hidden'>
         <?= Html::a('New record', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+    <?php endif ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
 //            ['class' => 'yii\grid\SerialColumn'],
-            'id',
+           [
+                'label'=>'Name',
+                'attribute'=>'id',
+                'value'=>function($model){
+                    $fullname = sprintf('%s. %s %s', $model->title , $model->firstname , $model->lastname);
+                    return Html::a($fullname,'/cavity/view/'.$model->id);
+
+                },
+                'format'=>'raw'
+           ],
+            // 'id',
             'title',
             'firstname',
             'lastname',
@@ -45,8 +60,28 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'date_time_callback',
             // 'date_created',
             // 'date_updated',
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{delete}',//{view}{update}
+                'buttons'=>[
+                    'delete'=>function($url , $model){
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-trash"></span>', 
+                            Url::to(['cavity/delete','id'=>$model->id]),
+                            [
+                            'class' => 'btn',
+                            'style' => 'color: red !important',
+                            'data' => [
+                                'confirm' => 'Are you sure you want to delete this item?',
+                                'method' => 'post',
+                            ],
+                    ]);
 
-            ['class' => 'yii\grid\ActionColumn'],
+                    }
+
+                ],
+            ],
+            // ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 </div>

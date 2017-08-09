@@ -48,7 +48,7 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $filterModel = new FilterPropertyRecordForm();
-        $defaultQuery = PropertyRecord::find();
+        $defaultQuery = PropertyRecord::find()->orderBy(['date_updated'=>SORT_DESC,'date_created'=>SORT_DESC]);
         $propertRecordModel = new PropertyRecord();
         $dataProvider = new ActiveDataProvider(['query'=>$defaultQuery]);
         $insulationCollection = PropertyRecord::find()->select('insulation_type')->distinct()->all();

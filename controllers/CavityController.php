@@ -37,7 +37,7 @@ class CavityController extends Controller
                 'only' => ['index', 'view', 'create', 'update', 'delete'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'actions' => ['index', 'view', 'create', 'update', 'delete','accept'],
                         'allow' => true,
                         'roles' => ['@']
                     ]
@@ -150,7 +150,11 @@ class CavityController extends Controller
 
             if ($supportingDocument->save()) {
                 if(Yii::$app->request->isAjax){
-                    if(Yii::$app->request->isAjax){
+                    $uploadedDocument = UploadedFile::getInstance($supportingDocument, 'document_name');
+                    $supportingDocument->document_name= uniqid().'-'.$uploadedDocument->name;
+                    $finalUploadName = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$supportingDocument->document_name;
+                    $uploadedDocument->saveAs($finalUploadName);
+                    if($supportingDocument->save()){
                         return Json::encode([
                             'files' => [
                                 [
@@ -160,6 +164,7 @@ class CavityController extends Controller
                             ],
                         ]);
                     }
+
                 }
 
             }
@@ -181,8 +186,20 @@ class CavityController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
-
+        Yii::$app->session->addFlash('success', 'Record deleted');
         return $this->redirect(['index']);
+    }
+
+
+    public function actionAccept($id)
+    {
+        /* @TODO - create QuestionairePropertyRecord record*/
+        /*get cavity record*/
+        /*create property record*/
+        /*import the images and documents*/
+        /*done*/
+        Yii::$app->session->addFlash('success', 'The record has been transfered. @TODO');
+        return $this->redirect(Yii::$app->request->referrer);
     }
 
     /**

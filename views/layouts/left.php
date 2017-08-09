@@ -40,12 +40,12 @@ if (
     Yii::$app->user->can('Senior Manager')
 ) {
     $menuItems[] = [
-        'label' => 'Cavity Questionare',
-        'url' => '#',
-        'items' => [
-            ['label' => 'All', 'url' => ['/cavity']],
-            ['label' => 'Create', 'url' => ['/cavity/create']]
-        ],
+        'label' => 'Not Submitted',
+        'url' => ['/not-submitted'],
+        // 'items' => [
+        //     ['label' => 'All', 'url' => ['/cavity']],
+        //     ['label' => 'Create', 'url' => ['/cavity/create']]
+        // ],
     ];
 }
 if (Yii::$app->user->can('Consultant')) {

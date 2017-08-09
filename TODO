@@ -1,0 +1,48 @@
+@TODO
+Cavity Lead Questionaire
+http://crmlead.site8.co/
+make the image uploading requred
+> images are requred before submitting the form
+Property Record
+> images are requred before submitting the form
+>after saving send the information to crmbuild.site8.co
+
+
+@TODO - crmbuild.site8.co
+create new link Not Submitted at the left part of menu link
+that will contain new leads
+it will have a titile of New Lead Upload
+Agents can see this
+after QA it will then be marked pending to be QA by the admin
+>Again would you make this layout on the lead platform user friendly and easy on the eye.
+-- new records are cavity questionaire record  that when approved , it will become a property record
+
+
+@TODO - 
+cavity/accept
+
+@TODO - create a table 
+tbl_questionaire_property_record
+id
+property_record_id
+cavity_form_id
+date_created
+date_updated
+
+@TODO
+> show delete button for property record . 
+make sure it also deletes the preappraisal images,  documents , etc.. 
+
+> show delete button for cavity questionaire
+make sure it also deletes the supporting documents
+
+@TODO
+> transfer the cavity form or change its layout 
+to suite the agent form 
+https://www.surveymonkey.co.uk/r/WhiteCollarLA
+>agent must be logged in 
+
+@TODO - 
+gitignore the RBAC folder
+
+@TODO
