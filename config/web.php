@@ -148,9 +148,12 @@ $config['modules']['user'] = [
     ]
 
 ];
-
-
 $config['modules']['gridview'] = [
     'class' => \kartik\grid\Module::className()
 ];
+
+$config['modules']['api'] = [
+    'class' => \app\modules\api\Module::className()
+];
+
 return $config;
