@@ -110,6 +110,8 @@ $this->registerJs($tooltip);
                             $mes = 'Photo ID ie driving licence or passport';
                         } else if($model->type === \app\models\CavitySupportingDocument::FILE_TYPE_PROOF_OF_ADDRESS){
                             $mes = 'Proof of address';
+                        } else if ($model->type === 'internal_images' ){
+                            $mes = 'Proof of address';
                         }
                         $htmlOptions = [
                             'data-toggle'=>"tooltip",

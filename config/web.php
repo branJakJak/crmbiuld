@@ -153,7 +153,7 @@ $config['modules']['gridview'] = [
 ];
 
 $config['modules']['api'] = [
-    'class' => \app\modules\api\Module::className()
+    'class' => "app\modules\api\Module"
 ];
 
 return $config;
