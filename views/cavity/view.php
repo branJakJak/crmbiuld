@@ -112,7 +112,12 @@ $this->registerJs($tooltip);
                             $mes = 'Proof of address';
                         } else if ($model->type === 'internal_images' ){
                             $mes = 'Proof of address';
+                        } else if ($model->type === 'external_images' ){
+                            $mes = 'External Images';
+                        } else if ($model->type === 'supporting_document_images' ){
+                            $mes = 'Supporting Document';
                         }
+
                         $htmlOptions = [
                             'data-toggle'=>"tooltip",
                             'title'=>$mes,
