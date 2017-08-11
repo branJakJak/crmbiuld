@@ -53,7 +53,7 @@ class CavityController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Cavity::find()->andWhere(['NOT',[ 'title'=>null ]])
+            'query' => Cavity::find()->andWhere(['NOT',[ 'title'=>null ]])->orderBy(['date_created'=>SORT_DESC])
         ]);
 
         return $this->render('index', [
