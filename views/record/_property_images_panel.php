@@ -9,6 +9,21 @@ use derekisbusy\panel\PanelWidget;
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
+/* @var $propertyImagesDataProvider \yii\data\ActiveDataProvider */
+/* @var $propertyRecord \app\models\PropertyRecord */
+/* @var $currentPropertyImage \app\models\PropertyImages */
+
+$imageCollection =  [];
+
+foreach($propertyRecord->getPropertyImages()->all() as $currentPropertyImage){
+    $imageToPublish = Yii::getAlias('@upload_image_path') .  DIRECTORY_SEPARATOR.$currentPropertyImage->image_name;
+    $published = $this->assetManager->publish($imageToPublish);
+    $imageCollection[] = [
+        'url' => $published[1],
+        'src' => $published[1],
+    ];
+}
+
 ?>
 
 <?php
@@ -18,12 +33,8 @@ echo PanelWidget::begin([
     'widget'=>false,
 ])
 ?>
+<?= dosamigos\gallery\Gallery::widget(['items' => $imageCollection]);?>
 
-<?php $form = \yii\widgets\ActiveForm::begin()?>
-<?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
-
-
-<?php \yii\widgets\ActiveForm::end()?>
 <?php
 PanelWidget::end()
 ?>

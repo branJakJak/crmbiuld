@@ -7,6 +7,7 @@ use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Cavity */
+/* @var $currentSupportingDocument \app\models\CavitySupportingDocument */
 
 $this->title = "View Information";
 $this->params['breadcrumbs'][] = ['label' => 'Cavities', 'url' => ['index']];
@@ -18,6 +19,17 @@ $('[data-toggle="tooltip"]').tooltip();
 EOL;
 
 $this->registerJs($tooltip);
+$imageCollection =[];
+$allSupportingDocuments = $model->getSupportingDocuments()->all();
+foreach ($allSupportingDocuments as $currentSupportingDocument) {
+    $imageToPublish = Yii::getAlias("@supporting_document_path") . DIRECTORY_SEPARATOR . $currentSupportingDocument->document_name;
+    $published = $this->assetManager->publish($imageToPublish);
+    $imageCollection[] = $published[1];
+}
+
+
+
+
 
 ?>
 <div class="row">
@@ -38,7 +50,7 @@ $this->registerJs($tooltip);
 </div>
 <br >
 <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-12">
         <div class="cavity-view">
             <?php
                 echo PanelWidget::begin([
@@ -86,7 +98,7 @@ $this->registerJs($tooltip);
         </div>
 
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-12">
         <?php
         echo PanelWidget::begin([
             'title' => 'Supporting Documents',
@@ -94,46 +106,52 @@ $this->registerJs($tooltip);
             'widget' => false,
         ])
         ?>
-        <?= GridView::widget([
-            'dataProvider' => $dataProvider,
-            'columns' => [
-//                ['class' => 'yii\grid\SerialColumn'],
-//                'id',
-//                'document_name',
-                [
-                    'label'=>'Document',
-                    'value'=>function($model){
-                        $mes = 'Not Specified';
-                        if($model->type === \app\models\CavitySupportingDocument::FILE_TYPE_GUARANTOR_CERTIFICATE){
-                            $mes = 'Guarantee cert or communication confirming which company installed the cavity showing date when installed.';
-                        } else if($model->type === \app\models\CavitySupportingDocument::FILE_TYPE_PHOTO){
-                            $mes = 'Photo ID ie driving licence or passport';
-                        } else if($model->type === \app\models\CavitySupportingDocument::FILE_TYPE_PROOF_OF_ADDRESS){
-                            $mes = 'Proof of address';
-                        } else if ($model->type === 'internal_images' ){
-                            $mes = 'Proof of address';
-                        } else if ($model->type === 'external_images' ){
-                            $mes = 'External Images';
-                        } else if ($model->type === 'supporting_document_images' ){
-                            $mes = 'Supporting Document';
-                        }
 
-                        $htmlOptions = [
-                            'data-toggle'=>"tooltip",
-                            'title'=>$mes,
-                        ];
-                        return Html::a($model->document_name, \yii\helpers\Url::to(['cavity-supporting-document/download', 'id' => $model->id]) , $htmlOptions);
-                    },
-                    'format'=>'raw',
-                    'attribute'=>'document_name'
-                ],
+        <?= dosamigos\gallery\Gallery::widget(['items' => $imageCollection]);?>
 
-//                'type',
-//                'document_name',
-//                'date_created',
-//                ['class' => 'yii\grid\ActionColumn'],
-            ],
-        ]); ?>
+
+        <?php
+//         GridView::widget([
+//             'dataProvider' => $dataProvider,
+//             'columns' => [
+// //                ['class' => 'yii\grid\SerialColumn'],
+// //                'id',
+// //                'document_name',
+//                 [
+//                     'label'=>'Document',
+//                     'value'=>function($model){
+//                         $mes = 'Not Specified';
+//                         if($model->type === \app\models\CavitySupportingDocument::FILE_TYPE_GUARANTOR_CERTIFICATE){
+//                             $mes = 'Guarantee cert or communication confirming which company installed the cavity showing date when installed.';
+//                         } else if($model->type === \app\models\CavitySupportingDocument::FILE_TYPE_PHOTO){
+//                             $mes = 'Photo ID ie driving licence or passport';
+//                         } else if($model->type === \app\models\CavitySupportingDocument::FILE_TYPE_PROOF_OF_ADDRESS){
+//                             $mes = 'Proof of address';
+//                         } else if ($model->type === 'internal_images' ){
+//                             $mes = 'Proof of address';
+//                         } else if ($model->type === 'external_images' ){
+//                             $mes = 'External Images';
+//                         } else if ($model->type === 'supporting_document_images' ){
+//                             $mes = 'Supporting Document';
+//                         }
+
+//                         $htmlOptions = [
+//                             'data-toggle'=>"tooltip",
+//                             'title'=>$mes,
+//                         ];
+//                         return Html::a($model->document_name, \yii\helpers\Url::to(['cavity-supporting-document/download', 'id' => $model->id]) , $htmlOptions);
+//                     },
+//                     'format'=>'raw',
+//                     'attribute'=>'document_name'
+//                 ],
+
+// //                'type',
+// //                'document_name',
+// //                'date_created',
+// //                ['class' => 'yii\grid\ActionColumn'],
+//             ],
+//         ]); 
+        ?>
 
         <?php
         PanelWidget::end()

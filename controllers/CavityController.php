@@ -3,6 +3,11 @@
 namespace app\controllers;
 
 use app\models\CavitySupportingDocument;
+use app\models\Owner;
+use app\models\PropertyDocuments;
+use app\models\PropertyImages;
+use app\models\PropertyOwner;
+use app\models\PropertyRecord;
 use Yii;
 use app\models\Cavity;
 use yii\data\ActiveDataProvider;
@@ -149,23 +154,14 @@ class CavityController extends Controller
             $uploadedDocument->saveAs($finalUploadName);
 
             if ($supportingDocument->save()) {
-                if(Yii::$app->request->isAjax){
-                    $uploadedDocument = UploadedFile::getInstance($supportingDocument, 'document_name');
-                    $supportingDocument->document_name= uniqid().'-'.$uploadedDocument->name;
-                    $finalUploadName = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$supportingDocument->document_name;
-                    $uploadedDocument->saveAs($finalUploadName);
-                    if($supportingDocument->save()){
-                        return Json::encode([
-                            'files' => [
-                                [
-                                    'name' => $uploadedDocument->name,
-                                    'size' => $uploadedDocument->size,
-                                ],
-                            ],
-                        ]);
-                    }
-
-                }
+                return Json::encode([
+                    'files' => [
+                        [
+                            'name' => $uploadedDocument->name,
+                            'size' => $uploadedDocument->size,
+                        ],
+                    ],
+                ]);
 
             }
             return $this->refresh();
@@ -193,12 +189,58 @@ class CavityController extends Controller
 
     public function actionAccept($id)
     {
-        /* @TODO - create QuestionairePropertyRecord record*/
+        /* Create QuestionairePropertyRecord record*/
         /*get cavity record*/
+        $modelFound = $this->findModel($id);
+
         /*create property record*/
+        $propertyRecord = new PropertyRecord();
+        $propertyRecord->postcode = $modelFound->address_postcode_cavity_installation;
+        $propertyRecord->address1 = $modelFound->address_postcode_cavity_installation;
+        $propertyRecord->address2 = $modelFound->address_postcode_cavity_installation;
+        $propertyRecord->address3 = $modelFound->address_postcode_cavity_installation;
+        $propertyRecord->town = $modelFound->address_postcode_cavity_installation;
+        $propertyRecord->country = $modelFound->address_postcode_cavity_installation;
+        $propertyRecord->installer = $modelFound->CWI_installer;
+        $propertyRecord->status = PropertyRecord::PROPERTY_STATUS_PENDING_ADMIN_APPROVAL;
+        $propertyRecord->save();
+
+        /*create owner */
+        $owner = new Owner();
+        $owner->title = $modelFound->title;
+        $owner->firstname = $modelFound->firstname;
+        $owner->lastname = $modelFound->lastname;
+        $owner->address1 = $modelFound->address1_cavity_installation;
+        $owner->address2 = $modelFound->address2_cavity_installation;
+        $owner->address3 = $modelFound->address3_cavity_installation;
+        $owner->town = $modelFound->address_postcode_cavity_installation;
+        $owner->country = "United Kingdom";
+        $owner->email_address = $modelFound->email_address;
+        $owner->phone_number = $modelFound->telephone_number;
+        $owner->date_of_birth = $modelFound->birthday;
+        $owner->save();
+        $propertOwner = new PropertyOwner();
+        $propertOwner->owner_id = $owner->id;
+        $propertOwner->property_id = $propertyRecord->id;
+        $propertOwner->save();
         /*import the images and documents*/
+
+        $supportingDocuments = $modelFound->getSupportingDocuments()->all();
+        foreach ($supportingDocuments as $currentSupportingDocuments) {
+            /* @var $currentSupportingDocuments CavitySupportingDocument */
+            $propertyImage = new PropertyImages();
+            /* transfer the image to /uploads/images*/
+            $copyFrom = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
+            $finalUploadName = Yii::getAlias('@upload_image_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
+            copy($copyFrom, $finalUploadName);
+            $propertyImage->image_name = $currentSupportingDocuments->document_name;
+            $propertyImage->property_id = $propertyRecord->id;
+            $propertyImage->save();
+        }
+        /*link to view the newly created */
+        $linkToProperty = Html::a("Check data", Url::to(['/record/update', 'id' => $propertyRecord->id]));
         /*done*/
-        Yii::$app->session->addFlash('success', 'The record has been transfered. @TODO');
+        Yii::$app->session->addFlash('success', 'The record has been transfered. '.$linkToProperty);
         return $this->redirect(Yii::$app->request->referrer);
     }
 

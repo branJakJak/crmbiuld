@@ -6,7 +6,7 @@ make the image uploading requred
 Property Record
 > images are requred before submitting the form
 >after saving send the information to crmbuild.site8.co
-
+@DONE
 
 @TODO - crmbuild.site8.co
 create new link Not Submitted at the left part of menu link
@@ -15,7 +15,8 @@ it will have a titile of New Lead Upload
 Agents can see this
 after QA it will then be marked pending to be QA by the admin
 >Again would you make this layout on the lead platform user friendly and easy on the eye.
--- new records are cavity questionaire record  that when approved , it will become a property record
+-- new records are cavity questionaire record  that when approved 
+, it will become a property record
 
 
 @TODO - 
@@ -42,13 +43,19 @@ make sure it also deletes the preappraisal images,  documents , etc..
 make sure it also deletes the supporting documents
 @DONE
 
-@TODO
-> transfer the cavity form or change its layout 
-to suite the agent form 
-https://www.surveymonkey.co.uk/r/WhiteCollarLA
->agent must be logged in 
+propertyImagesDataProvider
+propertyRecord
 
 @TODO - 
 gitignore the RBAC folder
+@DONE
 
-@TODO
+
+
+
+
+@TODO - 
+crmbuild.site8.co/questionaire
+redirect to 
+crmleads.site8.co
+>parang ililipat lang yung laman ng crmleads sa isang tab o menu sa crmbuild

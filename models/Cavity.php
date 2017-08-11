@@ -106,7 +106,7 @@ class Cavity extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTblCavitySupportingDocuments()
+    public function getSupportingDocuments()
     {
         return $this->hasMany(CavitySupportingDocument::className(), ['cavity_form_id' => 'id']);
     }

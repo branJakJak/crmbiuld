@@ -318,6 +318,8 @@ class RecordController extends Controller
 
         $triageDocumentDataProvider = new ActiveDataProvider(['query' => Triage::find()->where(['property_record'=>$propertyRecord->id])]);
 
+        $propertyImagesDataProvider = new ActiveDataProvider(['query' => PropertyImages::find()->where(['property_id'=>$propertyRecord->id])]);
+
         return $this->render('update', [
             'propertyRecord' => $propertyRecord,
             'propertyDocument' => $propertyDocument,
@@ -329,7 +331,8 @@ class RecordController extends Controller
             'propertyOwnerDataProvider' => $propertyOwnerDataProvider,
             'propertyDocumentDataProvider' => $propertyDocumentDataProvider,
             'triageDocumentDataProvider' => $triageDocumentDataProvider,
-            'triageDocument' => $triageDocument
+            'triageDocument' => $triageDocument,
+            'propertyImagesDataProvider' => $propertyImagesDataProvider
         ]);
     }
     public function actionTransferToTriage($propertyId){

@@ -39,6 +39,8 @@ EOL;
 $this->registerJs($adjustPjaxSettings,\yii\web\View::POS_READY);
 
 
+$this->title = $propertyRecord->status;
+
 ?>
 <style type="text/css">
     .select2-container .select2-selection--single .select2-selection__rendered {
@@ -123,8 +125,9 @@ $this->registerJs($adjustPjaxSettings,\yii\web\View::POS_READY);
             ],
             [
                 'label' => 'Images',
-//                'content' => $this->render('_property_images_panel'),
-                'content' => '',
+                'content' => $this->render('_property_images_panel',[
+                        'propertyRecord'=>$propertyRecord,
+                    ]),
                 [
                     'id'=>'imagesTab'
                 ]
