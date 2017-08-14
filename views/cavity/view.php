@@ -102,7 +102,7 @@ foreach ($allSupportingDocuments as $currentSupportingDocument) {
     <div class="col-lg-12">
         <?php
         echo PanelWidget::begin([
-            'title' => 'Supporting Documents',
+            'title' => 'Images',
             'type' => 'default',
             'widget' => false,
         ])

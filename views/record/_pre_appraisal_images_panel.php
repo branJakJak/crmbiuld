@@ -75,23 +75,23 @@ echo PanelWidget::begin([
     'dataProvider' => $preappraisalImageDataProvider,
     'columns' => [
         [
-//            'label' => 'Transfer',
             'class' => 'yii\grid\CheckboxColumn',
         ],
         [
             'label' => ' ',
             'value' => function ($currentModel) {
                 /*publish the image*/
-                $publishedImageUrl = '//placehold.it/150x150';
-                $uploadImagePath = Yii::getAlias("@upload_image_path") . DIRECTORY_SEPARATOR . $currentModel->image_name;
-                /*get the url of published image*/
-                $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
-                return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
+                if (isset($currentModel->image_name) && !empty($currentModel->image_name)) {
+                    $publishedImageUrl = '//placehold.it/150x150';
+                    $uploadImagePath = Yii::getAlias("@upload_image_path") . DIRECTORY_SEPARATOR . $currentModel->image_name;
+                    /*get the url of published image*/
+                    $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
+                    return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
+                }
             },
             'attribute' => 'image_name',
             'format' => 'html'
         ],
-        // 'date_created:date',
     ],
 ]);
 ?>

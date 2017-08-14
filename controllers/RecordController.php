@@ -242,7 +242,10 @@ class RecordController extends Controller
 
         }
         /*Pre appraisal images*/
-        $preappraisalImageDataProvider = new ActiveDataProvider(['query' => PropertyPreAppraisalImages::find()->where(['property_id'=>$propertyRecord->id])]);
+        $propertPreappraisalImageQuery = PropertyPreAppraisalImages::find()->where(['property_id'=>$propertyRecord->id]);
+        $propertPreappraisalImageQuery->andWhere(['<>','image_name','null']);
+
+        $preappraisalImageDataProvider = new ActiveDataProvider(['query' => $propertPreappraisalImageQuery]);
         $preappraisalImage = new PropertyPreAppraisalImages();
         if ($preappraisalImage->load(\Yii::$app->request->post())) {
             /*@save the uploaded file to a safe place*/
