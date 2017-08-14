@@ -14,10 +14,10 @@ if (
         'label' => 'Not Submitted',
         'url' => ['/not-submitted'],
     ];
-    $menuItems[] = [
-        'label' => 'New Record', 
-        'icon' => 'file-code-o', 'url' => ['/record/create']
-    ];
+    // $menuItems[] = [
+    //     'label' => 'New Record', 
+    //     'icon' => 'file-code-o', 'url' => ['/record/create']
+    // ];
 }
 if (Yii::$app->user->can('Consultant')) {
     $menuItems[] = ['label' => 'Open Cavity Questionaire', 'url' => ['/cavity/create']];

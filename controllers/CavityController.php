@@ -10,6 +10,7 @@ use app\models\PropertyOwner;
 use app\models\PropertyPreAppraisalImages;
 use app\models\PropertyRecord;
 use app\models\QuestionairePropertyRecord;
+use dektrium\user\models\User;
 use Yii;
 use app\models\Cavity;
 use yii\data\ActiveDataProvider;
