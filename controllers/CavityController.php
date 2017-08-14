@@ -7,6 +7,7 @@ use app\models\Owner;
 use app\models\PropertyDocuments;
 use app\models\PropertyImages;
 use app\models\PropertyOwner;
+use app\models\PropertyPreAppraisalImages;
 use app\models\PropertyRecord;
 use Yii;
 use app\models\Cavity;
@@ -225,17 +226,44 @@ class CavityController extends Controller
         $propertOwner->save();
         /*import the images and documents*/
 
+
+
+
         $supportingDocuments = $modelFound->getSupportingDocuments()->all();
         foreach ($supportingDocuments as $currentSupportingDocuments) {
             /* @var $currentSupportingDocuments CavitySupportingDocument */
-            $propertyImage = new PropertyImages();
-            /* transfer the image to /uploads/images*/
-            $copyFrom = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
-            $finalUploadName = Yii::getAlias('@upload_image_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
-            copy($copyFrom, $finalUploadName);
-            $propertyImage->image_name = $currentSupportingDocuments->document_name;
-            $propertyImage->property_id = $propertyRecord->id;
-            $propertyImage->save();
+
+            /*if current document has type supporting_document_images */
+            if ($currentSupportingDocuments->type === 'supporting_document_images') {
+                /*save to property document */
+                $copyFrom = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
+                $finalUploadName = Yii::getAlias('@upload_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
+                copy($copyFrom, $finalUploadName);
+
+                $propertyDocument = new PropertyDocuments();
+                $propertyDocument->property_id = $propertyRecord->id;
+                $propertyDocument->document_name = $currentSupportingDocuments->document_name;
+                $propertyDocument->save();
+            } else {
+                /*save it to pre appraisal images */
+                $preAppraisalImage = new PropertyPreAppraisalImages();
+                $copyFrom = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
+                $finalUploadName = Yii::getAlias('@upload_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
+                copy($copyFrom, $finalUploadName);
+                $preAppraisalImage->property_id = $propertyRecord->id;
+                $preAppraisalImage->image_name = $currentSupportingDocuments->document_name;
+                $preAppraisalImage->save();
+            }
+
+
+//            $propertyImage = new PropertyImages();
+//            /* transfer the image to /uploads/images*/
+//            $copyFrom = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
+//            $finalUploadName = Yii::getAlias('@upload_image_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
+//            copy($copyFrom, $finalUploadName);
+//            $propertyImage->image_name = $currentSupportingDocuments->document_name;
+//            $propertyImage->property_id = $propertyRecord->id;
+//            $propertyImage->save();
         }
         /*link to view the newly created */
         $linkToProperty = Html::a("Check data", Url::to(['/record/update', 'id' => $propertyRecord->id]));

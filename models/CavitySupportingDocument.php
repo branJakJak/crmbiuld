@@ -20,6 +20,7 @@ use yii\db\Expression;
  */
 class CavitySupportingDocument extends \yii\db\ActiveRecord
 {
+    const FILE_TYPE_INTERAL_IMAGES = 'internal_images';
     const FILE_TYPE_PHOTO = 'photo';
     const FILE_TYPE_PROOF_OF_ADDRESS = 'proof_of_address';
     const FILE_TYPE_GUARANTOR_CERTIFICATE = 'guarantor_certificate';
