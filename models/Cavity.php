@@ -27,7 +27,7 @@ use yii\db\Expression;
  * @property string $construction_type
  * @property string $property_exposure
  * @property double $CWI_payment
- * @property string $after_CWI_installation_comment
+ * @property string $after_CWI_installation_date
  * @property string $suffered_issues_prior_to_CWI
  * @property string $work_to_rectify_CWI
  * @property string $incured_financial_expenses
@@ -62,7 +62,7 @@ class Cavity extends \yii\db\ActiveRecord
             [['birthday','when_property_moved', 'CWI_installation_date', 'date_created', 'date_updated'], 'safe'],
             [['CWI_payment','telephone_number'], 'number'],
             [['email_address'], 'email'],
-            [['title', 'firstname', 'lastname','address1_cavity_installation', 'address2_cavity_installation', 'address3_cavity_installation', 'address_postcode_cavity_installation', 'address_town_cavity_installation', 'address_country_cavity_installation', 'CWI_installer', 'construction_type', 'property_exposure', 'after_CWI_installation_comment', 'suffered_issues_prior_to_CWI', 'work_to_rectify_CWI', 'incured_financial_expenses', 'document_copy', 'reported_issue_to_house_insurer', 'advice_about_suitability', 'date_time_callback','is_in_IVA_or_Bankrupt'], 'string', 'max' => 255],
+            [['title', 'firstname', 'lastname','address1_cavity_installation', 'address2_cavity_installation', 'address3_cavity_installation', 'address_postcode_cavity_installation', 'address_town_cavity_installation', 'address_country_cavity_installation', 'CWI_installer', 'construction_type', 'property_exposure', 'after_CWI_installation_date', 'suffered_issues_prior_to_CWI', 'work_to_rectify_CWI', 'incured_financial_expenses', 'document_copy', 'reported_issue_to_house_insurer', 'advice_about_suitability', 'date_time_callback','is_in_IVA_or_Bankrupt'], 'string', 'max' => 255],
         ];
     }
 
@@ -90,7 +90,7 @@ class Cavity extends \yii\db\ActiveRecord
             'construction_type' => 'Construction Type',
             'property_exposure' => 'Property Exposure',
             'CWI_payment' => 'Payment',
-            'after_CWI_installation_comment' => 'After CWI Installation Comment',
+            'after_CWI_installation_date' => 'After CWI Installation Date',
             'suffered_issues_prior_to_CWI' => 'Suffered Issues Prior To  CWI',
             'work_to_rectify_CWI' => 'Work To Rectify  CWI',
             'incured_financial_expenses' => 'Incured Financial Expenses',
