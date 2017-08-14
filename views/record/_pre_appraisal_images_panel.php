@@ -86,7 +86,7 @@ echo PanelWidget::begin([
                 $uploadImagePath = Yii::getAlias("@upload_image_path") . DIRECTORY_SEPARATOR . $currentModel->image_name;
                 /*get the url of published image*/
                 $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
-                return Html::img($publishedImageUrl[1], ['style' => 'height:50px']);
+                return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
             },
             'attribute' => 'image_name',
             'format' => 'html'
