@@ -359,6 +359,8 @@ class RecordController extends Controller
                 } else {
                     $warningMessage .= sprintf("%s was already transfered", $currentPreAppraisalImage->image_name);
                 }
+                //remove the preappraisal
+                $currentPreAppraisalImage->delete();
             }
 
             Yii::$app->getSession()->setFlash('success', sprintf("%s record(s) transfered" , $numProcessedFile));

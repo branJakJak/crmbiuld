@@ -9,6 +9,7 @@ use app\models\PropertyImages;
 use app\models\PropertyOwner;
 use app\models\PropertyPreAppraisalImages;
 use app\models\PropertyRecord;
+use app\models\QuestionairePropertyRecord;
 use Yii;
 use app\models\Cavity;
 use yii\data\ActiveDataProvider;
@@ -203,6 +204,7 @@ class CavityController extends Controller
         $propertyRecord->town = $modelFound->address_postcode_cavity_installation;
         $propertyRecord->country = $modelFound->address_postcode_cavity_installation;
         $propertyRecord->installer = $modelFound->CWI_installer;
+        $propertyRecord->created_by = Yii::$app->user->id;
         $propertyRecord->status = PropertyRecord::PROPERTY_STATUS_PENDING_ADMIN_APPROVAL;
         $propertyRecord->save();
 
@@ -254,7 +256,10 @@ class CavityController extends Controller
                 $preAppraisalImage->image_name = $currentSupportingDocuments->document_name;
                 $preAppraisalImage->save();
             }
-
+            $questionairePropertyRecord = new QuestionairePropertyRecord();
+            $questionairePropertyRecord->cavity_form_id = $modelFound->id;
+            $questionairePropertyRecord->property_record_id = $propertyRecord->id;
+            $questionairePropertyRecord->save();
 
 //            $propertyImage = new PropertyImages();
 //            /* transfer the image to /uploads/images*/

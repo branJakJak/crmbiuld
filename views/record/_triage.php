@@ -12,7 +12,7 @@ use yii\widgets\Pjax;
 
 ?>
 <style type="text/css">
-    #w19 > div.panel-heading {
+    #w21 > div.panel-heading {
         padding: 23px 20px;
     }
 </style>
@@ -29,7 +29,8 @@ use yii\widgets\Pjax;
         ?>
 
         <?php $form = \yii\widgets\ActiveForm::begin()?>
-        <?= FileUploadUI::widget([
+        <?=
+        FileUploadUI::widget([
             'model' => $triageDocument,
             'attribute' => 'material_file_name',
             'url' => ['/record/update', 'id' => $propertyRecord->id],
@@ -45,10 +46,6 @@ use yii\widgets\Pjax;
                                         console.log(data);
                                         $.pjax.reload({container:"#triage_grid"});
                                     }',
-                //        'fileuploadfail' => 'function(e, data) {
-                //                                console.log(e);
-                //                                console.log(data);
-                //                            }',
             ],
         ]); ?>
         <?php \yii\widgets\ActiveForm::end()?>
@@ -59,9 +56,18 @@ use yii\widgets\Pjax;
             'dataProvider' => $triageDocumentDataProvider,
             'columns' => [
                 [
-                    'label'=>'Document',
-                    'attribute'=>'material_file_name'
-                ]
+                    'label' => ' ',
+                    'value' => function ($currentModel) {
+                        /*publish the image*/
+                        $publishedImageUrl = '//placehold.it/150x150';
+                        $uploadImagePath = Yii::getAlias("@upload_image_path") . DIRECTORY_SEPARATOR . $currentModel->material_file_name;
+                        /*get the url of published image*/
+                        $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
+                        return Html::a(Html::img($publishedImageUrl[1], ['style' => 'height:250px']), $publishedImageUrl[1]);
+                    },
+                    'attribute' => 'image_name',
+                    'format' => 'html'
+                ],
             ],
         ]);
         ?>

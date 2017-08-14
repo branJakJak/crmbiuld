@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "tbl_questionaire_property_record".
@@ -13,8 +15,8 @@ use Yii;
  * @property string $date_created
  * @property string $date_updated
  *
- * @property TblCavity $cavityForm
- * @property TblPropertyRecord $propertyRecord
+ * @property Cavity $cavityForm
+ * @property PropertyRecord $propertyRecord
  */
 class QuestionairePropertyRecord extends \yii\db\ActiveRecord
 {
@@ -34,8 +36,8 @@ class QuestionairePropertyRecord extends \yii\db\ActiveRecord
         return [
             [['property_record_id', 'cavity_form_id'], 'integer'],
             [['date_created', 'date_updated'], 'safe'],
-            [['cavity_form_id'], 'exist', 'skipOnError' => true, 'targetClass' => TblCavity::className(), 'targetAttribute' => ['cavity_form_id' => 'id']],
-            [['property_record_id'], 'exist', 'skipOnError' => true, 'targetClass' => TblPropertyRecord::className(), 'targetAttribute' => ['property_record_id' => 'id']],
+            [['cavity_form_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cavity::className(), 'targetAttribute' => ['cavity_form_id' => 'id']],
+            [['property_record_id'], 'exist', 'skipOnError' => true, 'targetClass' => PropertyRecord::className(), 'targetAttribute' => ['property_record_id' => 'id']],
         ];
     }
 
@@ -58,7 +60,7 @@ class QuestionairePropertyRecord extends \yii\db\ActiveRecord
      */
     public function getCavityForm()
     {
-        return $this->hasOne(TblCavity::className(), ['id' => 'cavity_form_id']);
+        return $this->hasOne(Cavity::className(), ['id' => 'cavity_form_id']);
     }
 
     /**
@@ -66,6 +68,19 @@ class QuestionairePropertyRecord extends \yii\db\ActiveRecord
      */
     public function getPropertyRecord()
     {
-        return $this->hasOne(TblPropertyRecord::className(), ['id' => 'property_record_id']);
+        return $this->hasOne(PropertyRecord::className(), ['id' => 'property_record_id']);
     }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'date_created',
+                'updatedAtAttribute' => 'date_updated',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
 }
