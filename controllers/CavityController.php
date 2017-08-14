@@ -60,8 +60,14 @@ class CavityController extends Controller
      */
     public function actionIndex()
     {
+        $defaultQuery = Cavity::find();
+        $defaultQuery->leftJoin('tbl_questionaire_property_record', 'tbl_cavity.id = tbl_questionaire_property_record.cavity_form_id');
+        $defaultQuery
+//            ->where(['NOT',[ 'tbl_questionaire_property_record.cavity_form_id'=>null ]])
+            ->where([ 'tbl_questionaire_property_record.cavity_form_id'=>null ])
+            ->orderBy(['tbl_cavity.date_created'=>SORT_DESC]);
         $dataProvider = new ActiveDataProvider([
-            'query' => Cavity::find()->andWhere(['NOT',[ 'title'=>null ]])->orderBy(['date_created'=>SORT_DESC])
+            'query' => $defaultQuery
         ]);
 
         return $this->render('index', [
@@ -277,10 +283,12 @@ class CavityController extends Controller
 //            $propertyImage->save();
         }
         /*link to view the newly created */
-        $linkToProperty = Html::a("Check data", Url::to(['/record/update', 'id' => $propertyRecord->id]));
+        // $linkToProperty = Html::a("Check data", Url::to(['/record/update', 'id' => $propertyRecord->id])  );
         /*done*/
-        Yii::$app->session->addFlash('success', 'The record has been transfered. '.$linkToProperty);
-        return $this->redirect(Yii::$app->request->referrer);
+        // Yii::$app->session->addFlash('success', 'The record has been transfered. '.$linkToProperty);
+
+
+        return $this->redirect(Url::to(['/record/update', 'id' => $propertyRecord->id]));
     }
 
     /**
