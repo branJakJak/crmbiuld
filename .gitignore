@@ -32,4 +32,6 @@ phpunit.phar
 /uploads/images/*
 /uploads/triage/*
 /uploads/supporting_document_path/*
-/rbac/*
+/rbac/assignments.php
+/rbac/items.php
+/rbac/rules.php
