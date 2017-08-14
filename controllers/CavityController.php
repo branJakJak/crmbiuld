@@ -250,7 +250,7 @@ class CavityController extends Controller
                 /*save it to pre appraisal images */
                 $preAppraisalImage = new PropertyPreAppraisalImages();
                 $copyFrom = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
-                $finalUploadName = Yii::getAlias('@upload_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
+                $finalUploadName = Yii::getAlias('@upload_image_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
                 copy($copyFrom, $finalUploadName);
                 $preAppraisalImage->property_id = $propertyRecord->id;
                 $preAppraisalImage->image_name = $currentSupportingDocuments->document_name;

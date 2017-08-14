@@ -82,7 +82,7 @@ echo PanelWidget::begin([
             'value' => function ($currentModel) {
                 /*publish the image*/
                 if (isset($currentModel->image_name) && !empty($currentModel->image_name)) {
-                    $publishedImageUrl = '//placehold.it/150x150';
+                    $publishedImageUrl = '';
                     $uploadImagePath = Yii::getAlias("@upload_image_path") . DIRECTORY_SEPARATOR . $currentModel->image_name;
                     /*get the url of published image*/
                     $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
