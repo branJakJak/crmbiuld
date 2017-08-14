@@ -36,6 +36,7 @@ use yii\db\Expression;
  * @property string $advice_about_suitability
  * @property string $date_time_callback
  * @property string $when_property_moved
+ * @property string $is_in_IVA_or_Bankrupt
  * @property string $date_created
  * @property string $date_updated
  *
@@ -61,7 +62,7 @@ class Cavity extends \yii\db\ActiveRecord
             [['birthday','when_property_moved', 'CWI_installation_date', 'date_created', 'date_updated'], 'safe'],
             [['CWI_payment','telephone_number'], 'number'],
             [['email_address'], 'email'],
-            [['title', 'firstname', 'lastname','address1_cavity_installation', 'address2_cavity_installation', 'address3_cavity_installation', 'address_postcode_cavity_installation', 'address_town_cavity_installation', 'address_country_cavity_installation', 'CWI_installer', 'construction_type', 'property_exposure', 'after_CWI_installation_comment', 'suffered_issues_prior_to_CWI', 'work_to_rectify_CWI', 'incured_financial_expenses', 'document_copy', 'reported_issue_to_house_insurer', 'advice_about_suitability', 'date_time_callback'], 'string', 'max' => 255],
+            [['title', 'firstname', 'lastname','address1_cavity_installation', 'address2_cavity_installation', 'address3_cavity_installation', 'address_postcode_cavity_installation', 'address_town_cavity_installation', 'address_country_cavity_installation', 'CWI_installer', 'construction_type', 'property_exposure', 'after_CWI_installation_comment', 'suffered_issues_prior_to_CWI', 'work_to_rectify_CWI', 'incured_financial_expenses', 'document_copy', 'reported_issue_to_house_insurer', 'advice_about_suitability', 'date_time_callback','is_in_IVA_or_Bankrupt'], 'string', 'max' => 255],
         ];
     }
 
@@ -98,6 +99,7 @@ class Cavity extends \yii\db\ActiveRecord
             'advice_about_suitability' => 'Advice About Suitability',
             'date_time_callback' => 'Date Time Callback',
             'when_property_moved' => 'Date when property moved',
+            'is_in_IVA_or_Bankrupt' => 'Is in IVA or Bankrupt',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
         ];

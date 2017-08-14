@@ -27,6 +27,7 @@ $this->registerJs('jQuery(".sidebar-toggle").click()',\yii\web\View::POS_READY)
                     <?= $form->field($model, 'title')->dropDownList(['Mr'=>'Mr','Ms'=>'Ms','Mrs'=>'Mrs'])->label("Salutation") ?>
                     <?= $form->field($model, 'firstname')->textInput(['maxlength' => true])->label("Firstname") ?>
                     <?= $form->field($model, 'lastname')->textInput(['maxlength' => true])->label("Lastname") ?>
+                    
                     <?=
                         $form->field($model, 'birthday')->widget(DatePicker::classname(), [
                             'options' => ['placeholder' => 'Enter birthday'],

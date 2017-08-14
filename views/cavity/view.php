@@ -87,6 +87,7 @@ foreach ($allSupportingDocuments as $currentSupportingDocument) {
                     'document_copy',
                     'reported_issue_to_house_insurer',
                     'advice_about_suitability',
+                    'is_in_IVA_or_Bankrupt',
                     'date_time_callback:datetime',
                     'date_created:date',
                     'date_updated:date',
