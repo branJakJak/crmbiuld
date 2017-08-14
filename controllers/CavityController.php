@@ -207,7 +207,7 @@ class CavityController extends Controller
         $propertyRecord->installer = $modelFound->CWI_installer;
         
         if(User::find()->where(['username' => $modelFound->created_by_user])->exists()){
-            $userModel = User::findOne()->where(['username' => $modelFound->created_by_user]);
+            $userModel = User::find()->where(['username' => $modelFound->created_by_user])->one();
             $propertyRecord->created_by = $userModel->id;
         }
 
