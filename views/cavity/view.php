@@ -80,7 +80,7 @@ foreach ($allSupportingDocuments as $currentSupportingDocument) {
                     'construction_type',
                     'property_exposure',
                     'CWI_payment',
-                    'after_CWI_installation_comment',
+                    'after_CWI_installation_date:date',
                     'suffered_issues_prior_to_CWI',
                     'work_to_rectify_CWI',
                     'incured_financial_expenses',
