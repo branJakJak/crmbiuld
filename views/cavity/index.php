@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'Name',
                 'attribute'=>'id',
                 'value'=>function($model){
-                    $fullname = sprintf('%s. %s %s', $model->title , $model->firstname , $model->lastname);
+                    $fullname = sprintf('%s %s %s', $model->title , $model->firstname , $model->lastname);
                     return Html::a($fullname,'/cavity/view/'.$model->id);
 
                 },
