@@ -91,7 +91,7 @@ echo PanelWidget::begin([
             'attribute' => 'image_name',
             'format' => 'html'
         ],
-        'date_created:date',
+        // 'date_created:date',
     ],
 ]);
 ?>
