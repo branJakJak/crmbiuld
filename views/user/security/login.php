@@ -35,24 +35,33 @@ $openLoginFormBtnScript = <<<EOL
 EOL;
 $this->registerJs($openLoginFormBtnScript);
 
-
-
-
-
 ?>
+<style type="text/css">
+    .login-page, .register-page {
+        background: white;
+    }
+</style>
+
 
 <?= $this->render('/_alert', ['module' => Yii::$app->getModule('user')]) ?>
 
 
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <img src="/img/White Collar Logo.jpg" class="img-responsive" alt="Image" style="
+    margin: 0px auto;
+">
+    </div>
+</div>
 <div class="row">
     <div class="col-lg-4">
         
     </div>
     <div class="col-lg-4">
         <br>
-        <?= Html::a('<i class="fa fa-user"></i> Login as AGENT', 'http://crmlead.site8.co/', ['class' => 'btn btn-lg btn-success btn-block']); ?>
+        <?= Html::a('<i class="fa  fa-sticky-note-o"></i> Lead Questionaire Form', 'http://crmlead.site8.co/', ['class' => 'btn btn-lg btn-success btn-block']); ?>
         <br>
-        <?= Html::a('<i class="fa fa-user"></i> Admin Panel', '#', ['class' => 'btn btn-lg btn-info btn-block','id'=>'openLoginFormBtn']); ?>
+        <?= Html::a('<i class="fa fa-user"></i> CRM Panel ', '#', ['class' => 'btn btn-lg btn-info btn-block','id'=>'openLoginFormBtn']); ?>
         
     </div>
 </div>

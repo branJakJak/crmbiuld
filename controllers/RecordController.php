@@ -27,6 +27,8 @@ use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
+use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\UnauthorizedHttpException;
@@ -60,7 +62,7 @@ class RecordController extends Controller
                     [
                         'actions' => ['update'],
                         'allow' => true,
-                        'roles' => ['Manager','Consultant'],
+                        'roles' => ['Manager','Agent'],
                     ]
                 ],
             ],
@@ -158,6 +160,15 @@ class RecordController extends Controller
         /* @var $propertyRecord PropertyRecord */
         /*property record*/
         $propertyRecord = PropertyRecord::findOne(['id' => $id]);
+
+        if (Yii::$app->user->can('Agent')) {
+            /*check if he/she owns this record*/
+            if (Yii::$app->user->id != $propertyRecord->created_by) {
+                throw new ForbiddenHttpException();
+            }
+        }
+
+
         if(!$propertyRecord){
             new NotFoundHttpException('Sorry that record doesnt exists');
         }
@@ -280,7 +291,9 @@ class RecordController extends Controller
         if ($propertyNote->load(\Yii::$app->request->post())) {
             Yii::info(VarDumper::dumpAsString(Yii::$app->user->id).' userid is','application');
             $propertyNote->property_id = $propertyRecord->id;
+
             $propertyNote->created_by = Yii::$app->user->id;
+
             if($propertyNote->save()){
                 \Yii::$app->session->set("success","New property note added" );
                 $propertyNote = new PropertyNotes();

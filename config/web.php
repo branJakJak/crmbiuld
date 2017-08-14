@@ -116,7 +116,7 @@ $config['modules']['user'] = [
             'class'=> \dektrium\user\controllers\SecurityController::className(),
             'on afterLogin'=>function($model){
                 if (\Yii::$app->user->can('Agent')) {
-                    \Yii::$app->getResponse()->redirect(\yii\helpers\Url::to(["/questionaire"]),301)->send();
+                    \Yii::$app->getResponse()->redirect(\yii\helpers\Url::to(["/"]),301)->send();
                     exit(0);
                 }
             }

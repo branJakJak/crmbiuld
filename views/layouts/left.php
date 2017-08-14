@@ -3,35 +3,6 @@
 
 $menuItems = [
     ['label' => 'Home', 'icon' => 'dashboard', 'url' => ['/']],
-    ['label' => 'New Record', 'icon' => 'file-code-o', 'url' => ['/record/create']],
-//                    ['label' => 'Export Leads', 'icon' => 'file-excel-o', 'url' => ['/record/create']],
-//                    ['label' => 'Login', 'url' => ['site/login'], 'visible' => Yii::$app->user->isGuest],
-//                    [
-//                        'label' => 'Same tools',
-//                        'icon' => 'share',
-//                        'url' => '#',
-//                        'items' => [
-//                            ['label' => 'Gii', 'icon' => 'file-code-o', 'url' => ['/gii'],],
-//                            ['label' => 'Debug', 'icon' => 'dashboard', 'url' => ['/debug'],],
-//                            [
-//                                'label' => 'Level One',
-//                                'icon' => 'circle-o',
-//                                'url' => '#',
-//                                'items' => [
-//                                    ['label' => 'Level Two', 'icon' => 'circle-o', 'url' => '#',],
-//                                    [
-//                                        'label' => 'Level Two',
-//                                        'icon' => 'circle-o',
-//                                        'url' => '#',
-//                                        'items' => [
-//                                            ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#',],
-//                                            ['label' => 'Level Three', 'icon' => 'circle-o', 'url' => '#',],
-//                                        ],
-//                                    ],
-//                                ],
-//                            ],
-//                        ],
-//                    ],
 ];
 if (
     Yii::$app->user->can('Admin') ||
@@ -42,10 +13,10 @@ if (
     $menuItems[] = [
         'label' => 'Not Submitted',
         'url' => ['/not-submitted'],
-        // 'items' => [
-        //     ['label' => 'All', 'url' => ['/cavity']],
-        //     ['label' => 'Create', 'url' => ['/cavity/create']]
-        // ],
+    ];
+    $menuItems[] = [
+        'label' => 'New Record', 
+        'icon' => 'file-code-o', 'url' => ['/record/create']
     ];
 }
 if (Yii::$app->user->can('Consultant')) {

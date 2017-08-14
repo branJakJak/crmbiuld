@@ -4,6 +4,7 @@ namespace app\modules\api\controllers;
 
 use app\models\Cavity;
 use app\models\CavitySupportingDocument;
+use dektrium\user\models\User;
 use Yii;
 use yii\db\Exception;
 use yii\helpers\Html;
@@ -21,7 +22,6 @@ class CavityController extends Controller
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $cavityForm = new Cavity();
         if ($cavityForm->load(\Yii::$app->getRequest()->post())) {
-
             if ($cavityForm->save()) {
                 return Json::encode([
                     'id' => $cavityForm->id

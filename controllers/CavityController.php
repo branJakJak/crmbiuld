@@ -204,7 +204,12 @@ class CavityController extends Controller
         $propertyRecord->town = $modelFound->address_postcode_cavity_installation;
         $propertyRecord->country = $modelFound->address_postcode_cavity_installation;
         $propertyRecord->installer = $modelFound->CWI_installer;
-        $propertyRecord->created_by = Yii::$app->user->id;
+        
+        if(User::find()->where(['username' => $modelFound->created_by_user])->exists()){
+            $userModel = User::findOne()->where(['username' => $modelFound->created_by_user]);
+            $propertyRecord->created_by = $userModel->id;
+        }
+
         $propertyRecord->status = PropertyRecord::PROPERTY_STATUS_PENDING_ADMIN_APPROVAL;
         $propertyRecord->save();
 

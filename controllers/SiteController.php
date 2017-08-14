@@ -50,6 +50,10 @@ class SiteController extends Controller
         $filterModel = new FilterPropertyRecordForm();
         $defaultQuery = PropertyRecord::find()->orderBy(['date_updated'=>SORT_DESC,'date_created'=>SORT_DESC]);
         $propertRecordModel = new PropertyRecord();
+        if (Yii::$app->user->can('Agent')) {
+            // filter the query to only the data he/she created
+            $defaultQuery->andWhere(['created_by' => \Yii::$app->user->id]);
+        }
         $dataProvider = new ActiveDataProvider(['query'=>$defaultQuery]);
         $insulationCollection = PropertyRecord::find()->select('insulation_type')->distinct()->all();
         $availableUsers = User::find()->select('username')->distinct()->all();
