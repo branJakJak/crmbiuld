@@ -47,7 +47,7 @@ $this->title = $propertyRecord->status;
         padding-top: 4px;
     }
 </style>
-<?php if (Yii::$app->user->can('Admin')): ?>
+
 <div class="row">
     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
         <?php $form = \yii\widgets\ActiveForm::begin(['id'=>'updateStatusForm']) ?>
@@ -70,7 +70,8 @@ $this->title = $propertyRecord->status;
         <?php \yii\widgets\ActiveForm::end() ?>
     </div>
 </div>
-<?php endif ?>
+
+
 <br />
 <br />
 
