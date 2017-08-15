@@ -120,6 +120,10 @@ $config['modules']['user'] = [
                     exit(0);
                 }
             }
+        ],
+        'recovery'=>[
+            'class'=> \dektrium\user\controllers\RecoveryController::className(),
+            'layout' => '@app/views/layouts/main-login.php',
         ]
     ],
     'modelMap' => [
