@@ -194,6 +194,80 @@ class CavityController extends Controller
         Yii::$app->session->addFlash('success', 'Record deleted');
         return $this->redirect(['index']);
     }
+    public function actionDecline($id)
+    {
+        /* Create QuestionairePropertyRecord record*/
+        /*get cavity record*/
+        $modelFound = $this->findModel($id);
+        /*create property record*/
+        $propertyRecord = new PropertyRecord();
+        $propertyRecord->postcode = $modelFound->address_postcode_cavity_installation;
+        $propertyRecord->address1 = $modelFound->address_postcode_cavity_installation;
+        $propertyRecord->address2 = $modelFound->address_postcode_cavity_installation;
+        $propertyRecord->address3 = $modelFound->address_postcode_cavity_installation;
+        $propertyRecord->town = $modelFound->address_postcode_cavity_installation;
+        $propertyRecord->country = $modelFound->address_postcode_cavity_installation;
+        $propertyRecord->installer = $modelFound->CWI_installer;
+        
+        if(User::find()->where(['username' => $modelFound->created_by_user])->exists()){
+            $userModel = User::find()->where(['username' => $modelFound->created_by_user])->one();
+            $propertyRecord->created_by = $userModel->id;
+        }
+
+        $propertyRecord->status = PropertyRecord::PROPERTY_STATUS_REJECTED;
+        $propertyRecord->save();
+
+        /*create owner */
+        $owner = new Owner();
+        $owner->title = $modelFound->title;
+        $owner->firstname = $modelFound->firstname;
+        $owner->lastname = $modelFound->lastname;
+        $owner->address1 = $modelFound->address1_cavity_installation;
+        $owner->address2 = $modelFound->address2_cavity_installation;
+        $owner->address3 = $modelFound->address3_cavity_installation;
+        $owner->town = $modelFound->address_postcode_cavity_installation;
+        $owner->country = "United Kingdom";
+        $owner->email_address = $modelFound->email_address;
+        $owner->phone_number = $modelFound->telephone_number;
+        $owner->date_of_birth = $modelFound->birthday;
+        $owner->save();
+        $propertOwner = new PropertyOwner();
+        $propertOwner->owner_id = $owner->id;
+        $propertOwner->property_id = $propertyRecord->id;
+        $propertOwner->save();
+        /*import the images and documents*/
+        $supportingDocuments = $modelFound->getSupportingDocuments()->all();
+        foreach ($supportingDocuments as $currentSupportingDocuments) {
+            /* @var $currentSupportingDocuments CavitySupportingDocument */
+
+            /*if current document has type supporting_document_images */
+            if ($currentSupportingDocuments->type === 'supporting_document_images') {
+                /*save to property document */
+                $copyFrom = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
+                $finalUploadName = Yii::getAlias('@upload_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
+                copy($copyFrom, $finalUploadName);
+
+                $propertyDocument = new PropertyDocuments();
+                $propertyDocument->property_id = $propertyRecord->id;
+                $propertyDocument->document_name = $currentSupportingDocuments->document_name;
+                $propertyDocument->save();
+            } else {
+                /*save it to pre appraisal images */
+                $preAppraisalImage = new PropertyPreAppraisalImages();
+                $copyFrom = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
+                $finalUploadName = Yii::getAlias('@upload_image_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
+                copy($copyFrom, $finalUploadName);
+                $preAppraisalImage->property_id = $propertyRecord->id;
+                $preAppraisalImage->image_name = $currentSupportingDocuments->document_name;
+                $preAppraisalImage->save();
+            }
+            $questionairePropertyRecord = new QuestionairePropertyRecord();
+            $questionairePropertyRecord->cavity_form_id = $modelFound->id;
+            $questionairePropertyRecord->property_record_id = $propertyRecord->id;
+            $questionairePropertyRecord->save();
+        }
+        return $this->redirect(Url::to(['/record/update', 'id' => $propertyRecord->id]));
+    }
 
 
     public function actionAccept($id)
@@ -201,7 +275,6 @@ class CavityController extends Controller
         /* Create QuestionairePropertyRecord record*/
         /*get cavity record*/
         $modelFound = $this->findModel($id);
-
         /*create property record*/
         $propertyRecord = new PropertyRecord();
         $propertyRecord->postcode = $modelFound->address_postcode_cavity_installation;
@@ -239,10 +312,6 @@ class CavityController extends Controller
         $propertOwner->property_id = $propertyRecord->id;
         $propertOwner->save();
         /*import the images and documents*/
-
-
-
-
         $supportingDocuments = $modelFound->getSupportingDocuments()->all();
         foreach ($supportingDocuments as $currentSupportingDocuments) {
             /* @var $currentSupportingDocuments CavitySupportingDocument */
@@ -272,22 +341,7 @@ class CavityController extends Controller
             $questionairePropertyRecord->cavity_form_id = $modelFound->id;
             $questionairePropertyRecord->property_record_id = $propertyRecord->id;
             $questionairePropertyRecord->save();
-
-//            $propertyImage = new PropertyImages();
-//            /* transfer the image to /uploads/images*/
-//            $copyFrom = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
-//            $finalUploadName = Yii::getAlias('@upload_image_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
-//            copy($copyFrom, $finalUploadName);
-//            $propertyImage->image_name = $currentSupportingDocuments->document_name;
-//            $propertyImage->property_id = $propertyRecord->id;
-//            $propertyImage->save();
         }
-        /*link to view the newly created */
-        // $linkToProperty = Html::a("Check data", Url::to(['/record/update', 'id' => $propertyRecord->id])  );
-        /*done*/
-        // Yii::$app->session->addFlash('success', 'The record has been transfered. '.$linkToProperty);
-
-
         return $this->redirect(Url::to(['/record/update', 'id' => $propertyRecord->id]));
     }
 

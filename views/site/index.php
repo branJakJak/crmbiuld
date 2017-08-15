@@ -94,7 +94,7 @@ $gridColumns = [
         'format' => 'raw'
     ],
 ];
-if(Yii::$app->user->can('Admin')){
+if(Yii::$app->user->can('Admin') || Yii::$app->user->can('Admin')){
     $gridColumns[] = [
         'class' => 'yii\grid\ActionColumn',
         'template' => '{delete}',//{view}{update}

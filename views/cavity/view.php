@@ -35,7 +35,7 @@ foreach ($allSupportingDocuments as $currentSupportingDocument) {
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <h1><?= Html::encode($this->title) ?></h1>
-        <p>
+        <p class="hidden">
             <?= Html::a('Update record', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
             <?= Html::a('Delete record', ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
@@ -44,8 +44,9 @@ foreach ($allSupportingDocuments as $currentSupportingDocument) {
                     'method' => 'post',
                 ],
             ]) ?>
-            <?= Html::a('<i class="fa  fa-check-circle "></i> Accept', ['accept', 'id' => $model->id], ['class' => 'btn btn-success pull-right btn-lg']) ?>
         </p>
+        <?= Html::a('<i class="fa  fa-check-circle "></i> Accept', ['accept', 'id' => $model->id], ['class' => 'btn btn-success  btn-lg']) ?>
+        <?= Html::a('<i class="fa  fa-delete-circle "></i> Decline', ['decline', 'id' => $model->id], ['class' => 'btn btn-danger  pull-right btn-lg']) ?>
     </div>
 </div>
 <br >
