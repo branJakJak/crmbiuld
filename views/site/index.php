@@ -42,6 +42,7 @@ $gridColumns = [
         'format' => 'html'
     ],
     'date_created:date',
+    'status',
     'appraisal_completed:date',
     'address1',
     'postcode',
@@ -74,7 +75,7 @@ $gridColumns = [
             return $lastNote;
         },
     ],
-    'status',
+    
     [
         'label' => 'Clients',
         'value' => function ($currentModel) {
