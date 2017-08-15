@@ -36,7 +36,7 @@ $gridColumns = [
         'label' => 'ID',
         'value' => function ($currentModel) {
             /* @var $currentModel \app\models\PropertyRecord */
-            return Html::a("View", ['/record/update', 'id' => $currentModel->id]);
+            return Html::a($currentModel->id, ['/record/update', 'id' => $currentModel->id]);
         },
         'attribute' => 'id',
         'format' => 'html'

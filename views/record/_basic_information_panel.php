@@ -85,7 +85,7 @@ $propertyType = [
                         $currentOwner = $currentModel->getOwner()->one();
                         $ownerFullName = 'n/a';
                         if ($currentOwner) {
-                            $ownerFullName = sprintf("%s. %s %s ", $currentOwner->title, $currentOwner->firstname, $currentOwner->lastname);
+                            $ownerFullName = sprintf("%s %s %s ", $currentOwner->title, $currentOwner->firstname, $currentOwner->lastname);
                             $ownerFullName = Html::a(Html::encode($ownerFullName), ['/owner/view', 'id' => $currentOwner->id]);
                         }
                         return $ownerFullName;
