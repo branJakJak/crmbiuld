@@ -89,6 +89,7 @@ if (YII_ENV === 'dev') {
  */
 $config['modules']['user'] = [
     'class' =>  'dektrium\user\Module',
+    'enableRegistration' => false,
     'enableConfirmation' => false,
     'admins'=>['admin'],
     'controllerMap' => [
