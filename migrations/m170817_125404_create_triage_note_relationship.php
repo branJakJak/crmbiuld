@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m170817_110303_create_triage_note_relationship extends Migration
+class m170817_125404_create_triage_note_relationship extends Migration
 {
     public function safeUp()
     {
