@@ -13,7 +13,7 @@ use yii\widgets\Pjax;
 
 ?>
 <style type="text/css">
-    #w21 > div.panel-heading {
+    #w24 > div.panel-heading {
         padding: 23px 20px;
     }
 </style>
@@ -22,7 +22,7 @@ use yii\widgets\Pjax;
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <?php
             echo PanelWidget::begin([
-                'title' => 'File Upload',
+                'title' => 'Triage Note',
                 'type' => 'default',
                 'widget' => false,
             ]);
