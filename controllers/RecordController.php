@@ -17,6 +17,7 @@ use app\models\PropertyOwner;
 use app\models\PropertyPreAppraisalImages;
 use app\models\PropertyRecord;
 use app\models\Triage;
+use app\models\TriageNote;
 use DateTime;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -305,16 +306,13 @@ class RecordController extends Controller
         }
         $propertyOwnerDataProvider = new ActiveDataProvider(['query' => PropertyOwner::find()->where(['property_id'=>$propertyRecord->id])]);
         $triageDocument = new Triage();
-
         if ($triageDocument->load(Yii::$app->request->post())) {
             $uploadedTriageDocument = UploadedFile::getInstance($triageDocument, 'material_file_name');
-
             $triageDocument->property_record = $propertyRecord->id;
             $triageDocument->material_file_name = uniqid().'-'.$uploadedTriageDocument->name;
             /* save the uploaded document in safe place */
             $finalUploadName = Yii::getAlias('@triage_path') .  DIRECTORY_SEPARATOR.$triageDocument->material_file_name;
             $uploadedTriageDocument->saveAs($finalUploadName);
-
             /*save and return json*/
             if ($triageDocument->save()) {
                 if(Yii::$app->request->isAjax){
@@ -335,6 +333,17 @@ class RecordController extends Controller
         $triageDocumentDataProvider = new ActiveDataProvider(['query' => Triage::find()->where(['property_record'=>$propertyRecord->id])]);
 
         $propertyImagesDataProvider = new ActiveDataProvider(['query' => PropertyImages::find()->where(['property_id'=>$propertyRecord->id])]);
+
+
+        $triageNote = new TriageNote();
+        if ($triageNote->load(Yii::$app->request->post())) {
+            $triageNote->triage_id = intval(\Yii::$app->request->post(['triage_id']));
+            if($triageNote->save()){
+                \Yii::$app->session->set("success","New triage note added" );
+            }else{
+                \Yii::$app->session->set("error", Html::errorSummary($triageNote));
+            }
+        }
 
         return $this->render('update', [
             'propertyRecord' => $propertyRecord,

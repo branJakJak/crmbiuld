@@ -17,10 +17,12 @@ use yii\widgets\Pjax;
     }
 </style>
 
+
+
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <?php
-        $downloadAllBtn = Html::a("Download All", \yii\helpers\Url::to(["/triage/download", "record_id" => $propertyRecord->id]), ['class' => 'pull-right btn btn-success']);
+        $downloadAllBtn = Html::a("<i class='fa  fa-file-pdf-o'></i> Export PDF", \yii\helpers\Url::to(["/export/view", "id" => $propertyRecord->id]), ['class' => 'pull-right btn btn-success']);
         echo PanelWidget::begin([
             'title' => 'File Upload' . $downloadAllBtn,
             'type' => 'default',
@@ -75,7 +77,7 @@ use yii\widgets\Pjax;
 
 
         <?php
-        PanelWidget::end()
+            PanelWidget::end()
         ?>
     </div>
 </div>

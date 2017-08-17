@@ -17,6 +17,7 @@ use kartik\widgets\Select2;
 /* @var $triageDocumentDataProvider \yii\data\ActiveDataProvider */
 
 
+
 $statusCollection = [
     \app\models\PropertyRecord::PROPERTY_STATUS_NOT_SUBMITTED,
     \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_SUPERVISOR_APPROVAL,

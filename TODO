@@ -117,3 +117,11 @@ Leighton Power New No. 3-25-2017, [15.08.17 02:12]
 because also should have said this before that,  but there are 2 types of images,  ID docs, and  then the pictures ,  they should be auto go into the correct sections.
 
 i am also getting error 500 on the leads so it was hard to talke about this with him
+
+
+
+
+  $questionairePropertyRecord = new QuestionairePropertyRecord();
+  $questionairePropertyRecord->cavity_form_id = $modelFound->id;
+  $questionairePropertyRecord->property_record_id = $propertyRecord->id;
+  $questionairePropertyRecord->save();

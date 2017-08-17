@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "347e008120ff3a5ef2ffb8728191ac51",
+    "content-hash": "571bdd8e1f5474e9efc487741331b322",
     "packages": [
         {
             "name": "2amigos/yii2-date-picker-widget",
@@ -900,6 +900,67 @@
                 "yii2"
             ],
             "time": "2017-03-30T09:04:16+00:00"
+        },
+        {
+            "name": "dompdf/dompdf",
+            "version": "v0.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dompdf/dompdf.git",
+                "reference": "5c98652b1a5beb7e3cc8ec35419b2828dd63ab14"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dompdf/dompdf/zipball/5c98652b1a5beb7e3cc8ec35419b2828dd63ab14",
+                "reference": "5c98652b1a5beb7e3cc8ec35419b2828dd63ab14",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-gd": "*",
+                "ext-mbstring": "*",
+                "phenx/php-font-lib": "0.4.*",
+                "phenx/php-svg-lib": "0.1.*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "0.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Dompdf\\": "src/"
+                },
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-2.1"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Ménager",
+                    "email": "fabien.menager@gmail.com"
+                },
+                {
+                    "name": "Brian Sweeney",
+                    "email": "eclecticgeek@gmail.com"
+                },
+                {
+                    "name": "Gabriel Bull",
+                    "email": "me@gabrielbull.com"
+                }
+            ],
+            "description": "DOMPDF is a CSS 2.1 compliant HTML to PDF converter",
+            "homepage": "https://github.com/dompdf/dompdf",
+            "time": "2016-05-11T00:36:29+00:00"
         },
         {
             "name": "drsdre/yii2-wizardwidget",
@@ -2226,16 +2287,16 @@
         },
         {
             "name": "kartik-v/yii2-widget-select2",
-            "version": "v2.0.9",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-widget-select2.git",
-                "reference": "03f202e9e2415f4c84e93a64074d85677fd0cc51"
+                "reference": "a129c6663078fe0ad14cde2a5d0afd071c7608e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-widget-select2/zipball/03f202e9e2415f4c84e93a64074d85677fd0cc51",
-                "reference": "03f202e9e2415f4c84e93a64074d85677fd0cc51",
+                "url": "https://api.github.com/repos/kartik-v/yii2-widget-select2/zipball/a129c6663078fe0ad14cde2a5d0afd071c7608e9",
+                "reference": "a129c6663078fe0ad14cde2a5d0afd071c7608e9",
                 "shasum": ""
             },
             "require": {
@@ -2244,7 +2305,7 @@
             "type": "yii2-extension",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0.x-dev"
+                    "dev-master": "2.1.x-dev"
                 }
             },
             "autoload": {
@@ -2275,7 +2336,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2017-04-12T09:00:24+00:00"
+            "time": "2017-08-07T18:12:36+00:00"
         },
         {
             "name": "kartik-v/yii2-widget-sidenav",
@@ -2690,6 +2751,74 @@
             "time": "2017-07-09T16:46:12+00:00"
         },
         {
+            "name": "phenx/php-font-lib",
+            "version": "0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PhenX/php-font-lib.git",
+                "reference": "b8af0cacdc3cbf1e41a586fcb78f506f4121a088"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PhenX/php-font-lib/zipball/b8af0cacdc3cbf1e41a586fcb78f506f4121a088",
+                "reference": "b8af0cacdc3cbf1e41a586fcb78f506f4121a088",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "FontLib\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Ménager",
+                    "email": "fabien.menager@gmail.com"
+                }
+            ],
+            "description": "A library to read, parse, export and make subsets of different types of font files.",
+            "homepage": "https://github.com/PhenX/php-font-lib",
+            "time": "2015-05-06T20:02:39+00:00"
+        },
+        {
+            "name": "phenx/php-svg-lib",
+            "version": "0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PhenX/php-svg-lib.git",
+                "reference": "b419766515b3426c6da74b0e29e93d71c4f17099"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PhenX/php-svg-lib/zipball/b419766515b3426c6da74b0e29e93d71c4f17099",
+                "reference": "b419766515b3426c6da74b0e29e93d71c4f17099",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Svg\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Ménager",
+                    "email": "fabien.menager@gmail.com"
+                }
+            ],
+            "description": "A library to read, parse and export to PDF SVG files.",
+            "homepage": "https://github.com/PhenX/php-svg-lib",
+            "time": "2015-05-06T18:49:49+00:00"
+        },
+        {
             "name": "phpoffice/phpexcel",
             "version": "1.8.1",
             "source": {
@@ -2900,6 +3029,68 @@
                 "mailer"
             ],
             "time": "2017-05-01T15:54:03+00:00"
+        },
+        {
+            "name": "tecnickcom/tcpdf",
+            "version": "6.2.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tecnickcom/TCPDF.git",
+                "reference": "95c5938aafe4b20df1454dbddb3e5005c0b26f64"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/95c5938aafe4b20df1454dbddb3e5005c0b26f64",
+                "reference": "95c5938aafe4b20df1454dbddb3e5005c0b26f64",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "config",
+                    "include",
+                    "tcpdf.php",
+                    "tcpdf_parser.php",
+                    "tcpdf_import.php",
+                    "tcpdf_barcodes_1d.php",
+                    "tcpdf_barcodes_2d.php",
+                    "include/tcpdf_colors.php",
+                    "include/tcpdf_filters.php",
+                    "include/tcpdf_font_data.php",
+                    "include/tcpdf_fonts.php",
+                    "include/tcpdf_images.php",
+                    "include/tcpdf_static.php",
+                    "include/barcodes/datamatrix.php",
+                    "include/barcodes/pdf417.php",
+                    "include/barcodes/qrcode.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPLv3"
+            ],
+            "authors": [
+                {
+                    "name": "Nicola Asuni",
+                    "email": "info@tecnick.com",
+                    "homepage": "http://nicolaasuni.tecnick.com"
+                }
+            ],
+            "description": "TCPDF is a PHP class for generating PDF documents and barcodes.",
+            "homepage": "http://www.tcpdf.org/",
+            "keywords": [
+                "PDFD32000-2008",
+                "TCPDF",
+                "barcodes",
+                "datamatrix",
+                "pdf",
+                "pdf417",
+                "qrcode"
+            ],
+            "time": "2017-04-26T08:14:48+00:00"
         },
         {
             "name": "yiisoft/yii2",
@@ -3281,29 +3472,31 @@
         },
         {
             "name": "fzaninotto/faker",
-            "version": "v1.6.0",
+            "version": "v1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fzaninotto/Faker.git",
-                "reference": "44f9a286a04b80c76a4e5fb7aad8bb539b920123"
+                "reference": "d3ed4cc37051c1ca52d22d76b437d14809fc7e0d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/44f9a286a04b80c76a4e5fb7aad8bb539b920123",
-                "reference": "44f9a286a04b80c76a4e5fb7aad8bb539b920123",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/d3ed4cc37051c1ca52d22d76b437d14809fc7e0d",
+                "reference": "d3ed4cc37051c1ca52d22d76b437d14809fc7e0d",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.3.3|^7.0"
+                "php": "^5.3.3 || ^7.0"
             },
             "require-dev": {
                 "ext-intl": "*",
-                "phpunit/phpunit": "~4.0",
-                "squizlabs/php_codesniffer": "~1.5"
+                "phpunit/phpunit": "^4.0 || ^5.0",
+                "squizlabs/php_codesniffer": "^1.5"
             },
             "type": "library",
             "extra": {
-                "branch-alias": []
+                "branch-alias": {
+                    "dev-master": "1.8-dev"
+                }
             },
             "autoload": {
                 "psr-4": {
@@ -3325,7 +3518,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2016-04-29T12:21:54+00:00"
+            "time": "2017-08-15T16:48:10+00:00"
         },
         {
             "name": "phpspec/php-diff",

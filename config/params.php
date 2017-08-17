@@ -2,6 +2,7 @@
 
 return [
     'adminEmail' => 'admin@example.com',
+    'solicitor_name' => 'White Collar Legal',
     'statusCollection' => [
         'Not Submitted' => 'Not Submitted',
         'Pending Administrators Approval' => 'Pending Administrators Approval',

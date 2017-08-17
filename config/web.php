@@ -10,6 +10,9 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
+        'triageExporter' => [
+            'class' => 'app\components\TriagePdfExport'
+        ],
         'authManager' => [
             'class' => 'yii\rbac\PhpManager'
         ],
