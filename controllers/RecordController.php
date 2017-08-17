@@ -222,6 +222,7 @@ class RecordController extends Controller
                 $owner = new Owner();//clear attribs
             }
 
+
             return $this->refresh("#ownersTab");
         }
         /*property documents*/
@@ -288,13 +289,19 @@ class RecordController extends Controller
         $propertyNotesDataProvider = new ActiveDataProvider([
             'query' => PropertyNotes::find()->where(['property_id'=>$propertyRecord->id])->orderBy(['date_created'=>SORT_DESC])
         ]);
+        $triageNotesQueryProvider = PropertyNotes::find()
+            ->where(['property_id' => $propertyRecord->id ,'note_type'=>PropertyNotes::NOTE_TYPE_TRIAGE])
+            ->orderBy(['date_created' => SORT_DESC]);
+        $triageNotesDataProvider = new ActiveDataProvider([
+            'query' =>$triageNotesQueryProvider
+        ]);
+
+
 
         if ($propertyNote->load(\Yii::$app->request->post())) {
             Yii::info(VarDumper::dumpAsString(Yii::$app->user->id).' userid is','application');
             $propertyNote->property_id = $propertyRecord->id;
-
             $propertyNote->created_by = Yii::$app->user->id;
-
             if($propertyNote->save()){
                 \Yii::$app->session->set("success","New property note added" );
                 $propertyNote = new PropertyNotes();
@@ -302,7 +309,7 @@ class RecordController extends Controller
                 \Yii::$app->session->set("error", Html::errorSummary($propertyNote));
 
             }
-            return $this->refresh("#w22-tab4");
+            return $this->refresh("#w27-tab5");
         }
         $propertyOwnerDataProvider = new ActiveDataProvider(['query' => PropertyOwner::find()->where(['property_id'=>$propertyRecord->id])]);
         $triageDocument = new Triage();
@@ -335,16 +342,6 @@ class RecordController extends Controller
         $propertyImagesDataProvider = new ActiveDataProvider(['query' => PropertyImages::find()->where(['property_id'=>$propertyRecord->id])]);
 
 
-        $triageNote = new TriageNote();
-        if ($triageNote->load(Yii::$app->request->post())) {
-            $triageNote->triage_id = intval(\Yii::$app->request->post(['triage_id']));
-            if($triageNote->save()){
-                \Yii::$app->session->set("success","New triage note added" );
-            }else{
-                \Yii::$app->session->set("error", Html::errorSummary($triageNote));
-            }
-        }
-
         return $this->render('update', [
             'propertyRecord' => $propertyRecord,
             'propertyDocument' => $propertyDocument,
@@ -357,7 +354,8 @@ class RecordController extends Controller
             'propertyDocumentDataProvider' => $propertyDocumentDataProvider,
             'triageDocumentDataProvider' => $triageDocumentDataProvider,
             'triageDocument' => $triageDocument,
-            'propertyImagesDataProvider' => $propertyImagesDataProvider
+            'propertyImagesDataProvider' => $propertyImagesDataProvider,
+            'triageNotesDataProvider' => $triageNotesDataProvider
         ]);
     }
     public function actionTransferToTriage($propertyId){

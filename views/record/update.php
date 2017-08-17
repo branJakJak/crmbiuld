@@ -77,7 +77,8 @@ $this->title = $propertyRecord->status;
 <br />
 
 <?php
-    echo TabsX::widget([
+
+echo TabsX::widget([
         'enableStickyTabs' => true,
         'items' => [
             [
@@ -151,7 +152,9 @@ $this->title = $propertyRecord->status;
                 'content' => $this->render('_triage',[
                     'propertyRecord'=>$propertyRecord,
                     'triageDocument'=>$triageDocument,
-                    'triageDocumentDataProvider'=>$triageDocumentDataProvider
+                    'triageDocumentDataProvider'=>$triageDocumentDataProvider,
+                    'triageNotesDataProvider'=>$triageNotesDataProvider,
+                    'propertyNote'=>$propertyNote,
                 ]),
                 [
                     'id'=>'triageTab'

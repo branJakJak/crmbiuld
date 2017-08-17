@@ -9,6 +9,7 @@ use yii\widgets\Pjax;
 /* @var $propertyRecord \app\models\PropertyRecord */
 /* @var $triageDocument \app\models\Triage */
 /* @var $triageDocumentDataProvider \yii\data\ActiveDataProvider */
+/* @var $triageNotesDataProvider \yii\data\ActiveDataProvider */
 
 ?>
 <style type="text/css">
@@ -16,6 +17,46 @@ use yii\widgets\Pjax;
         padding: 23px 20px;
     }
 </style>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <?php
+            echo PanelWidget::begin([
+                'title' => 'File Upload',
+                'type' => 'default',
+                'widget' => false,
+            ]);
+        ?>
+        <?= $this->render('/property-notes/_form',['model'=>$propertyNote ,'note_type'=>\app\models\PropertyNotes::NOTE_TYPE_TRIAGE ])?>
+        <br>
+        <?=
+        \yii\grid\GridView::widget([
+            'dataProvider'=>$triageNotesDataProvider,
+            'columns'=>[
+                'content',
+                [
+                    'label'=>'Created by',
+                    'value'=>function($currentModel){
+                        $creator = $currentModel->getCreator()->one();
+                        $creatorName = '';
+                        if($creator){
+                            $creatorProfile = $creator->getProfile()->one();
+                            $creatorName = $creatorProfile->name;
+                        }
+                        return $creatorName;
+                    },
+                ],
+                'date_created:datetime',
+            ]
+        ])
+        ?>
+
+
+        <?php
+            PanelWidget::end()
+        ?>
+    </div>
+</div>
 
 
 
