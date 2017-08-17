@@ -12,6 +12,7 @@ class m170814_204248_add_column_created_by_user_tbl_cavity extends Migration
     public function safeDown()
     {
         $this->dropColumn('tbl_cavity', 'created_by_user');
+        
     }
 
 }
