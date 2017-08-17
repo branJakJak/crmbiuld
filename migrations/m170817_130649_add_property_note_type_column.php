@@ -2,7 +2,7 @@
 
 use yii\db\Migration;
 
-class m170817_125335_create_triage_note_column extends Migration
+class m170817_130649_add_property_note_type_column extends Migration
 {
     public function safeUp()
     {
