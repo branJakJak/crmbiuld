@@ -16,6 +16,8 @@ class TriagePdfExport extends \yii\base\Object
         $this->pdf_template = Yii::getAlias('@app') .DIRECTORY_SEPARATOR.'pdf_template' .DIRECTORY_SEPARATOR . 'Case_Triage_Report_Template.pdf';
         class_exists('TCPDF', true);
         $pdf = new FPDI();
+        $pdf ->setPrintHeader(false);
+        $pdf ->setPrintFooter(false);
         $pdf->addPage();
         $pdf->SetFont("Helvetica",'',10);
         $pdf->setSourceFile($this->pdf_template);
@@ -61,29 +63,29 @@ class TriagePdfExport extends \yii\base\Object
         /*write the images on page 2-3*/
         $this->pdf_object->addPage();
         $tplIdx = $this->pdf_object->importPage(2);
-        $image_x_coordinate = 15;
-        $image_y_coordinate = 15;
+        $image_x_coordinate = 10;
+        $image_y_coordinate = 10;
         $image_width_coordinate = 50;
-        $image_height_coordinate = 80;
+        $image_height_coordinate = 45;
         foreach ($this->propertyImages as $keyIndex => $currentPropertyImage) {
-            $this->pdf_object->Image($currentPropertyImage, $image_x_coordinate, $image_y_coordinate, $image_width_coordinate,$image_height_coordinate);
-            $this->pdf_object->Output('peek.pdf', 'I');
+            $this->pdf_object->Image($currentPropertyImage, $image_x_coordinate, $image_y_coordinate, $image_width_coordinate ,$image_height_coordinate);
             if (  (($keyIndex+1) / 9) === 0 ) {
                 $this->pdf_object->addPage();
                 $tplIdx = $this->pdf_object->importPage(3);
-                $image_x_coordinate = 15;
-                $image_y_coordinate = 15;
+                $image_x_coordinate = 10;
+                $image_y_coordinate = 10;
             }
             /*resize the image and write the image floating*/
-            if (  (($keyIndex+1) % 4) === 0 ) {
+            if (  (($keyIndex+1) % 3) === 0 ) {
                 /*add x */
-                $image_y_coordinate += $image_height_coordinate;
-                $image_x_coordinate = 0;
+                $image_y_coordinate += $image_height_coordinate*1.3;
+                $image_x_coordinate = 10;
             }else{
-                $image_x_coordinate += $image_width_coordinate;
+                $image_x_coordinate += $image_width_coordinate*1.3;
             }
         }
-
+        $this->pdf_object->Output('peek.pdf', 'I');
+        die;
 
     }
 
