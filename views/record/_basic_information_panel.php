@@ -85,7 +85,7 @@ $propertyType = [
                         $currentOwner = $currentModel->getOwner()->one();
                         $ownerFullName = 'n/a';
                         if ($currentOwner) {
-                            $ownerFullName = sprintf("%s. %s %s ", $currentOwner->title, $currentOwner->firstname, $currentOwner->lastname);
+                            $ownerFullName = sprintf("%s %s %s ", $currentOwner->title, $currentOwner->firstname, $currentOwner->lastname);
                             $ownerFullName = Html::a(Html::encode($ownerFullName), ['/owner/view', 'id' => $currentOwner->id]);
                         }
                         return $ownerFullName;
@@ -131,6 +131,9 @@ $propertyType = [
                 [
                     'label' => 'Owners',
                     'content' => $this->blocks['list_of_owner'],
+                    [
+                            'id'=>'ownersTab'
+                    ]
                 ],
                 [
                     'label' => 'Create new owner',
@@ -161,17 +164,27 @@ $propertyType = [
         /* @var $tempNoteCreator \dektrium\user\models\User */
         /* @var $tempNoteCreatorProfile \dektrium\user\models\Profile */
         $lastNote = $propertyRecord->getPropertyNotes()->orderBy(['date_created' => SORT_DESC])->one();
-        $noteCreator = '';
+        $noteCreator = 'n/a';
         $noteDatePublished = '';
         $noteContent = '';
         if ($lastNote) {
+            $tempProfile = '';
+            $tempNoteCreatorProfile = '';
             $creatorObj = $lastNote->getCreator();
-            $tempNoteCreator = $creatorObj->one();
-            $tempProfile = $tempNoteCreator->getProfile();
-            $tempNoteCreatorProfile = $tempProfile->one();
-            $noteCreator = $tempNoteCreatorProfile->name;
+            if($creatorObj){
+                $creatorObj = $lastNote->getCreator();
+                $tempNoteCreator = $creatorObj->one();
+                if($tempNoteCreator){
+                    $tempProfile = $tempNoteCreator->getProfile();
+                    if ($tempProfile) {
+                        $tempNoteCreatorProfile = $tempProfile->one();
+                        $noteCreator = $tempNoteCreatorProfile->name;
+                        $noteCreator = $tempNoteCreatorProfile->name;
+                    }
+                }
+                $noteContent = $lastNote->content;
+            }
             $noteDatePublished = $lastNote->date_created;
-            $noteContent = $lastNote->content;
         }
         ?>
         <?php if ($lastNote): ?>

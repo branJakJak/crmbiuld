@@ -31,7 +31,7 @@ class PropertyNotesController extends Controller
                     [
                         'actions' => ['update','delete'],
                         'allow' => true,
-                        'roles' => ['admin'],
+                        'roles' => ['admin','Admin'],
                     ],
 
                 ]

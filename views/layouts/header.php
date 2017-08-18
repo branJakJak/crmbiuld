@@ -11,7 +11,8 @@ $userCollection = \dektrium\user\models\User::find()->all();
 
 <header class="main-header">
 
-    <?= Html::a('<span class="logo-mini">APP</span><span class="logo-lg">' . Yii::$app->name . '</span>', Yii::$app->homeUrl, ['class' => 'logo']) ?>
+    <?= Html::a('<span class="logo-mini">APP</span><span class="logo-lg">' . Html::img('/img/White Collar Logo.jpg', ['style' => 'height: 49px']) . '</span>', Yii::$app->homeUrl, ['class' => 'logo','style'=>'background: white !important']) ?>
+
 
     <nav class="navbar navbar-static-top" role="navigation">
 
@@ -24,7 +25,7 @@ $userCollection = \dektrium\user\models\User::find()->all();
             <ul class="nav navbar-nav">
 
                 <!-- Messages: style can be found in dropdown.less-->
-                <li class="dropdown messages-menu ">
+                <li class="dropdown messages-menu <?= (Yii::$app->user->can('Admin') || Yii::$app->user->can('admin')) ? "":"hidden" ?> ">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-user-o"></i>
                         <span class="label label-success"> <?= $userCount ?> </span>

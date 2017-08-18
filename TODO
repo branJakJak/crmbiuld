@@ -1,0 +1,127 @@
+@TODO
+Cavity Lead Questionaire
+http://crmlead.site8.co/
+make the image uploading requred
+> images are requred before submitting the form
+Property Record
+> images are requred before submitting the form
+>after saving send the information to crmbuild.site8.co
+@DONE
+
+@TODO - crmbuild.site8.co
+create new link Not Submitted at the left part of menu link
+that will contain new leads
+it will have a titile of New Lead Upload
+Agents can see this
+after QA it will then be marked pending to be QA by the admin
+>Again would you make this layout on the lead platform user friendly and easy on the eye.
+-- new records are cavity questionaire record  that when approved 
+, it will become a property record
+
+
+@TODO - 
+cavity/accept
+
+
+@TODO - create a table 
+tbl_questionaire_property_record
+id
+property_record_id
+cavity_form_id
+date_created
+date_updated
+@DONE
+
+
+
+@TODO
+> show delete button for property record . 
+make sure it also deletes the preappraisal images,  documents , etc.. 
+@DONE
+
+> show delete button for cavity questionaire
+make sure it also deletes the supporting documents
+@DONE
+
+propertyImagesDataProvider
+propertyRecord
+
+@TODO - 
+gitignore the RBAC folder
+@DONE
+
+@TODO - present the images 
+from not-submitted and 
+
+
+
+
+
+
+@TODO - 
+crmbuild.site8.co/questionaire
+redirect to 
+crmleads.site8.co
+>parang ililipat lang yung laman ng crmleads sa isang tab o menu sa crmbuild
+
+
+
+
+@TODO datepicker
+When (after the CWI installation) did they first notice problems (damp, condensation, mould, odour, wallpaper falling off the walls, damage to furniture or other personal property
+
+
+
+
+1)  logo for badging both the CRM and the lead platform. Use the pic of the scales and then put under " White Collar Claim" remove the rest of the wording it currently has under.
+@TODO
+
+Birthday – write on top of the box “max age 75”
+Callenders now only allow to go back in months when it should be in years and months.
+@DONE
+
+CWI Installation Date –  Write on top “ Max 15 Years ago”
+@DONE
+
+When (after the CWI installation) did they first notice problems (damp, condensation, mould, odour, wallpaper falling off the walls, damage
+to furniture or other personal property – 
+This should have date ie callender  not type of problem.
+@DONE
+
+
+Had they suffered any such issues prior to the CWI installation – No answers only at the moment you have it NA 
+@DONE
+
+
+Have they reported the issues to their house insurers, to the original installers, to the Cavity Insulation Guarantee Agency (CIGA) 
+or anyone else – No answers Only at the moment you have it NA 
+@DONE
+
+We need to add the question .....  
+
+Only people free of Bankruptcy and not currently in an IVA would be allowed to start this litigation process. 
+Please confirm client is not currently in one of the mentioned.    
+@DONE
+after_CWI_installation_comment
+after_CWI_installation_date
+@DONE
+
+
+Leighton Power New No. 3-25-2017, [15.08.17 02:08]
+also this part is so hard to explain about the agents i dont know where to start ouch
+
+Leighton Power New No. 3-25-2017, [15.08.17 02:11]
+ok i will try,   the people that doing the leads should be able to log into the crm and see only their leads,  veiw only permissions,  BUT are able to move some pictures into pending apprisal images they select  into  traige,  and be able to create document themselfs  so that then legal can check this case
+
+Leighton Power New No. 3-25-2017, [15.08.17 02:12]
+because also should have said this before that,  but there are 2 types of images,  ID docs, and  then the pictures ,  they should be auto go into the correct sections.
+
+i am also getting error 500 on the leads so it was hard to talke about this with him
+
+
+
+
+  $questionairePropertyRecord = new QuestionairePropertyRecord();
+  $questionairePropertyRecord->cavity_form_id = $modelFound->id;
+  $questionairePropertyRecord->property_record_id = $propertyRecord->id;
+  $questionairePropertyRecord->save();

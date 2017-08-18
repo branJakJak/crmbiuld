@@ -31,7 +31,7 @@ class PropertyDocumentsController extends Controller
                     [
                         'actions' => ['index','update','delete'],
                         'allow' => true,
-                        'roles' => ['admin'],
+                        'roles' => ['admin','Admin'],
                     ],
                 ],
             ]

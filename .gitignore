@@ -1,6 +1,8 @@
 # phpstorm project files
 .idea
 
+.phpintel/
+
 # netbeans project files
 nbproject
 
@@ -28,3 +30,8 @@ phpunit.phar
 
 /uploads/documents/*
 /uploads/images/*
+/uploads/triage/*
+/uploads/supporting_document_path/*
+/rbac/assignments.php
+/rbac/items.php
+/rbac/rules.php

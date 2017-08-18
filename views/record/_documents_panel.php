@@ -8,6 +8,8 @@
 use derekisbusy\panel\PanelWidget;
 use dosamigos\fileupload\FileUploadUI;
 use yii\helpers\Html;
+use yii\widgets\Pjax;
+
 /* @var $this yii\web\View */
 /* @var $propertyRecord \app\models\PropertyRecord */
 /* @var $propertyDocument \app\models\PropertyDocuments */
@@ -46,7 +48,7 @@ use yii\helpers\Html;
                 'fileuploaddone' => 'function(e, data) {
                                         console.log(e);
                                         console.log(data);
-                                        window.location.reload()
+                                        $.pjax.reload({container:"#propertyDocumentsPjax"});
                                     }',
         //        'fileuploadfail' => 'function(e, data) {
         //                                console.log(e);
@@ -60,20 +62,38 @@ use yii\helpers\Html;
         <?php \yii\widgets\ActiveForm::end()?>
 
         <br >
+        <?php Pjax::begin(['id' => 'propertyDocumentsPjax','timeout'=>10000]) ?>
         <?=
         \yii\grid\GridView::widget([
             'dataProvider' => $propertyDocumentDataProvider,
             'columns' => [
-                'document_name',
-                'date_created:date',
+                // 'document_name',
+                // 'date_created:date',
+                // [
+                //     'label'=>' ',
+                //     'value'=>function($currentModel){
+                //         return Html::a("Download", ['/property-documents/download','property'=>$currentModel->id]);
+                //     },
+                //     'attribute'=>'id',
+                //     'format'=>'html'
+                // ],
                 [
-                    'label'=>' ',
-                    'value'=>function($currentModel){
-                        return Html::a("Download", ['/property-documents/download','property'=>$currentModel->id]);
+                    'label' => ' ',
+                    'value' => function ($currentModel) {
+                        /*publish the image*/
+                        if (isset($currentModel->document_name) && !empty($currentModel->document_name)) {
+                            $publishedImageUrl = '';
+                            $uploadImagePath = Yii::getAlias("@upload_document_path") . DIRECTORY_SEPARATOR . $currentModel->document_name;
+                            /*get the url of published image*/
+                            $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
+                            return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
+                        }
                     },
-                    'attribute'=>'id',
-                    'format'=>'html'
+                    'attribute' => 'document_name',
+                    'format' => 'html'
                 ],
+
+                
                 [
                         'class' => 'yii\grid\ActionColumn',
                         'template' => '{delete}',
@@ -91,6 +111,7 @@ use yii\helpers\Html;
             ],
         ]);
         ?>
+        <?php Pjax::end() ?>
 
 
         <?php

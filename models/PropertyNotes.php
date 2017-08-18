@@ -13,6 +13,7 @@ use yii\db\Expression;
  * @property integer $id
  * @property integer $property_id
  * @property string $content
+ * @property string $note_type
  * @property integer $created_by
  * @property string $date_created
  * @property string $date_updated
@@ -22,6 +23,8 @@ use yii\db\Expression;
  */
 class PropertyNotes extends \yii\db\ActiveRecord
 {
+    const NOTE_TYPE_INFO = 'info_type';
+    const NOTE_TYPE_TRIAGE = 'triage_type';
     /**
      * @inheritdoc
      */
@@ -37,7 +40,7 @@ class PropertyNotes extends \yii\db\ActiveRecord
     {
         return [
             [['property_id', 'created_by'], 'integer'],
-            [['content'], 'string'],
+            [['content','note_type'], 'string'],
             [['date_created', 'date_updated'], 'safe'],
             [['property_id'], 'exist', 'skipOnError' => true, 'targetClass' => PropertyRecord::className(), 'targetAttribute' => ['property_id' => 'id']],
         ];
@@ -52,6 +55,7 @@ class PropertyNotes extends \yii\db\ActiveRecord
             'id' => 'ID',
             'property_id' => 'Property ID',
             'content' => 'Content',
+            'note_type' => 'Note Type',
             'created_by' => 'Created By',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
