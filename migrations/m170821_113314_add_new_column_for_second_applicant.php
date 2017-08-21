@@ -31,17 +31,17 @@ class m170821_113314_add_new_column_for_second_applicant extends Migration
         $this->addColumn(
             "tbl_cavity",
             'second_application_telephone',
-            $this->date()
+            $this->string()
         );
         $this->addColumn(
             "tbl_cavity",
             'second_application_mobile_landline',
-            $this->date()
+            $this->string()
         );
         $this->addColumn(
             "tbl_cavity",
             'second_application_email_address',
-            $this->date()
+            $this->string()
         );
     }
 

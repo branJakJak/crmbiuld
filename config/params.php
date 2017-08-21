@@ -6,6 +6,7 @@ return [
     'statusCollection' => [
         'Not Submitted' => 'Not Submitted',
         'Pending Administrators Approval' => 'Pending Administrators Approval',
+        'Pics Booked' => 'Pics Booked',
         'Rejected' => 'Rejected',
         'Approved By Surveyor and Triage Complete' => 'Approved By Surveyor and Triage Complete',
         'CFA Complete' => 'CFA Complete',
