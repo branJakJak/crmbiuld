@@ -304,6 +304,11 @@ class CavityController extends Controller
         $owner->town = $modelFound->address_postcode_cavity_installation;
         $owner->country = "United Kingdom";
         $owner->email_address = $modelFound->email_address;
+        if ($modelFound->second_application_telephone) {
+            $owner->phone_number = $modelFound->telephone_number.' , '.$modelFound->second_application_mobile_landline;
+        } else {
+            $owner->phone_number = $modelFound->telephone_number;
+        }
         $owner->phone_number = $modelFound->telephone_number;
         $owner->date_of_birth = $modelFound->birthday;
         $owner->save();
