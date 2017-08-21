@@ -97,6 +97,7 @@ foreach ($allSupportingDocuments as $currentSupportingDocument) {
                     'second_application_birthday',
                     'second_application_telephone',
                     'second_application_mobile_landline',
+                    'second_application_email_address',
                     'date_time_callback:datetime',
                     'date_created:date',
                     'date_updated:date',

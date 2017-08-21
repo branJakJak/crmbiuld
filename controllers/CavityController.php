@@ -312,11 +312,16 @@ class CavityController extends Controller
         $owner2->title = $modelFound->second_application_title;
         $owner2->firstname = $modelFound->second_application_firstname;
         $owner2->lastname = $modelFound->second_application_lastname;
+        $owner2->address1 = $modelFound->address1_cavity_installation;
+        $owner2->address2 = $modelFound->address2_cavity_installation;
+        $owner2->address3 = $modelFound->address3_cavity_installation;
         $owner2->date_of_birth = $modelFound->second_application_birthday;
         if (isset($modelFound->second_application_mobile_landline)) {
             $owner2->phone_number = $modelFound->second_application_telephone.','.$modelFound->second_application_mobile_landline;
+        } else {
+            $owner2->phone_number = $modelFound->second_application_telephone;
         }
-        $owner2->email_address = $modelFound->second_application_mobile_landline;
+        $owner2->email_address = $modelFound->second_application_email_address;
         $owner2->save();
 
         $propertOwner = new PropertyOwner();
