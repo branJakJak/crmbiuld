@@ -307,6 +307,16 @@ class CavityController extends Controller
         $owner->phone_number = $modelFound->telephone_number;
         $owner->date_of_birth = $modelFound->birthday;
         $owner->save();
+
+        $owner2 = new Owner();
+        $owner2->title = $modelFound->second_application_title;
+        $owner2->firstname = $modelFound->second_application_firstname;
+        $owner2->lastname = $modelFound->second_application_lastname;
+        $owner2->second_application_birthday = $modelFound->second_application_birthday;
+        $owner2->second_application_telephone = $modelFound->second_application_telephone;
+        $owner2->second_application_mobile_landline = $modelFound->second_application_mobile_landline;
+        $owner2->save();
+
         $propertOwner = new PropertyOwner();
         $propertOwner->owner_id = $owner->id;
         $propertOwner->property_id = $propertyRecord->id;
