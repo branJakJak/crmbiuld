@@ -328,6 +328,13 @@ class CavityController extends Controller
         $propertOwner->owner_id = $owner->id;
         $propertOwner->property_id = $propertyRecord->id;
         $propertOwner->save();
+
+        $propertOwner2 = new PropertyOwner();
+        $propertOwner2->owner_id = $owner2->id;
+        $propertOwner2->property_id = $propertyRecord->id;
+        $propertOwner2->save();
+
+
         /*import the images and documents*/
         $supportingDocuments = $modelFound->getSupportingDocuments()->all();
         foreach ($supportingDocuments as $currentSupportingDocuments) {
