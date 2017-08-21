@@ -32,7 +32,7 @@ $config = [
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'useFileTransport' => false,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -92,6 +92,9 @@ $config['modules']['user'] = [
     'enableRegistration' => false,
     'enableConfirmation' => false,
     'admins'=>['admin'],
+    'mailer'=>[
+        'sender' => 'admin@whitecollarclaim.co.uk',
+    ],
     'controllerMap' => [
         'registration' => [
             'class' => \dektrium\user\controllers\RegistrationController::className(),
