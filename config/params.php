@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'adminEmail' => 'admin@example.com',
+    'adminEmail' => 'admin@whitecollarclaim.co.uk',
     'solicitor_name' => 'White Collar Legal',
     'statusCollection' => [
         'Not Submitted' => 'Not Submitted',
