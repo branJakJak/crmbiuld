@@ -53,7 +53,9 @@ $propertyType = [
         <?= $form->field($propertyRecord, 'property_type')->dropDownList($propertyType) ?>
         <?= $form->field($propertyRecord, 'number_of_bedrooms') ?>
         <?= $form->field($propertyRecord, 'approximate_build') ?>
-        <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
+        <?php if (!Yii::$app->user->can('Manager') && !Yii::$app->user->can('Consultant') && !Yii::$app->user->can('Agent')): ?>
+            <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
+        <?php endif ?>
         <?php \yii\widgets\ActiveForm::end() ?>
 
         <?php
