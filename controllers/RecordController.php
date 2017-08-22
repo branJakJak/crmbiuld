@@ -48,7 +48,7 @@ class RecordController extends Controller
                 'only' => ['create','update','downloadDocument','transferToTriage'],
                 'rules' => [
                     [
-                        'actions' => ['create','update','downloadDocument','transferToTriage'],
+                        'actions' => ['create','downloadDocument','transferToTriage'],
                         'allow' => true,
                         'roles' => ['admin','Admin'],
                     ],
@@ -60,7 +60,7 @@ class RecordController extends Controller
                     [
                         'actions' => ['update'],
                         'allow' => true,
-                        'roles' => ['Manager','Agent','Manager','Senior Manager'],
+                        'roles' => ['admin','Admin','Manager','Agent','Manager','Senior Manager'],
                     ]
                 ],
             ],
