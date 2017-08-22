@@ -60,7 +60,7 @@ class RecordController extends Controller
                     [
                         'actions' => ['update'],
                         'allow' => true,
-                        'roles' => ['admin','Admin','Manager','Agent','Manager','Senior Manager'],
+                        'roles' => ['admin','Admin','Manager','Agent','Senior Manager'],
                     ]
                 ],
             ],
@@ -158,8 +158,12 @@ class RecordController extends Controller
         /* @var $propertyRecord PropertyRecord */
         /*property record*/
         $propertyRecord = PropertyRecord::findOne(['id' => $id]);
+        if(!$propertyRecord){
+            new NotFoundHttpException('Sorry that record doesnt exists');
+        }
 
-        if (Yii::$app->user->can('Agent')) {
+
+        if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Consultant')) {
             /*check if he/she owns this record*/
             if (Yii::$app->user->id != $propertyRecord->created_by) {
                 throw new ForbiddenHttpException();
@@ -181,15 +185,9 @@ class RecordController extends Controller
                     break;
                 }
             }
-            if(!$isOwner && !$oneOfAgent){
+            if ($isOwner || $oneOfAgent) {
                 throw new ForbiddenHttpException();
             }
-        }
-
-
-
-        if(!$propertyRecord){
-            new NotFoundHttpException('Sorry that record doesnt exists');
         }
         // if ( Yii::$app->user->can('Manager')) {
         //     if(!Yii::$app->user->can('managerPermission',['property_record' => $propertyRecord])) {
