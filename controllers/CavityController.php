@@ -78,7 +78,7 @@ class CavityController extends Controller
             }
             // update query
             $defaultQuery->andWhere(['in', 'created_by_user', $allowedUsername]);
-        } else if (Yii::$app->user->can('Agent')) {
+        } else if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Consultant')) {
             $defaultQuery->andWhere(['in', 'created_by_user', [\Yii::$app->user->identity->username]]);
         }
         else {
