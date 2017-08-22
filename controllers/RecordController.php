@@ -190,11 +190,17 @@ class RecordController extends Controller
                 throw new UnauthorizedHttpException("You are not allowed to edit this record");
             }
         }
-        // if ( Yii::$app->user->can('Manager')) {
-        //     if(!Yii::$app->user->can('managerPermission',['property_record' => $propertyRecord])) {
-        //         throw new UnauthorizedHttpException("You are not allowed to edit this record");
-        //     }
-        // }
+
+        if ( 
+            (
+                Yii::$app->user->can('Manager') || 
+                Yii::$app->user->can('Consultant') || 
+                Yii::$app->user->can('Agent')
+            ) 
+            && Yii::$app->request->isPost) {
+            throw new UnauthorizedHttpException("You are not allowed to edit this record");
+        }
+
         if ( Yii::$app->user->can('Consultant')) {
             if(!Yii::$app->user->can('editOwnRecordPermission',['property_record' => $propertyRecord])) {
                 throw new UnauthorizedHttpException("You are not allowed to edit this record");
