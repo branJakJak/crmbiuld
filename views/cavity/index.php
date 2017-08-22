@@ -27,7 +27,7 @@ $gridCols = [
     'title',
     'firstname',
     'lastname',
-    'birthday',
+    'birthday:date',
     'telephone_number',
     'email_address:email',
     // 'address1_cavity_installation',
