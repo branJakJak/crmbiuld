@@ -57,6 +57,7 @@ class SiteController extends Controller
         }
         if (Yii::$app->user->can('Manager')) {
             $userCreated = [];
+            $userCreated[] = Yii::$app->user->id;
             $userCreatedByManagerRes = UserCreator::find()
                 ->where(['creator_id'=>\Yii::$app->user->id])
                 ->asArray()
