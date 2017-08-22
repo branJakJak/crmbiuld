@@ -181,7 +181,7 @@ class RecordController extends Controller
                 ->asArray()
                 ->all();
             foreach ($userCreatedByManagerRes as $currentUserCreatedByManagerRes) {
-                if (intval($currentUserCreatedByManagerRes['agent_id']) === $propertyRecord->id) {
+                if (intval($currentUserCreatedByManagerRes['agent_id']) == $propertyRecord->id) {
                     $oneOfAgent = true;
                     break;
                 }
