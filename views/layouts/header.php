@@ -25,7 +25,7 @@ $userCollection = \dektrium\user\models\User::find()->all();
             <ul class="nav navbar-nav">
 
                 <!-- Messages: style can be found in dropdown.less-->
-                <li class="dropdown messages-menu <?= (Yii::$app->user->can('Admin') || Yii::$app->user->can('admin')) ? "":"hidden" ?> ">
+                <li class="dropdown messages-menu <?= (Yii::$app->user->can('Admin') || Yii::$app->user->can('admin') || Yii::$app->user->can('Manager'))  ? "":"hidden" ?> ">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-user-o"></i>
                         <span class="label label-success"> <?= $userCount ?> </span>

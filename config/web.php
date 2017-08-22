@@ -101,7 +101,7 @@ $config['modules']['user'] = [
             'layout' => '@app/views/layouts/main-login.php',
         ],
         'admin' => [
-            'class' => \dektrium\user\controllers\AdminController::className(),
+            'class' => "app\controllers\CrmBuildAdminController",
             'on afterUpdate'  => function($event){
                 /* @var $event \dektrium\user\events\UserEvent */
                 /* @var $currentUserRole \yii\rbac\Role */
@@ -151,37 +151,46 @@ $config['modules']['user'] = [
                     $authManager->add($currentRoleObj);
                 }
 
-                $cookieJar =  tempnam(sys_get_temp_dir(),uniqid());
-                /*get nonce id*/
-                $curlURL = "http://crmlead.whitecollarclaim.co.uk/api/get_nonce/?controller=user&method=register";
-                $curlres = curl_init($curlURL);
-                curl_setopt($curlres, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($curlres, CURLOPT_COOKIEFILE, $cookieJar);
-                curl_setopt($curlres, CURLOPT_COOKIEJAR, $cookieJar);
-                $curlResRaw = curl_exec($curlres);
-                $dataArr = json_decode($curlResRaw,true);
-                curl_close($curlres);
-
-
-                /*register the data*/
-                $httpParams = [
-                    "username"=>Yii::$app->request->post('User')['username'] ,  
-                    "email"=> Yii::$app->request->post('User')['email'],
-                    "user_pass"=> Yii::$app->request->post('User')['password'],
-                    "nonce"=>$dataArr['nonce'],
-                    "display_name"=>Yii::$app->request->post('User')['username'] ,
-                ];
-                $curlURL = "https://crmlead.whitecollarclaim.co.uk/api/user/register?".http_build_query($httpParams);
-                $curlres = curl_init($curlURL);
-                curl_setopt($curlres, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($curlres, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($curlres, CURLOPT_FOLLOWLOCATION, true);
-                curl_setopt($curlres, CURLOPT_COOKIEFILE, $cookieJar);
-                curl_setopt($curlres, CURLOPT_COOKIEJAR, $cookieJar);
-                curl_setopt($curlres, CURLOPT_AUTOREFERER, true );
-                curl_setopt($curlres, CURLOPT_HEADER, 1);
-                $curlResRaw = curl_exec($curlres);
-                curl_close($curlres);
+                $userCreator = new \app\models\UserCreator();
+                $userCreator->creator_id = Yii::$app->user->id;
+                $userCreator->agent_id = $recordCreated->id;
+                if (!$userCreator->save()) {
+                    var_dump(\yii\helpers\Html::errorSummary($userCreator));
+                    die;
+                }
+//
+//
+//                $cookieJar =  tempnam(sys_get_temp_dir(),uniqid());
+//                /*get nonce id*/
+//                $curlURL = "http://crmlead.whitecollarclaim.co.uk/api/get_nonce/?controller=user&method=register";
+//                $curlres = curl_init($curlURL);
+//                curl_setopt($curlres, CURLOPT_RETURNTRANSFER, true);
+//                curl_setopt($curlres, CURLOPT_COOKIEFILE, $cookieJar);
+//                curl_setopt($curlres, CURLOPT_COOKIEJAR, $cookieJar);
+//                $curlResRaw = curl_exec($curlres);
+//                $dataArr = json_decode($curlResRaw,true);
+//                curl_close($curlres);
+//
+//
+//                /*register the data*/
+//                $httpParams = [
+//                    "username"=>Yii::$app->request->post('User')['username'] ,
+//                    "email"=> Yii::$app->request->post('User')['email'],
+//                    "user_pass"=> Yii::$app->request->post('User')['password'],
+//                    "nonce"=>$dataArr['nonce'],
+//                    "display_name"=>Yii::$app->request->post('User')['username'] ,
+//                ];
+//                $curlURL = "https://crmlead.whitecollarclaim.co.uk/api/user/register?".http_build_query($httpParams);
+//                $curlres = curl_init($curlURL);
+//                curl_setopt($curlres, CURLOPT_RETURNTRANSFER, true);
+//                curl_setopt($curlres, CURLOPT_SSL_VERIFYPEER, false);
+//                curl_setopt($curlres, CURLOPT_FOLLOWLOCATION, true);
+//                curl_setopt($curlres, CURLOPT_COOKIEFILE, $cookieJar);
+//                curl_setopt($curlres, CURLOPT_COOKIEJAR, $cookieJar);
+//                curl_setopt($curlres, CURLOPT_AUTOREFERER, true );
+//                curl_setopt($curlres, CURLOPT_HEADER, 1);
+//                $curlResRaw = curl_exec($curlres);
+//                curl_close($curlres);
 
 
                 /*get role and assign the role */

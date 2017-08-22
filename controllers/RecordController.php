@@ -51,11 +51,6 @@ class RecordController extends Controller
                         'roles' => ['admin','Admin'],
                     ],
                     [
-                        'actions' => ['update'],
-                        'allow' => true,
-                        'roles' => ['Senior Manager'],
-                    ],
-                    [
                         'actions' => ['create'],
                         'allow' => true,
                         'roles' => ['Manager','Consultant'],
@@ -63,7 +58,7 @@ class RecordController extends Controller
                     [
                         'actions' => ['update'],
                         'allow' => true,
-                        'roles' => ['Manager','Agent'],
+                        'roles' => ['Manager','Agent','Manager','Senior Manager'],
                     ]
                 ],
             ],
@@ -173,11 +168,11 @@ class RecordController extends Controller
         if(!$propertyRecord){
             new NotFoundHttpException('Sorry that record doesnt exists');
         }
-        if ( Yii::$app->user->can('Manager')) {
-            if(!Yii::$app->user->can('managerPermission',['property_record' => $propertyRecord])) {
-                throw new UnauthorizedHttpException("You are not allowed to edit this record");
-            }
-        }
+        // if ( Yii::$app->user->can('Manager')) {
+        //     if(!Yii::$app->user->can('managerPermission',['property_record' => $propertyRecord])) {
+        //         throw new UnauthorizedHttpException("You are not allowed to edit this record");
+        //     }
+        // }
         if ( Yii::$app->user->can('Consultant')) {
             if(!Yii::$app->user->can('editOwnRecordPermission',['property_record' => $propertyRecord])) {
                 throw new UnauthorizedHttpException("You are not allowed to edit this record");
