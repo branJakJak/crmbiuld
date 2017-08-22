@@ -112,7 +112,7 @@ class CavityController extends Controller
         $query = CavitySupportingDocument::find()->where(['cavity_form_id'=>$id]);
         $curObj =$this->findModel($id);
         if ($curObj && Yii::$app->user->can('Agent')) {
-            if ($curObj->created_by_user !== \Yii::$app->user->username) {
+            if ($curObj->created_by_user !== \Yii::$app->user->identity->username) {
                 throw new ForbiddenHttpException();
             }
         }
