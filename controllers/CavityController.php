@@ -63,6 +63,13 @@ class CavityController extends Controller
     public function actionIndex()
     {
         $defaultQuery = Cavity::find();
+
+        $defaultQuery->leftJoin('tbl_questionaire_property_record', 'tbl_cavity.id = tbl_questionaire_property_record.cavity_form_id');
+        $defaultQuery
+            ->where([ 'tbl_questionaire_property_record.cavity_form_id'=>null ])
+            ->orderBy(['tbl_cavity.date_created'=>SORT_DESC]);
+
+
         /*can view the leads submitted by him/her or his/her agents*/
         if (Yii::$app->user->can('Manager')) {
             $allowedUsername = [];
@@ -76,22 +83,10 @@ class CavityController extends Controller
                 }
                 //find username
             }
-            // update query
-            $defaultQuery->andWhere(['in', 'created_by_user', $allowedUsername]);
+            $defaultQuery->andWhere(['in', 'tbl_cavity.created_by_user', $allowedUsername]);
         } else if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Consultant')) {
-            $defaultQuery->andWhere(['in', 'created_by_user', [\Yii::$app->user->identity->username]]);
+            $defaultQuery->andWhere(['in', 'tbl_cavity.created_by_user', [\Yii::$app->user->identity->username]  ]);
         }
-        else {
-            $defaultQuery->leftJoin('tbl_questionaire_property_record', 'tbl_cavity.id = tbl_questionaire_property_record.cavity_form_id');
-            $defaultQuery
-    //            ->where(['NOT',[ 'tbl_questionaire_property_record.cavity_form_id'=>null ]])
-                ->where([ 'tbl_questionaire_property_record.cavity_form_id'=>null ])
-                ->orderBy(['tbl_cavity.date_created'=>SORT_DESC]);
-        }
-        if (Yii::$app->user->can('Consultant')) {
-            $defaultQuery->andWhere(['in', 'created_by_user', \Yii::$app->user->identity->username]);
-        }
-
         $dataProvider = new ActiveDataProvider([
             'query' => $defaultQuery
         ]);
