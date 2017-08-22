@@ -181,13 +181,13 @@ class RecordController extends Controller
                 ->asArray()
                 ->all();
             foreach ($userCreatedByManagerRes as $currentUserCreatedByManagerRes) {
-                if (intval($currentUserCreatedByManagerRes['agent_id']) == $propertyRecord->id) {
+                if (intval($currentUserCreatedByManagerRes['agent_id']) == $propertyRecord->created_by) {
                     $oneOfAgent = true;
                     break;
                 }
             }
             if (!$isOwner && !$oneOfAgent) {
-                throw new ForbiddenHttpException();
+                throw new UnauthorizedHttpException("You are not allowed to edit this record");
             }
         }
         // if ( Yii::$app->user->can('Manager')) {
