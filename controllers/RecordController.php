@@ -186,7 +186,7 @@ class RecordController extends Controller
                     break;
                 }
             }
-            if ($isOwner || $oneOfAgent) {
+            if (!$isOwner && !$oneOfAgent) {
                 throw new ForbiddenHttpException();
             }
         }
