@@ -122,7 +122,7 @@ $config['modules']['user'] = [
         'security'=>[
             'class'=> \dektrium\user\controllers\SecurityController::className(),
             'on afterLogin'=>function($model){
-                if (\Yii::$app->user->can('Agent')) {
+                if (\Yii::$app->user->can('Agent') || \Yii::$app->user->can('Consultant')) {
                     \Yii::$app->getResponse()->redirect(\yii\helpers\Url::to(["/"]),301)->send();
                     exit(0);
                 }
