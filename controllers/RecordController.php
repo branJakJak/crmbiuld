@@ -18,7 +18,9 @@ use app\models\PropertyPreAppraisalImages;
 use app\models\PropertyRecord;
 use app\models\Triage;
 use app\models\TriageNote;
+use app\models\UserCreator;
 use DateTime;
+use dektrium\user\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\debug\models\timeline\DataProvider;
@@ -163,6 +165,27 @@ class RecordController extends Controller
                 throw new ForbiddenHttpException();
             }
         }
+        if (Yii::$app->user->can('Manager')) {
+            // can the manager view this ?
+            // either he/she is the creator of the record
+            $isOwner = $propertyRecord->created_by == \Yii::$app->user->id;
+            // or one of his agent created it
+            $oneOfAgent = false;
+            $userCreatedByManagerRes = UserCreator::find()
+                ->where(['creator_id'=>\Yii::$app->user->id])
+                ->asArray()
+                ->all();
+            foreach ($userCreatedByManagerRes as $currentUserCreatedByManagerRes) {
+                if (intval($currentUserCreatedByManagerRes['agent_id']) === $propertyRecord->id) {
+                    $oneOfAgent = true;
+                    break;
+                }
+            }
+            if(!$isOwner && !$oneOfAgent){
+                throw new ForbiddenHttpException();
+            }
+        }
+
 
 
         if(!$propertyRecord){

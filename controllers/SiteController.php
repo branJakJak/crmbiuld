@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\FilterPropertyRecordForm;
 use app\models\PropertyRecord;
+use app\models\UserCreator;
 use dektrium\user\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -53,6 +54,17 @@ class SiteController extends Controller
         if (Yii::$app->user->can('Agent')) {
             // filter the query to only the data he/she created
             $defaultQuery->andWhere(['created_by' => \Yii::$app->user->id]);
+        }
+        if (Yii::$app->user->can('Manager')) {
+            $userCreated = [];
+            $userCreatedByManagerRes = UserCreator::find()
+                ->where(['creator_id'=>\Yii::$app->user->id])
+                ->asArray()
+                ->all();
+            foreach ($userCreatedByManagerRes as $currentUserCreatedByManagerRes) {
+                $userCreated[] = $currentUserCreatedByManagerRes['agent_id'];
+            }
+            $defaultQuery->andWhere(['in','created_by',$userCreated]);
         }
         $dataProvider = new ActiveDataProvider(['query'=>$defaultQuery]);
         $insulationCollection = PropertyRecord::find()->select('insulation_type')->distinct()->all();
