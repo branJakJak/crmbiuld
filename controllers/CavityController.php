@@ -20,6 +20,7 @@ use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
@@ -77,7 +78,10 @@ class CavityController extends Controller
             }
             // update query
             $defaultQuery->andWhere(['in', 'created_by_user', $allowedUsername]);
-        } else {
+        } else if (Yii::$app->user->can('Agent')) {
+            $defaultQuery->andWhere(['in', 'created_by_user', [\Yii::$app->user->identity->username]]);
+        }
+        else {
             $defaultQuery->leftJoin('tbl_questionaire_property_record', 'tbl_cavity.id = tbl_questionaire_property_record.cavity_form_id');
             $defaultQuery
     //            ->where(['NOT',[ 'tbl_questionaire_property_record.cavity_form_id'=>null ]])
@@ -101,10 +105,18 @@ class CavityController extends Controller
      * Displays a single Cavity model.
      * @param integer $id
      * @return mixed
+     * @throws ForbiddenHttpException
      */
     public function actionView($id)
     {
         $query = CavitySupportingDocument::find()->where(['cavity_form_id'=>$id]);
+        $curObj =$this->findModel($id);
+        if ($curObj && Yii::$app->user->can('Agent')) {
+            if ($curObj->created_by_user !== \Yii::$app->user->username) {
+                throw new ForbiddenHttpException();
+            }
+        }
+
         $dataProvider = new ActiveDataProvider(['query' => $query]);
         return $this->render('view', [
             'model' => $this->findModel($id),

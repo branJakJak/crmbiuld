@@ -16,6 +16,7 @@ use app\models\PropertyNotes;
 use app\models\PropertyOwner;
 use app\models\PropertyPreAppraisalImages;
 use app\models\PropertyRecord;
+use app\models\QuestionairePropertyRecord;
 use app\models\Triage;
 use app\models\TriageNote;
 use app\models\UserCreator;
@@ -414,6 +415,14 @@ class RecordController extends Controller
     {
         $modelFound = $this->findModel($id);
         if ($modelFound) {
+            /*delete cavitypropertyrecord*/
+            $qp = QuestionairePropertyRecord::find()->where(['property_record_id' => $id]);
+            if ($qp->exists()) {
+                /* @var $obj QuestionairePropertyRecord*/
+                $obj = $qp->one();
+                $obj->cavityForm->delete();
+                $obj->delete();
+            }
             $modelFound->delete();
             Yii::$app->session->addFlash('success', 'Record deleted');
             return $this->redirect(\Yii::$app->getRequest()->getReferrer());

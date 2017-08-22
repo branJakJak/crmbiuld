@@ -20,12 +20,12 @@ if (
     // ];
 }
 
-if (Yii::$app->user->can('Consultant') || Yii::$app->user->can('Agent') ) {
+if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Consultant') ) {
     $menuItems[] = [
         'label' => 'Not Submitted',
         'url' => ['/not-submitted'],
     ];
-    
+
     // $menuItems[] = ['label' => 'Open Cavity Questionaire', 'url' => ['/cavity/create']];
 }
 
