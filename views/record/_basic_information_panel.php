@@ -181,7 +181,6 @@ $propertyType = [
                     if ($tempProfile) {
                         $tempNoteCreatorProfile = $tempProfile->one();
                         $noteCreator = $tempNoteCreatorProfile->name;
-                        $noteCreator = $tempNoteCreatorProfile->name;
                     }
                 }
                 $noteContent = $lastNote->content;
