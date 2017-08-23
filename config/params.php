@@ -7,6 +7,7 @@ return [
         'Not Submitted'     => 'Not Submitted',
         'Pending Supervisor Approval'       => 'Pending Supervisor Approval',
         'Pending Administrator Approval'        => 'Pending Administrator Approval',
+        'Pics Booked'        => 'Pics Booked',
         'Rejected'      => 'Rejected',
         'Approved'      => 'Approved',
         'Work in Progress'      => 'Work in Progress',
