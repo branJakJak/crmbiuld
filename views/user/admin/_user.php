@@ -25,6 +25,16 @@ $availableRoles = [
 	'Agent'=>'Agent'
 ];
 $defaultSelectedRole = 'Consultant';
+if (Yii::$app->user->can('Manager')) {
+$availableRoles = [
+	'Consultant'=>'Consultant',
+	'Agent'=>'Agent'
+];
+
+	
+}
+
+
 $roles = Yii::$app->authManager->getRolesByUser($user->id);
 
 
