@@ -77,7 +77,7 @@ class SiteController extends Controller
             foreach ($userCreatedByManagerRes as $currentUserCreatedByManagerRes) {
                 $userCreated[] = $currentUserCreatedByManagerRes['agent_id'];
             }
-            $queryObject = $filterModel->getQueryObject();
+            $queryObject = PropertyRecord::find();
             $queryObject->andWhere(['in', 'tbl_property_record.created_by', $userCreated]);
             $filterModel->setQueryObject($queryObject);
             $dataProvider = $filterModel->search();

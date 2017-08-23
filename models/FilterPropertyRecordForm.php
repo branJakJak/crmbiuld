@@ -97,7 +97,7 @@ class FilterPropertyRecordForm extends Model
             $this->queryObject->orWhere(['date(tbl_property_record.date_created)' => $this->date_created]);
         } else if( $this->scenario === 'status-filter-form') {
             if(!empty($this->status)){
-                $this->queryObject->where(['status'=> $this->status ] );
+                $this->queryObject->where(['tbl_property_record.status'=> $this->status ] );
             }
         }
         return new ActiveDataProvider(['query'=>$this->queryObject]);
