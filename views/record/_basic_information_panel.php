@@ -191,7 +191,24 @@ $propertyType = [
         ?>
         <?php if ($lastNote): ?>
             <?= $noteCreator ?> -<?= Yii::$app->formatter->asDate(new DateTime($noteDatePublished)) ?> <br>
-            <?= Html::encode($noteContent) ?>
+            <?php if (strlen($noteContent) >= 250): ?>
+                <?php 
+                \yii\bootstrap\Modal::begin([
+                    'header' => '<h2>Latest Note</h2>',
+                    'toggleButton' => [
+                        'label' => substr(Html::encode($noteContent), 0, 250).'..',
+                        'tag'=>'a'
+                    ],
+                ]);
+                echo Html::encode($noteContent);
+                \yii\bootstrap\Modal::end();
+                ?>
+            <?php endif ?>
+            <?php if (strlen($noteContent) < 250): ?>
+                <?php echo Html::encode($noteContent); ?>
+            <?php endif ?>
+
+
         <?php endif ?>
         <?php if (!$lastNote): ?>
             <strong>No notes created yet</strong>

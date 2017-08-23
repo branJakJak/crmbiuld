@@ -71,9 +71,13 @@ $gridColumns = [
             if (isset($propertyNotes) && !empty($propertyNotes)) {
                 $lastNoteObj = $propertyNotes[count($propertyNotes) - 1];
                 $lastNote = $lastNoteObj->content;
+                if (strlen($lastNote) >= 250) {
+                    $lastNote = substr($lastNote, 0, 250).'...'.Html::a('Read more', "/record/update/{$currentModel->id}#w28-tab4" , []);
+                }
             }
             return $lastNote;
         },
+        'format'=>'raw'
     ],
     
     [

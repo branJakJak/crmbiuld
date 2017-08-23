@@ -16,7 +16,7 @@ if(isset($note_type) && !empty($note_type)){
 
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($model, 'content')->textarea(['rows' => 6]) ?>
-    <?= $form->field($model, 'note_type')->hiddenInput() ?>
+    <?= $form->field($model, 'note_type')->hiddenInput()->label("") ?>
     <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
     <?php \yii\widgets\ActiveForm::end()?>
 
