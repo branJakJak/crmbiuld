@@ -44,6 +44,7 @@ class Owner extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [[ 'title', 'firstname', 'lastname' ], 'required'],
             [['date_of_birth','date_created', 'date_updated'], 'safe'],
             [[ 'email_address'], 'email'],
             [['title', 'firstname', 'lastname', 'company_name', 'email_address', 'mobile_number', 'phone_number', 'address1', 'address2', 'address3', 'postalcode', 'town', 'country'], 'string', 'max' => 255],
