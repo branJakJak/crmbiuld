@@ -151,7 +151,7 @@ if(Yii::$app->user->can('admin') || Yii::$app->user->can('Admin')){
     </div>
     <?php endif ?>
 
-    <?php if (!Yii::$app->user->can('Manager') && !Yii::$app->user->can('Agent')): ?>
+    
     <div class="row">
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             <?php $form = ActiveForm::begin(['id' => 'status-filter-form']); ?>
@@ -176,7 +176,7 @@ if(Yii::$app->user->can('admin') || Yii::$app->user->can('Admin')){
         </div>
         <br>
     </div>
-    <?php endif ?>
+    
 
     <br>
     <?php
