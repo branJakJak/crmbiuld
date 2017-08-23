@@ -319,7 +319,7 @@ class CavityController extends Controller
             $propertyRecord->created_by = $userModel->id;
         }
 
-        $propertyRecord->status = PropertyRecord::PROPERTY_STATUS_PENDING_ADMIN_APPROVAL;
+        $propertyRecord->status = PropertyRecord::PROPERTY_STATUS_APPROVED;
         $propertyRecord->save();
 
         /*create owner */
