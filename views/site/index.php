@@ -89,12 +89,14 @@ $gridColumns = [
             $propertyOwners = $currentModel->getPropertyOwners()->all();
             foreach ($propertyOwners as $currentPropertyOwner) {
                 $currentOwner = $currentPropertyOwner->getOwner()->one();
-                $ownerFullName = '';
-                if (!empty($currentOwner->title)) {
-                    $ownerFullName = sprintf("%s %s %s", $currentOwner->title, $currentOwner->firstname, $currentOwner->lastname);
+                if ($currentOwner) {
+                    $ownerFullName = '';
+                    if (!empty($currentOwner->title)) {
+                        $ownerFullName = sprintf("%s %s %s", $currentOwner->title, $currentOwner->firstname, $currentOwner->lastname);
+                    }
+                    $tempContainer = Html::a($ownerFullName, ['/owner/view', 'id' => $currentOwner->id]);
+                    $propertyOwnersCollection[] = $tempContainer;
                 }
-                $tempContainer = Html::a($ownerFullName, ['/owner/view', 'id' => $currentOwner->id]);
-                $propertyOwnersCollection[] = $tempContainer;
             }
             return implode(",<br>", $propertyOwnersCollection);
         },
