@@ -64,25 +64,25 @@ class SiteController extends Controller
                 if (isset($_POST['scenario'])) {
                     $filterModel->scenario = $_POST['scenario'];
                 }
-                if (Yii::$app->user->can('Manager')) {
-                    $userCreated = [];
-                    $userCreated[] = Yii::$app->user->id;
-                    $userCreatedByManagerRes = UserCreator::find()
-                        ->where(['creator_id'=>\Yii::$app->user->id])
-                        ->asArray()
-                        ->all();
-                    foreach ($userCreatedByManagerRes as $currentUserCreatedByManagerRes) {
-                        $userCreated[] = $currentUserCreatedByManagerRes['agent_id'];
-                    }
-                    $queryObject = $filterModel->getQueryObject();
-                    $queryObject->andWhere(['in', 'tbl_property_record.created_by', $userCreated]);
-                    $filterModel->setQueryObject($queryObject);
-                    $dataProvider = $filterModel->search();
-                }
-
                 $dataProvider = $filterModel->search();
             }
         }
+        if (Yii::$app->user->can('Manager')) {
+            $userCreated = [];
+            $userCreated[] = Yii::$app->user->id;
+            $userCreatedByManagerRes = UserCreator::find()
+                ->where(['creator_id'=>\Yii::$app->user->id])
+                ->asArray()
+                ->all();
+            foreach ($userCreatedByManagerRes as $currentUserCreatedByManagerRes) {
+                $userCreated[] = $currentUserCreatedByManagerRes['agent_id'];
+            }
+            $queryObject = $filterModel->getQueryObject();
+            $queryObject->andWhere(['in', 'tbl_property_record.created_by', $userCreated]);
+            $filterModel->setQueryObject($queryObject);
+            $dataProvider = $filterModel->search();
+        }
+
 
         return $this->render('index', [
             'filterModel' => $filterModel,
