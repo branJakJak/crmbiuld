@@ -218,10 +218,14 @@ class RecordController extends Controller
             }
             return $this->refresh("#basicInformationTab");
         }
-        $dtTemp = new DateTime($propertyRecord->date_of_cwi);
-        $propertyRecord->date_of_cwi = $dtTemp->format("m/d/Y");
-        $dtTemp = new DateTime($propertyRecord->date_guarantee_issued);
-        $propertyRecord->date_guarantee_issued = $dtTemp->format("m/d/Y");
+        if (isset($propertyRecord->date_of_cwi)) {
+            $dtTemp = new DateTime($propertyRecord->date_of_cwi);
+            $propertyRecord->date_of_cwi = $dtTemp->format("m/d/Y");
+        }
+        if ($propertyRecord->date_guarantee_issued) {
+            $dtTemp = new DateTime($propertyRecord->date_guarantee_issued);
+            $propertyRecord->date_guarantee_issued = $dtTemp->format("m/d/Y");
+        }
 
         /*property owner*/
         $owner = new Owner();

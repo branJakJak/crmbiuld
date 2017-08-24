@@ -307,19 +307,22 @@ class CavityController extends Controller
         /*create property record*/
         $propertyRecord = new PropertyRecord();
         $propertyRecord->postcode = $modelFound->address_postcode_cavity_installation;
-        $propertyRecord->address1 = $modelFound->address_postcode_cavity_installation;
-        $propertyRecord->address2 = $modelFound->address_postcode_cavity_installation;
-        $propertyRecord->address3 = $modelFound->address_postcode_cavity_installation;
-        $propertyRecord->town = $modelFound->address_postcode_cavity_installation;
-        $propertyRecord->country = $modelFound->address_postcode_cavity_installation;
+        $propertyRecord->address1 = $modelFound->address1_cavity_installation;
+        $propertyRecord->address2 = $modelFound->address2_cavity_installation;
+        $propertyRecord->address3 = $modelFound->address3_cavity_installation;
+        $propertyRecord->town = $modelFound->address_town_cavity_installation;
+        $propertyRecord->country = $modelFound->address_country_cavity_installation;
         $propertyRecord->installer = $modelFound->CWI_installer;
         
         if(User::find()->where(['username' => $modelFound->created_by_user])->exists()){
             $userModel = User::find()->where(['username' => $modelFound->created_by_user])->one();
             $propertyRecord->created_by = $userModel->id;
         }
-
         $propertyRecord->status = 'Pending Administrators Approval';
+        /* CWI information */
+        $propertyRecord->date_of_cwi = $modelFound->CWI_installation_date;
+        $propertyRecord->installer = $modelFound->CWI_installer;
+        $propertyRecord->product_installed = $modelFound->construction_type;
         $propertyRecord->save();
 
         /*create owner */
@@ -330,7 +333,8 @@ class CavityController extends Controller
         $owner->address1 = $modelFound->address1_cavity_installation;
         $owner->address2 = $modelFound->address2_cavity_installation;
         $owner->address3 = $modelFound->address3_cavity_installation;
-        $owner->town = $modelFound->address_postcode_cavity_installation;
+        $owner->postalcode = $modelFound->address_postcode_cavity_installation;
+        $owner->town = $modelFound->address_town_cavity_installation;
         $owner->country = "United Kingdom";
         $owner->email_address = $modelFound->email_address;
         if ($modelFound->second_application_telephone) {
