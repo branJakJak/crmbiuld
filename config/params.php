@@ -14,7 +14,6 @@ return [
             'Funding Accepted' =>'Funding Accepted',
             'Full Survey Complete' =>'Full Survey Complete',
             'Passed To Solicitor' =>'Passed To Solicitor',
-            ' ' =>'All Jobs',
 //        \app\models\PropertyRecord::PROPERTY_STATUS_NOT_SUBMITTED => \app\models\PropertyRecord::PROPERTY_STATUS_NOT_SUBMITTED,
 //        \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_SUPERVISOR_APPROVAL => \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_SUPERVISOR_APPROVAL,
 //        \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_ADMIN_APPROVAL => \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_ADMIN_APPROVAL,
