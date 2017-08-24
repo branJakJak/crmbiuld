@@ -60,6 +60,9 @@ class FilterPropertyRecordForm extends Model
     }
     public function search()
     {
+        if ($this->status === 'All Jobs') {
+            $this->status='';
+        }
         $this->queryObject->leftJoin('tbl_property_notes','tbl_property_notes.property_id = tbl_property_record.id');
         $this->queryObject->leftJoin('user','user.id = tbl_property_record.created_by');
         $this->queryObject->leftJoin('profile','profile.user_id = user.id');
