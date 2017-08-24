@@ -56,7 +56,11 @@ $gridColumns = [
             if ($modelFound) {
                 $profileObj = $modelFound->getProfile();
                 $profileObj = $profileObj->one();
-                $createdByName = $profileObj->name;
+                if ($profileObj) {
+                    $createdByName = $profileObj->name;
+                }else{
+                    $createdByName = $modelFound->username;
+                }
             }
             return $createdByName;
         },
