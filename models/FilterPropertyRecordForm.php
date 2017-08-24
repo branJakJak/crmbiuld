@@ -103,6 +103,11 @@ class FilterPropertyRecordForm extends Model
                 $this->queryObject->andWhere(['tbl_property_record.status'=> $this->status ] );
             }
         }
+
+        if ($this->status === '') {
+            $this->status='All Jobs';
+        }
+        
         return new ActiveDataProvider(['query'=>$this->queryObject]);
     }
 
