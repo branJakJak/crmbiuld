@@ -32,7 +32,7 @@ $config = [
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
-            'useFileTransport' => false,
+            'useFileTransport' => true,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -92,16 +92,13 @@ $config['modules']['user'] = [
     'enableRegistration' => false,
     'enableConfirmation' => false,
     'admins'=>['admin'],
-    'mailer'=>[
-        'sender' => 'admin@whitecollarclaim.co.uk',
-    ],
     'controllerMap' => [
         'registration' => [
             'class' => \dektrium\user\controllers\RegistrationController::className(),
             'layout' => '@app/views/layouts/main-login.php',
         ],
         'admin' => [
-            'class' => "app\controllers\CrmBuildAdminController",
+            'class' => \dektrium\user\controllers\AdminController::className(),
             'on afterUpdate'  => function($event){
                 /* @var $event \dektrium\user\events\UserEvent */
                 /* @var $currentUserRole \yii\rbac\Role */
@@ -122,7 +119,7 @@ $config['modules']['user'] = [
         'security'=>[
             'class'=> \dektrium\user\controllers\SecurityController::className(),
             'on afterLogin'=>function($model){
-                if (\Yii::$app->user->can('Agent') || \Yii::$app->user->can('Consultant')) {
+                if (\Yii::$app->user->can('Agent')) {
                     \Yii::$app->getResponse()->redirect(\yii\helpers\Url::to(["/"]),301)->send();
                     exit(0);
                 }
@@ -150,48 +147,6 @@ $config['modules']['user'] = [
                     $currentRoleObj = $authManager->createRole($currentRole);
                     $authManager->add($currentRoleObj);
                 }
-
-                $userCreator = new \app\models\UserCreator();
-                $userCreator->creator_id = Yii::$app->user->id;
-                $userCreator->agent_id = $recordCreated->id;
-                if (!$userCreator->save()) {
-                    var_dump(\yii\helpers\Html::errorSummary($userCreator));
-                    die;
-                }
-
-               $cookieJar =  tempnam(sys_get_temp_dir(),uniqid());
-               /*get nonce id*/
-               $curlURL = "http://crmlead.whitecollarclaim.co.uk/api/get_nonce/?controller=user&method=register";
-               $curlres = curl_init($curlURL);
-               curl_setopt($curlres, CURLOPT_RETURNTRANSFER, true);
-               curl_setopt($curlres, CURLOPT_COOKIEFILE, $cookieJar);
-               curl_setopt($curlres, CURLOPT_COOKIEJAR, $cookieJar);
-               $curlResRaw = curl_exec($curlres);
-               $dataArr = json_decode($curlResRaw,true);
-               curl_close($curlres);
-
-
-               /*register the data*/
-               $httpParams = [
-                   "username"=>Yii::$app->request->post('User')['username'] ,
-                   "email"=> Yii::$app->request->post('User')['email'],
-                   "user_pass"=> Yii::$app->request->post('User')['password'],
-                   "nonce"=>$dataArr['nonce'],
-                   "display_name"=>Yii::$app->request->post('User')['username'] ,
-               ];
-               $curlURL = "https://crmlead.whitecollarclaim.co.uk/api/user/register?".http_build_query($httpParams);
-               $curlres = curl_init($curlURL);
-               curl_setopt($curlres, CURLOPT_RETURNTRANSFER, true);
-               curl_setopt($curlres, CURLOPT_SSL_VERIFYPEER, false);
-               curl_setopt($curlres, CURLOPT_FOLLOWLOCATION, true);
-               curl_setopt($curlres, CURLOPT_COOKIEFILE, $cookieJar);
-               curl_setopt($curlres, CURLOPT_COOKIEJAR, $cookieJar);
-               curl_setopt($curlres, CURLOPT_AUTOREFERER, true );
-               curl_setopt($curlres, CURLOPT_HEADER, 1);
-               $curlResRaw = curl_exec($curlres);
-               curl_close($curlres);
-
-
                 /*get role and assign the role */
                 $authManager->assign($currentRoleObj, $recordCreated->id);
                 Yii::$app->session->addFlash("success", "User $recordCreated->email is assigned as $currentRole ");

@@ -11,13 +11,6 @@ use yii\widgets\Pjax;
 /* @var $triageDocumentDataProvider \yii\data\ActiveDataProvider */
 /* @var $triageNotesDataProvider \yii\data\ActiveDataProvider */
 
-$downloadAllBtn = '';
-if (Yii::$app->user->can('Admin') || Yii::$app->user->can('Senior Manager')) {
-    $downloadAllBtn = Html::a("<i class='fa  fa-file-pdf-o'></i> Export PDF", \yii\helpers\Url::to(["/export/view", "id" => $propertyRecord->id]), ['class' => 'pull-right btn btn-success']);
-}
-
-
-
 ?>
 <style type="text/css">
     #w24 > div.panel-heading {
@@ -27,8 +20,8 @@ if (Yii::$app->user->can('Admin') || Yii::$app->user->can('Senior Manager')) {
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <?=
-        PanelWidget::begin([
+        <?php
+            echo PanelWidget::begin([
                 'title' => 'Triage Note',
                 'type' => 'default',
                 'widget' => false,
@@ -69,18 +62,14 @@ if (Yii::$app->user->can('Admin') || Yii::$app->user->can('Senior Manager')) {
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <?php if (  Yii::$app->user->can('Admin') || Yii::$app->user->can('Senior Manager')   ): ?>
-        <?php endif ?>
-            <?php
-                echo PanelWidget::begin([
-                    'title' => 'File Upload' . $downloadAllBtn,
-                    'type' => 'default',
-                    'widget' => false,
-                ]);
-            ?>
-
-
-
+        <?php
+        $downloadAllBtn = Html::a("<i class='fa  fa-file-pdf-o'></i> Export PDF", \yii\helpers\Url::to(["/export/view", "id" => $propertyRecord->id]), ['class' => 'pull-right btn btn-success']);
+        echo PanelWidget::begin([
+            'title' => 'File Upload' . $downloadAllBtn,
+            'type' => 'default',
+            'widget' => false,
+        ]);
+        ?>
 
         <?php $form = \yii\widgets\ActiveForm::begin()?>
         <?=

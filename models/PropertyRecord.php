@@ -49,7 +49,6 @@ class PropertyRecord extends \yii\db\ActiveRecord
     const PROPERTY_STATUS_NOT_SUBMITTED = 'Not Submitted';
     const PROPERTY_STATUS_PENDING_SUPERVISOR_APPROVAL = 'Pending Supervisor Approval';
     const PROPERTY_STATUS_PENDING_ADMIN_APPROVAL = 'Pending Administrator Approval';
-    const PROPERTY_STATUS_PICS_BOOKED = 'Pics Booked';
     const PROPERTY_STATUS_REJECTED = 'Rejected';
     const PROPERTY_STATUS_APPROVED = 'Approved';
     const PROPERTY_STATUS_WORK_IN_PROGRESS = 'Work in Progress';

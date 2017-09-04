@@ -32,8 +32,6 @@ foreach ($allSupportingDocuments as $currentSupportingDocument) {
 
 
 ?>
-
-<?php if (!Yii::$app->user->can('Manager') && !Yii::$app->user->can('Agent')): ?>
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <h1><?= Html::encode($this->title) ?></h1>
@@ -51,7 +49,6 @@ foreach ($allSupportingDocuments as $currentSupportingDocument) {
         <?= Html::a('<i class="fa  fa-delete-circle "></i> Decline', ['decline', 'id' => $model->id], ['class' => 'btn btn-danger  pull-right btn-lg']) ?>
     </div>
 </div>
-<?php endif ?>
 <br >
 <div class="row">
     <div class="col-lg-12">
@@ -93,14 +90,6 @@ foreach ($allSupportingDocuments as $currentSupportingDocument) {
                     'advice_about_suitability',
                     'is_in_IVA_or_Bankrupt',
                     'created_by_user',
-                    'mobile_landline',
-                    'second_application_title',
-                    'second_application_firstname',
-                    'second_application_lastname',
-                    'second_application_birthday',
-                    'second_application_telephone',
-                    'second_application_mobile_landline',
-                    'second_application_email_address',
                     'date_time_callback:datetime',
                     'date_created:date',
                     'date_updated:date',

@@ -59,7 +59,7 @@ $this->registerJs($openLoginFormBtnScript);
     </div>
     <div class="col-lg-4">
         <br>
-        <?= Html::a('<i class="fa  fa-sticky-note-o"></i> Lead Questionaire Form', '//crmlead.whitecollarclaim.co.uk/', ['class' => 'btn btn-lg btn-success btn-block']); ?>
+        <?= Html::a('<i class="fa  fa-sticky-note-o"></i> Lead Questionaire Form', 'http://crmlead.site8.co/', ['class' => 'btn btn-lg btn-success btn-block']); ?>
         <br>
         <?= Html::a('<i class="fa fa-user"></i> CRM Panel ', '#', ['class' => 'btn btn-lg btn-info btn-block','id'=>'openLoginFormBtn']); ?>
         

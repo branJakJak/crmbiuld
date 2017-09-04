@@ -11,8 +11,6 @@ class m170804_170019_add_column_when_they_move_property extends Migration
             'when_property_moved' ,
             $this->date()
         );
-
-
     }
 
     public function down()

@@ -4,7 +4,6 @@ namespace app\controllers;
 
 use app\models\FilterPropertyRecordForm;
 use app\models\PropertyRecord;
-use app\models\UserCreator;
 use dektrium\user\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
@@ -67,23 +66,6 @@ class SiteController extends Controller
                 $dataProvider = $filterModel->search();
             }
         }
-        if (Yii::$app->user->can('Manager')) {
-            $userCreated = [];
-            $userCreated[] = Yii::$app->user->id;
-            $userCreatedByManagerRes = UserCreator::find()
-                ->where(['creator_id'=>\Yii::$app->user->id])
-                ->asArray()
-                ->all();
-            foreach ($userCreatedByManagerRes as $currentUserCreatedByManagerRes) {
-                $userCreated[] = $currentUserCreatedByManagerRes['agent_id'];
-            }
-            $filterModel->setQueryObject(PropertyRecord::find());
-            $queryObject = $filterModel->getQueryObject();
-            $queryObject->andWhere(['in', 'tbl_property_record.created_by', $userCreated]);
-            $dataProvider = $filterModel->search();
-        }
-
-
         return $this->render('index', [
             'filterModel' => $filterModel,
             'dataProvider'=> $dataProvider,
