@@ -16,9 +16,12 @@ use app\models\PropertyNotes;
 use app\models\PropertyOwner;
 use app\models\PropertyPreAppraisalImages;
 use app\models\PropertyRecord;
+use app\models\QuestionairePropertyRecord;
 use app\models\Triage;
 use app\models\TriageNote;
+use app\models\UserCreator;
 use DateTime;
+use dektrium\user\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\debug\models\timeline\DataProvider;
@@ -46,14 +49,9 @@ class RecordController extends Controller
                 'only' => ['create','update','downloadDocument','transferToTriage'],
                 'rules' => [
                     [
-                        'actions' => ['create','update','downloadDocument','transferToTriage'],
+                        'actions' => ['create','downloadDocument','transferToTriage'],
                         'allow' => true,
                         'roles' => ['admin','Admin'],
-                    ],
-                    [
-                        'actions' => ['update'],
-                        'allow' => true,
-                        'roles' => ['Senior Manager'],
                     ],
                     [
                         'actions' => ['create'],
@@ -63,7 +61,7 @@ class RecordController extends Controller
                     [
                         'actions' => ['update'],
                         'allow' => true,
-                        'roles' => ['Manager','Agent'],
+                        'roles' => ['admin','Admin','Manager','Agent','Senior Manager'],
                     ]
                 ],
             ],
@@ -161,23 +159,48 @@ class RecordController extends Controller
         /* @var $propertyRecord PropertyRecord */
         /*property record*/
         $propertyRecord = PropertyRecord::findOne(['id' => $id]);
+        if(!$propertyRecord){
+            new NotFoundHttpException('Sorry that record doesnt exists');
+        }
 
-        if (Yii::$app->user->can('Agent')) {
+
+        if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Consultant')) {
             /*check if he/she owns this record*/
             if (Yii::$app->user->id != $propertyRecord->created_by) {
                 throw new ForbiddenHttpException();
             }
         }
-
-
-        if(!$propertyRecord){
-            new NotFoundHttpException('Sorry that record doesnt exists');
-        }
-        if ( Yii::$app->user->can('Manager')) {
-            if(!Yii::$app->user->can('managerPermission',['property_record' => $propertyRecord])) {
+        if (Yii::$app->user->can('Manager')) {
+            // can the manager view this ?
+            // either he/she is the creator of the record
+            $isOwner = $propertyRecord->created_by == \Yii::$app->user->id;
+            // or one of his agent created it
+            $oneOfAgent = false;
+            $userCreatedByManagerRes = UserCreator::find()
+                ->where(['creator_id'=>\Yii::$app->user->id])
+                ->asArray()
+                ->all();
+            foreach ($userCreatedByManagerRes as $currentUserCreatedByManagerRes) {
+                if (intval($currentUserCreatedByManagerRes['agent_id']) == $propertyRecord->created_by) {
+                    $oneOfAgent = true;
+                    break;
+                }
+            }
+            if (!$isOwner && !$oneOfAgent) {
                 throw new UnauthorizedHttpException("You are not allowed to edit this record");
             }
         }
+
+        if ( 
+            (
+                Yii::$app->user->can('Manager') || 
+                Yii::$app->user->can('Consultant') || 
+                Yii::$app->user->can('Agent')
+            ) 
+            && Yii::$app->request->isPost) {
+            throw new UnauthorizedHttpException("You are not allowed to edit this record");
+        }
+
         if ( Yii::$app->user->can('Consultant')) {
             if(!Yii::$app->user->can('editOwnRecordPermission',['property_record' => $propertyRecord])) {
                 throw new UnauthorizedHttpException("You are not allowed to edit this record");
@@ -195,10 +218,14 @@ class RecordController extends Controller
             }
             return $this->refresh("#basicInformationTab");
         }
-        $dtTemp = new DateTime($propertyRecord->date_of_cwi);
-        $propertyRecord->date_of_cwi = $dtTemp->format("m/d/Y");
-        $dtTemp = new DateTime($propertyRecord->date_guarantee_issued);
-        $propertyRecord->date_guarantee_issued = $dtTemp->format("m/d/Y");
+        if (isset($propertyRecord->date_of_cwi)) {
+            $dtTemp = new DateTime($propertyRecord->date_of_cwi);
+            $propertyRecord->date_of_cwi = $dtTemp->format("m/d/Y");
+        }
+        if ($propertyRecord->date_guarantee_issued) {
+            $dtTemp = new DateTime($propertyRecord->date_guarantee_issued);
+            $propertyRecord->date_guarantee_issued = $dtTemp->format("m/d/Y");
+        }
 
         /*property owner*/
         $owner = new Owner();
@@ -398,6 +425,14 @@ class RecordController extends Controller
     {
         $modelFound = $this->findModel($id);
         if ($modelFound) {
+            /*delete cavitypropertyrecord*/
+            $qp = QuestionairePropertyRecord::find()->where(['property_record_id' => $id]);
+            if ($qp->exists()) {
+                /* @var $obj QuestionairePropertyRecord*/
+                $obj = $qp->one();
+                $obj->cavityForm->delete();
+                $obj->delete();
+            }
             $modelFound->delete();
             Yii::$app->session->addFlash('success', 'Record deleted');
             return $this->redirect(\Yii::$app->getRequest()->getReferrer());

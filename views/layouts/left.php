@@ -19,11 +19,20 @@ if (
     //     'icon' => 'file-code-o', 'url' => ['/record/create']
     // ];
 }
-if (Yii::$app->user->can('Consultant')) {
-    $menuItems[] = ['label' => 'Open Cavity Questionaire', 'url' => ['/cavity/create']];
 
+if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Consultant') ) {
+    $menuItems[] = [
+        'label' => 'Not Submitted',
+        'url' => ['/not-submitted'],
+    ];
 
+    // $menuItems[] = ['label' => 'Open Cavity Questionaire', 'url' => ['/cavity/create']];
 }
+
+if (Yii::$app->user->can('Manager')) {
+    $menuItems[] = ['label' => 'Create agent account', 'url' => ['/user/admin/create'],'icon'=>'user'];
+}
+
 
 
 ?>

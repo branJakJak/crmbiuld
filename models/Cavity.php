@@ -38,6 +38,14 @@ use yii\db\Expression;
  * @property string $when_property_moved
  * @property string $is_in_IVA_or_Bankrupt
  * @property string $created_by_user
+ * @property string $mobile_landline
+ * @property string second_application_title
+ * @property string second_application_firstname
+ * @property string second_application_lastname
+ * @property string second_application_birthday
+ * @property string second_application_telephone
+ * @property string second_application_mobile_landline
+ * @property string second_application_email_address
  * @property string $date_created
  * @property string $date_updated
  *
@@ -63,7 +71,7 @@ class Cavity extends \yii\db\ActiveRecord
             [['birthday','when_property_moved', 'CWI_installation_date', 'date_created', 'date_updated'], 'safe'],
             [['CWI_payment','telephone_number'], 'number'],
             [['email_address'], 'email'],
-            [['title', 'firstname', 'lastname','address1_cavity_installation', 'address2_cavity_installation', 'address3_cavity_installation', 'address_postcode_cavity_installation', 'address_town_cavity_installation', 'address_country_cavity_installation', 'CWI_installer', 'construction_type', 'property_exposure', 'after_CWI_installation_date', 'suffered_issues_prior_to_CWI', 'work_to_rectify_CWI', 'incured_financial_expenses', 'document_copy', 'reported_issue_to_house_insurer', 'advice_about_suitability', 'date_time_callback','is_in_IVA_or_Bankrupt','created_by_user'], 'string', 'max' => 255],
+            [['title', 'firstname', 'lastname','address1_cavity_installation', 'address2_cavity_installation', 'address3_cavity_installation', 'address_postcode_cavity_installation', 'address_town_cavity_installation', 'address_country_cavity_installation', 'CWI_installer', 'construction_type', 'property_exposure', 'after_CWI_installation_date', 'suffered_issues_prior_to_CWI', 'work_to_rectify_CWI', 'incured_financial_expenses', 'document_copy', 'reported_issue_to_house_insurer', 'advice_about_suitability', 'date_time_callback','is_in_IVA_or_Bankrupt','created_by_user','mobile_landline','second_application_title','second_application_firstname','second_application_lastname','second_application_birthday','second_application_telephone','second_application_mobile_landline','second_application_email_address'], 'string', 'max' => 255],
         ];
     }
 
@@ -102,6 +110,14 @@ class Cavity extends \yii\db\ActiveRecord
             'when_property_moved' => 'Date when property moved',
             'is_in_IVA_or_Bankrupt' => 'Is in IVA or Bankrupt',
             'created_by_user' => 'Created by user',
+            'mobile_landline' => 'Other contact number',
+            'second_application_title' => 'Title (second applicant)',
+            'second_application_firstname' => 'Firstname (second applicant)',
+            'second_application_lastname' => 'Lastname (second applicant)',
+            'second_application_birthday' => 'Birthday (second applicant)',
+            'second_application_telephone' => 'Telephone (second applicant)',
+            'second_application_mobile_landline' => 'Other contact number (second applicant)',
+            'second_application_email_address' => 'Email Address (second applicant)',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
         ];

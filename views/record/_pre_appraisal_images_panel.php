@@ -41,6 +41,7 @@ echo PanelWidget::begin([
 ])
 ?>
 
+
 <?php $form = \yii\widgets\ActiveForm::begin(['action' => \yii\helpers\Url::to(['/record/transfer-to-triage', 'propertyId' => $propertyRecord->id])]) ?>
 
 <?= FileUploadUI::widget([
@@ -95,9 +96,13 @@ echo PanelWidget::begin([
     ],
 ]);
 ?>
+<?php if (!Yii::$app->user->can('Manager') && !Yii::$app->user->can('Consultant') && !Yii::$app->user->can('Agent')): ?>
     <div>
         <?= Html::submitButton('Transfer to Triage', ['class' => 'btn btn-success']) ?>
     </div>
+<?php endif ?>
+
+
 
 
 <?php ActiveForm::end(); ?>

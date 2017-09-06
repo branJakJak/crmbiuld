@@ -10,6 +10,7 @@ use app\models\PropertyOwner;
 use app\models\PropertyPreAppraisalImages;
 use app\models\PropertyRecord;
 use app\models\QuestionairePropertyRecord;
+use app\models\UserCreator;
 use dektrium\user\models\User;
 use Yii;
 use app\models\Cavity;
@@ -19,6 +20,7 @@ use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\UploadedFile;
@@ -42,7 +44,7 @@ class CavityController extends Controller
             ],
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'view', 'create', 'update', 'delete'],
+                'only' => ['index', 'view', 'create', 'update', 'delete','accept'],
                 'rules' => [
                     [
                         'actions' => ['index', 'view', 'create', 'update', 'delete','accept'],
@@ -61,11 +63,30 @@ class CavityController extends Controller
     public function actionIndex()
     {
         $defaultQuery = Cavity::find();
+
         $defaultQuery->leftJoin('tbl_questionaire_property_record', 'tbl_cavity.id = tbl_questionaire_property_record.cavity_form_id');
         $defaultQuery
-//            ->where(['NOT',[ 'tbl_questionaire_property_record.cavity_form_id'=>null ]])
             ->where([ 'tbl_questionaire_property_record.cavity_form_id'=>null ])
             ->orderBy(['tbl_cavity.date_created'=>SORT_DESC]);
+
+
+        /*can view the leads submitted by him/her or his/her agents*/
+        if (Yii::$app->user->can('Manager')) {
+            $allowedUsername = [];
+            $allowedUsername[] = \Yii::$app->user->identity->username;
+            // get the id of created_by_user
+            $agentsCreatedByUser = UserCreator::find()->where(['creator_id' => Yii::$app->user->id])->asArray()->all();
+            foreach ($agentsCreatedByUser as $currentAllowed) {
+                $userObj = User::find()->where(['id'=>$currentAllowed['agent_id']])->one();
+                if($userObj){
+                    $allowedUsername[] = $userObj->username;
+                }
+                //find username
+            }
+            $defaultQuery->andWhere(['in', 'tbl_cavity.created_by_user', $allowedUsername]);
+        } else if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Consultant')) {
+            $defaultQuery->andWhere(['in', 'tbl_cavity.created_by_user', [\Yii::$app->user->identity->username]  ]);
+        }
         $dataProvider = new ActiveDataProvider([
             'query' => $defaultQuery
         ]);
@@ -79,10 +100,18 @@ class CavityController extends Controller
      * Displays a single Cavity model.
      * @param integer $id
      * @return mixed
+     * @throws ForbiddenHttpException
      */
     public function actionView($id)
     {
         $query = CavitySupportingDocument::find()->where(['cavity_form_id'=>$id]);
+        $curObj =$this->findModel($id);
+        if ($curObj && Yii::$app->user->can('Agent')) {
+            if ($curObj->created_by_user !== \Yii::$app->user->identity->username) {
+                throw new ForbiddenHttpException();
+            }
+        }
+
         $dataProvider = new ActiveDataProvider(['query' => $query]);
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -278,19 +307,22 @@ class CavityController extends Controller
         /*create property record*/
         $propertyRecord = new PropertyRecord();
         $propertyRecord->postcode = $modelFound->address_postcode_cavity_installation;
-        $propertyRecord->address1 = $modelFound->address_postcode_cavity_installation;
-        $propertyRecord->address2 = $modelFound->address_postcode_cavity_installation;
-        $propertyRecord->address3 = $modelFound->address_postcode_cavity_installation;
-        $propertyRecord->town = $modelFound->address_postcode_cavity_installation;
-        $propertyRecord->country = $modelFound->address_postcode_cavity_installation;
+        $propertyRecord->address1 = $modelFound->address1_cavity_installation;
+        $propertyRecord->address2 = $modelFound->address2_cavity_installation;
+        $propertyRecord->address3 = $modelFound->address3_cavity_installation;
+        $propertyRecord->town = $modelFound->address_town_cavity_installation;
+        $propertyRecord->country = $modelFound->address_country_cavity_installation;
         $propertyRecord->installer = $modelFound->CWI_installer;
         
         if(User::find()->where(['username' => $modelFound->created_by_user])->exists()){
             $userModel = User::find()->where(['username' => $modelFound->created_by_user])->one();
             $propertyRecord->created_by = $userModel->id;
         }
-
-        $propertyRecord->status = PropertyRecord::PROPERTY_STATUS_PENDING_ADMIN_APPROVAL;
+        $propertyRecord->status = 'Pending Administrators Approval';
+        /* CWI information */
+        $propertyRecord->date_of_cwi = $modelFound->CWI_installation_date;
+        $propertyRecord->installer = $modelFound->CWI_installer;
+        $propertyRecord->product_installed = $modelFound->construction_type;
         $propertyRecord->save();
 
         /*create owner */
@@ -301,16 +333,46 @@ class CavityController extends Controller
         $owner->address1 = $modelFound->address1_cavity_installation;
         $owner->address2 = $modelFound->address2_cavity_installation;
         $owner->address3 = $modelFound->address3_cavity_installation;
-        $owner->town = $modelFound->address_postcode_cavity_installation;
+        $owner->postalcode = $modelFound->address_postcode_cavity_installation;
+        $owner->town = $modelFound->address_town_cavity_installation;
         $owner->country = "United Kingdom";
         $owner->email_address = $modelFound->email_address;
+        if ($modelFound->second_application_telephone) {
+            $owner->phone_number = $modelFound->telephone_number.' , '.$modelFound->second_application_mobile_landline;
+        } else {
+            $owner->phone_number = $modelFound->telephone_number;
+        }
         $owner->phone_number = $modelFound->telephone_number;
         $owner->date_of_birth = $modelFound->birthday;
         $owner->save();
+
+        $owner2 = new Owner();
+        $owner2->title = $modelFound->second_application_title;
+        $owner2->firstname = $modelFound->second_application_firstname;
+        $owner2->lastname = $modelFound->second_application_lastname;
+        $owner2->address1 = $modelFound->address1_cavity_installation;
+        $owner2->address2 = $modelFound->address2_cavity_installation;
+        $owner2->address3 = $modelFound->address3_cavity_installation;
+        $owner2->date_of_birth = $modelFound->second_application_birthday;
+        if (isset($modelFound->second_application_mobile_landline)) {
+            $owner2->phone_number = $modelFound->second_application_telephone.','.$modelFound->second_application_mobile_landline;
+        } else {
+            $owner2->phone_number = $modelFound->second_application_telephone;
+        }
+        $owner2->email_address = $modelFound->second_application_email_address;
+        $owner2->save();
+
         $propertOwner = new PropertyOwner();
         $propertOwner->owner_id = $owner->id;
         $propertOwner->property_id = $propertyRecord->id;
         $propertOwner->save();
+
+        $propertOwner2 = new PropertyOwner();
+        $propertOwner2->owner_id = $owner2->id;
+        $propertOwner2->property_id = $propertyRecord->id;
+        $propertOwner2->save();
+
+
         /*import the images and documents*/
         $supportingDocuments = $modelFound->getSupportingDocuments()->all();
         foreach ($supportingDocuments as $currentSupportingDocuments) {
