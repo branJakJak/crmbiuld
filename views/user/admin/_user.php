@@ -18,28 +18,32 @@
 use yii\helpers\Html;
 
 $availableRoles = [
-	'Admin'=>'Admin',
-	'Senior Manager'=>'Senior Manager',
-	'Manager'=>'Manager',
-	// 'Consultant'=>'Consultant',
-	'Agent'=>'Agent'
+    'Admin' => 'Admin',
+    'Senior Manager' => 'Senior Manager',
+    'Manager' => 'Manager',
+    // 'Consultant'=>'Consultant',
+    'Agent' => 'Agent'
 ];
-$defaultSelectedRole = 'Consultant';
+if (Yii::$app->user->can('Agent')) {
+    $availableRoles = [
+        'Consultant' => 'Consultant',
+    ];
+}
+$defaultSelectedRole = 'Agent';
 if (Yii::$app->user->can('Manager')) {
-$availableRoles = [
-	// 'Consultant'=>'Consultant',
-	'Agent'=>'Agent'
-];
+    $availableRoles = [
+        // 'Consultant'=>'Consultant',
+        'Agent' => 'Agent'
+    ];
 
-	
+
 }
 
 
 $roles = Yii::$app->authManager->getRolesByUser($user->id);
 
 
-
-if(count($roles) >=1 ){
+if (count($roles) >= 1) {
     $currentRole = reset($roles);
     $defaultSelectedRole = $currentRole->name;
 }
@@ -51,10 +55,10 @@ if(count($roles) >=1 ){
 <?= $form->field($user, 'username')->textInput(['maxlength' => 255]) ?>
 <?= $form->field($user, 'password')->passwordInput() ?>
 <div class="form-group field-user-password">
-	<label class="control-label col-sm-3" for="user-password">Role</label>
-	<div class="col-sm-9">
-		<?= Html::dropDownList('role', $defaultSelectedRole, $availableRoles,['class'=>'form-control']); ?>
-	</div>
+    <label class="control-label col-sm-3" for="user-password">Role</label>
+    <div class="col-sm-9">
+        <?= Html::dropDownList('role', $defaultSelectedRole, $availableRoles, ['class' => 'form-control']); ?>
+    </div>
 
 </div>
 

@@ -51,7 +51,7 @@ class SiteController extends Controller
         $filterModel = new FilterPropertyRecordForm();
         $defaultQuery = PropertyRecord::find()->orderBy(['date_updated'=>SORT_DESC,'date_created'=>SORT_DESC]);
         $propertRecordModel = new PropertyRecord();
-        if (Yii::$app->user->can('Agent')) {
+        if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Consultant')) {
             // filter the query to only the data he/she created
             $defaultQuery->andWhere(['created_by' => \Yii::$app->user->id]);
         }

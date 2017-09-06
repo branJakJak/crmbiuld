@@ -29,6 +29,11 @@ class UserCreator extends \yii\db\ActiveRecord
         return 'tbl_user_creator';
     }
 
+    public static function isOwner($creatorId, $childId)
+    {
+        return UserCreator::find()->where(['creator_id' => $creatorId, 'agent_id' => $childId])->exists();
+    }
+
     /**
      * @inheritdoc
      */

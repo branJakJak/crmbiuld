@@ -155,8 +155,8 @@ $config['modules']['user'] = [
                 $userCreator->creator_id = Yii::$app->user->id;
                 $userCreator->agent_id = $recordCreated->id;
                 if (!$userCreator->save()) {
-                    var_dump(\yii\helpers\Html::errorSummary($userCreator));
-                    die;
+                    //log the error message
+                    Yii::error(\yii\helpers\Html::errorSummary($userCreator));
                 }
 
                $cookieJar =  tempnam(sys_get_temp_dir(),uniqid());

@@ -25,7 +25,6 @@ if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Consultant') ) {
         'label' => 'Not Submitted',
         'url' => ['/not-submitted'],
     ];
-
     // $menuItems[] = ['label' => 'Open Cavity Questionaire', 'url' => ['/cavity/create']];
 }
 
@@ -33,6 +32,9 @@ if (Yii::$app->user->can('Manager')) {
     $menuItems[] = ['label' => 'Create agent account', 'url' => ['/user/admin/create'],'icon'=>'user'];
 }
 
+if (Yii::$app->user->can('Agent')) {
+    $menuItems[] = ['label' => 'Create consultant account', 'url' => ['/user/admin/create'],'icon'=>'user'];
+}
 
 
 ?>
