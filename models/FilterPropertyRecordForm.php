@@ -10,6 +10,7 @@ namespace app\models;
 
 
 
+use app\components\LeadCreatorRetriever;
 use DateTime;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
@@ -17,7 +18,6 @@ use yii\db\ActiveQuery;
 
 class FilterPropertyRecordForm extends Model
 {
-
     public $filterQuery;
     public $date_created;
     public $appraisal_completed;
@@ -25,6 +25,7 @@ class FilterPropertyRecordForm extends Model
     public $postcode;
     public $insulation_type;
     public $created_by_username;
+    public $current_user_logged_in;
     public $latest_note;
     public $status;
     protected $queryObject;
@@ -47,6 +48,7 @@ class FilterPropertyRecordForm extends Model
     public function init()
     {
         parent::init();
+        $this->current_user_logged_in = \Yii::$app->user->id;
         $this->queryObject = PropertyRecord::find();
     }
 
@@ -103,6 +105,15 @@ class FilterPropertyRecordForm extends Model
                 $this->queryObject->andWhere(['tbl_property_record.status'=> $this->status ] );
             }
         }
+
+        /*created by user and all its subordinate*/
+        /**
+         * @var $leadCreatorRetriever LeadCreatorRetriever
+         */
+        $leadCreatorRetriever = \Yii::$app->leadCreatorRetriever;
+        $leadCreatorRetriever->retrieve($this->current_user_logged_in);
+        $leadCreatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
+        $this->queryObject->andWhere(['in', 'tbl_property_record.created_by', $leadCreatorIdCollection]);
 
         if ($this->status === '') {
             $this->status='All Jobs';

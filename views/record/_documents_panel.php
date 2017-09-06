@@ -86,6 +86,7 @@ use yii\widgets\Pjax;
                             $uploadImagePath = Yii::getAlias("@upload_document_path") . DIRECTORY_SEPARATOR . $currentModel->document_name;
                             /*get the url of published image*/
                             $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
+//                            return Html::a(Html::img($publishedImageUrl[1], ['style' => 'height:250px']), $publishedImageUrl[1],['target'=>'_blank']);
                             return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
                         }
                     },

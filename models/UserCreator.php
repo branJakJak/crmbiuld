@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\LeadCreatorRetriever;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
@@ -42,6 +43,23 @@ class UserCreator extends \yii\db\ActiveRecord
     public static function getCreatedUsers($user_id)
     {
         return UserCreator::find()->where(['creator_id' => $user_id])->all();
+    }
+
+    /**
+     * Checks whether the $subordinate_id is a subordinate of $upper_class_user_id
+     * @param $upper_class_user_id
+     * @param $subordinate_id
+     * @return bool
+     */
+    public static function isSubordinate($upper_class_user_id, $subordinate_id)
+    {
+        /**
+         * @var $leadCreatorRetriever LeadCreatorRetriever
+         */
+        $leadCreatorRetriever = \Yii::$app->leadCreatorRetriever;
+        $leadCreatorRetriever->retrieve($upper_class_user_id);
+        $userCreatedCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
+        return in_array($subordinate_id, $userCreatedCollection);
     }
 
     /**

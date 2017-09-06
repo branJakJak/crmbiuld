@@ -9,6 +9,9 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
+        'leadCreatorRetriever' => [
+            'class' => 'app\components\LeadCreatorRetriever'
+        ],
         'triageExporter' => [
             'class' => 'app\components\TriagePdfExport'
         ],

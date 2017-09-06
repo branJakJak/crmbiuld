@@ -247,7 +247,10 @@ $propertyType = [
         ])
         ?>
         <br>
-        <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
+        <?php if (!Yii::$app->user->can('Manager') && !Yii::$app->user->can('Consultant') && !Yii::$app->user->can('Agent')): ?>
+            <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
+        <?php endif ?>
+
         <?php \yii\widgets\ActiveForm::end() ?>
         <?php
         PanelWidget::end()

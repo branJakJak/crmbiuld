@@ -50,15 +50,10 @@ class SiteController extends Controller
     public function actionIndex()
     {
         $filterModel = new FilterPropertyRecordForm();
-        $defaultQuery = PropertyRecord::find()->orderBy(['date_updated'=>SORT_DESC,'date_created'=>SORT_DESC]);
         $propertRecordModel = new PropertyRecord();
-        if(Yii::$app->user->can('Consultant')){
-            // filter the query to only the data he/she created
-            $defaultQuery->andWhere(['created_by' => \Yii::$app->user->id]);
-        }
-        $dataProvider = new ActiveDataProvider(['query'=>$defaultQuery]);
         $insulationCollection = PropertyRecord::find()->select('insulation_type')->distinct()->all();
         $availableUsers = User::find()->select('username')->distinct()->all();
+
         if ($filterModel->load(Yii::$app->request->post())) {
             if ($filterModel->validate()) {
                 //search and return the result
@@ -67,56 +62,39 @@ class SiteController extends Controller
                 }
                 $dataProvider = $filterModel->search();
             }
-        }
-        if (Yii::$app->user->can('Manager')) {
-            $userCreated = [];
-            $userCreated[] = Yii::$app->user->id;
-            $userCreatedByManagerRes = UserCreator::find()
-                ->where(['creator_id'=>\Yii::$app->user->id])
-                ->asArray()
-                ->all();
-            foreach ($userCreatedByManagerRes as $currentUserCreatedByManagerRes) {
-                $userCreated[] = $currentUserCreatedByManagerRes['agent_id'];
-            }
-            $filterModel->setQueryObject(PropertyRecord::find());
-            $queryObject = $filterModel->getQueryObject();
-            $queryObject->andWhere(['in', 'tbl_property_record.created_by', $userCreated]);
-            $dataProvider = $filterModel->search();
-        }
-        if (Yii::$app->user->can('Agent')) {
-            $userCreated = [];
-            $userCreated[] = Yii::$app->user->id;
-            $userCreatedByManagerRes = UserCreator::find()
-                ->where(['creator_id'=>\Yii::$app->user->id])
-                ->asArray()
-                ->all();
-            foreach ($userCreatedByManagerRes as $currentUserCreatedByManagerRes) {
-                $userCreated[] = $currentUserCreatedByManagerRes['agent_id'];
-            }
-            $filterModel->setQueryObject(PropertyRecord::find());
-            $queryObject = $filterModel->getQueryObject();
-            $queryObject->andWhere(['in', 'tbl_property_record.created_by', $userCreated]);
-            $dataProvider = $filterModel->search();
+        } else {
+            $defaultQuery = PropertyRecord::find()->orderBy(['date_updated' => SORT_DESC, 'date_created' => SORT_DESC]);
+            //search leads created by this user and its subordinate
+            $creatorIdCollection = [];
+            $leadCreatorRetriever = new LeadCreatorRetriever();
+            $leadCreatorRetriever->retrieve(Yii::$app->user->id);
+            $creatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
+            $defaultQuery->andWhere(['in', 'tbl_property_record.created_by', $creatorIdCollection]);
+            $dataProvider = new ActiveDataProvider(['query' => $defaultQuery]);
+
+//            $filterModel->setQueryObject(PropertyRecord::find());
+//            $queryObject = $filterModel->getQueryObject();
+//            $queryObject->andWhere(['in', 'tbl_property_record.created_by', $creatorIdCollection]);
+//            $dataProvider = $filterModel->search();
         }
 
 
         return $this->render('index', [
             'filterModel' => $filterModel,
-            'dataProvider'=> $dataProvider,
-            'propertRecordModel'=>$propertRecordModel,
-            'insulationCollection'=>$insulationCollection,
-            'availableUsers'=>$availableUsers,
+            'dataProvider' => $dataProvider,
+            'propertRecordModel' => $propertRecordModel,
+            'insulationCollection' => $insulationCollection,
+            'availableUsers' => $availableUsers,
         ]);
     }
-
-    public function actionTest()
-    {
-        $creatorIdCollection = [];
-        $leadCreatorRetriever = new LeadCreatorRetriever();
-        $leadCreatorRetriever->retrieve(Yii::$app->user->id);
-        $creatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
-        var_dump($creatorIdCollection);
-    }
+//
+//    public function actionTest()
+//    {
+//        $creatorIdCollection = [];
+//        $leadCreatorRetriever = new LeadCreatorRetriever();
+//        $leadCreatorRetriever->retrieve(Yii::$app->user->id);
+//        $creatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
+//    }
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {

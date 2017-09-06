@@ -162,36 +162,18 @@ class RecordController extends Controller
         if(!$propertyRecord){
             new NotFoundHttpException('Sorry that record doesnt exists');
         }
+        $isOwner = Yii::$app->user->id != $propertyRecord->created_by;
+        $isSubordinate = UserCreator::isSubordinate(Yii::$app->getUser()->id, $propertyRecord->created_by);
 
+//        var_dump($isOwner);
+//        var_dump($isSubordinate);
+//        die;
 
-        if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Consultant')) {
-            /*check if he/she owns this record*/
-            if (Yii::$app->user->id != $propertyRecord->created_by) {
-                throw new ForbiddenHttpException();
-            }
-        }
-        if (Yii::$app->user->can('Manager')) {
-            // can the manager view this ?
-            // either he/she is the creator of the record
-            $isOwner = $propertyRecord->created_by == \Yii::$app->user->id;
-            // or one of his agent created it
-            $oneOfAgent = false;
-            $userCreatedByManagerRes = UserCreator::find()
-                ->where(['creator_id'=>\Yii::$app->user->id])
-                ->asArray()
-                ->all();
-            foreach ($userCreatedByManagerRes as $currentUserCreatedByManagerRes) {
-                if (intval($currentUserCreatedByManagerRes['agent_id']) == $propertyRecord->created_by) {
-                    $oneOfAgent = true;
-                    break;
-                }
-            }
-            if (!$isOwner && !$oneOfAgent) {
-                throw new UnauthorizedHttpException("You are not allowed to edit this record");
-            }
+        if(!$isOwner && !$isSubordinate){
+            throw new ForbiddenHttpException();
         }
 
-        if ( 
+        if (
             (
                 Yii::$app->user->can('Manager') || 
                 Yii::$app->user->can('Consultant') || 
@@ -201,11 +183,11 @@ class RecordController extends Controller
             throw new UnauthorizedHttpException("You are not allowed to edit this record");
         }
 
-        if ( Yii::$app->user->can('Consultant')) {
-            if(!Yii::$app->user->can('editOwnRecordPermission',['property_record' => $propertyRecord])) {
-                throw new UnauthorizedHttpException("You are not allowed to edit this record");
-            }
-        }
+//        if ( Yii::$app->user->can('Consultant')) {
+//            if(!Yii::$app->user->can('editOwnRecordPermission',['property_record' => $propertyRecord])) {
+//                throw new UnauthorizedHttpException("You are not allowed to edit this record");
+//            }
+//        }
 
 
         if ($propertyRecord->load(\Yii::$app->request->post())) {

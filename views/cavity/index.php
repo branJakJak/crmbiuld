@@ -24,9 +24,10 @@ $gridCols = [
         'format' => 'raw'
     ],
     // 'id',
-    'title',
-    'firstname',
-    'lastname',
+//    'title',
+//    'firstname',
+//    'lastname',
+    'created_by_user',
     'birthday:date',
     'telephone_number',
     'email_address:email',

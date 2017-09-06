@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\LeadCreatorRetriever;
 use app\models\CavitySupportingDocument;
 use app\models\Owner;
 use app\models\PropertyDocuments;
@@ -71,20 +72,28 @@ class CavityController extends Controller
 
 
         /*can view the leads submitted by him/her or his/her agents*/
-        if (Yii::$app->user->can('Manager')) {
+        if (Yii::$app->user->can('Manager') ||
+            Yii::$app->user->can('Senior Manager') ||
+            Yii::$app->user->can('Agent')) {
             $allowedUsername = [];
             $allowedUsername[] = \Yii::$app->user->identity->username;
+            /**
+             * @var $leadCreatorRetriever LeadCreatorRetriever
+             */
+            $leadCreatorRetriever = Yii::$app->leadCreatorRetriever;
+            $leadCreatorRetriever->retrieve(Yii::$app->user->id);
+            $userIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
             // get the id of created_by_user
-            $agentsCreatedByUser = UserCreator::find()->where(['creator_id' => Yii::$app->user->id])->asArray()->all();
+            $agentsCreatedByUser = UserCreator::find()->where(['in', 'creator_id', $userIdCollection])->asArray()->all();
             foreach ($agentsCreatedByUser as $currentAllowed) {
-                $userObj = User::find()->where(['id'=>$currentAllowed['agent_id']])->one();
+                $userObj = User::find()->select(["username"])->where(['id'=>$currentAllowed['agent_id']])->one();
                 if($userObj){
                     $allowedUsername[] = $userObj->username;
                 }
                 //find username
             }
             $defaultQuery->andWhere(['in', 'tbl_cavity.created_by_user', $allowedUsername]);
-        } else if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Consultant')) {
+        } else if (Yii::$app->user->can('Consultant')) {
             $defaultQuery->andWhere(['in', 'tbl_cavity.created_by_user', [\Yii::$app->user->identity->username]  ]);
         }
         $dataProvider = new ActiveDataProvider([
