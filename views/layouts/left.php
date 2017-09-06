@@ -20,32 +20,30 @@ if (
     // ];
 }
 
-if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Consultant') ) {
+if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Consultant')) {
     $menuItems[] = [
         'label' => 'Not Submitted',
         'url' => ['/not-submitted'],
     ];
     // $menuItems[] = ['label' => 'Open Cavity Questionaire', 'url' => ['/cavity/create']];
 }
-
-if (Yii::$app->user->can('Manager')) {
-    $menuItems[] = ['label' => 'Create agent account', 'url' => ['/user/admin/create'],'icon'=>'user'];
+if (Yii::$app->user->can('Manager')){
+    $menuItems[] = ['label' => 'Create agent account', 'url' => ['/user/admin/create'], 'icon' => 'user'];
 }
-
-if (Yii::$app->user->can('Agent')) {
-    $menuItems[] = ['label' => 'Create consultant account', 'url' => ['/user/admin/create'],'icon'=>'user'];
+if(Yii::$app->user->can('Agent')){
+    $menuItems[] = ['label' => 'Create consultant account', 'url' => ['/user/admin/create'], 'icon' => 'user'];
+}
+if (Yii::$app->user->can('Senior Manager')) {
+    $menuItems[] = ['label' => 'Create manager account', 'url' => ['/user/admin/create'], 'icon' => 'user'];
 }
 
 
 ?>
 <aside class="main-sidebar">
-
     <section class="sidebar">
-
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-
                 <img src="/img/user-160x160.png" class="img-circle" alt="User Image"/>
             </div>
             <div class="pull-left info">

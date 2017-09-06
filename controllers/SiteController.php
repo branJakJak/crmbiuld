@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\LeadCreatorRetriever;
 use app\models\FilterPropertyRecordForm;
 use app\models\PropertyRecord;
 use app\models\UserCreator;
@@ -51,7 +52,7 @@ class SiteController extends Controller
         $filterModel = new FilterPropertyRecordForm();
         $defaultQuery = PropertyRecord::find()->orderBy(['date_updated'=>SORT_DESC,'date_created'=>SORT_DESC]);
         $propertRecordModel = new PropertyRecord();
-        if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Consultant')) {
+        if(Yii::$app->user->can('Consultant')){
             // filter the query to only the data he/she created
             $defaultQuery->andWhere(['created_by' => \Yii::$app->user->id]);
         }
@@ -82,6 +83,21 @@ class SiteController extends Controller
             $queryObject->andWhere(['in', 'tbl_property_record.created_by', $userCreated]);
             $dataProvider = $filterModel->search();
         }
+        if (Yii::$app->user->can('Agent')) {
+            $userCreated = [];
+            $userCreated[] = Yii::$app->user->id;
+            $userCreatedByManagerRes = UserCreator::find()
+                ->where(['creator_id'=>\Yii::$app->user->id])
+                ->asArray()
+                ->all();
+            foreach ($userCreatedByManagerRes as $currentUserCreatedByManagerRes) {
+                $userCreated[] = $currentUserCreatedByManagerRes['agent_id'];
+            }
+            $filterModel->setQueryObject(PropertyRecord::find());
+            $queryObject = $filterModel->getQueryObject();
+            $queryObject->andWhere(['in', 'tbl_property_record.created_by', $userCreated]);
+            $dataProvider = $filterModel->search();
+        }
 
 
         return $this->render('index', [
@@ -93,6 +109,14 @@ class SiteController extends Controller
         ]);
     }
 
+    public function actionTest()
+    {
+        $creatorIdCollection = [];
+        $leadCreatorRetriever = new LeadCreatorRetriever();
+        $leadCreatorRetriever->retrieve(Yii::$app->user->id);
+        $creatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
+        var_dump($creatorIdCollection);
+    }
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {

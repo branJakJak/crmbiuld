@@ -52,7 +52,7 @@ class CrmBuildAdminController extends AdminController
                     [
                         'allow' => true,
                         'actions' => ['index', 'create', 'update', 'update-profile', 'info', 'switch', 'assignment', 'delete', 'block', 'resend-password'],
-                        'roles' => ['admin', 'Admin', 'Manager'],
+                        'roles' => ['admin', 'Admin', 'Manager','Senior Manager'],
                     ],
                     [
                         'allow' => true,

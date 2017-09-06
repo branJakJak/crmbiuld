@@ -33,7 +33,7 @@ foreach ($allSupportingDocuments as $currentSupportingDocument) {
 
 ?>
 
-<?php if (!Yii::$app->user->can('Manager') && !Yii::$app->user->can('Agent')): ?>
+<?php if (!Yii::$app->user->can('Manager') && !Yii::$app->user->can('Agent') || !Yii::$app->user->can('Consultant')): ?>
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <h1><?= Html::encode($this->title) ?></h1>

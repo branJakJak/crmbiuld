@@ -21,7 +21,7 @@ $availableRoles = [
     'Admin' => 'Admin',
     'Senior Manager' => 'Senior Manager',
     'Manager' => 'Manager',
-    // 'Consultant'=>'Consultant',
+    'Consultant' => 'Consultant',
     'Agent' => 'Agent'
 ];
 if (Yii::$app->user->can('Agent')) {
@@ -29,11 +29,16 @@ if (Yii::$app->user->can('Agent')) {
         'Consultant' => 'Consultant',
     ];
 }
+if (Yii::$app->user->can('Senior Manager')) {
+    $availableRoles = [
+        'Manager' => 'Manager',
+    ];
+}
 $defaultSelectedRole = 'Agent';
 if (Yii::$app->user->can('Manager')) {
     $availableRoles = [
-        // 'Consultant'=>'Consultant',
-        'Agent' => 'Agent'
+        'Agent' => 'Agent',
+        'Consultant' => 'Consultant'
     ];
 
 

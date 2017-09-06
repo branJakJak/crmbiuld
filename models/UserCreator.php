@@ -34,6 +34,16 @@ class UserCreator extends \yii\db\ActiveRecord
         return UserCreator::find()->where(['creator_id' => $creatorId, 'agent_id' => $childId])->exists();
     }
 
+    public static function isCreator($user_id)
+    {
+        return UserCreator::find()->where(['creator_id' => $user_id])->exists();
+    }
+
+    public static function getCreatedUsers($user_id)
+    {
+        return UserCreator::find()->where(['creator_id' => $user_id])->all();
+    }
+
     /**
      * @inheritdoc
      */
