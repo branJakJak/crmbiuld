@@ -64,18 +64,17 @@ class SiteController extends Controller
             }
         } else {
             $defaultQuery = PropertyRecord::find()->orderBy(['date_updated' => SORT_DESC, 'date_created' => SORT_DESC]);
-            //search leads created by this user and its subordinate
-            $creatorIdCollection = [];
-            $leadCreatorRetriever = new LeadCreatorRetriever();
-            $leadCreatorRetriever->retrieve(Yii::$app->user->id);
-            $creatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
-            $defaultQuery->andWhere(['in', 'tbl_property_record.created_by', $creatorIdCollection]);
+            if (!Yii::$app->user->can('Admin') &&
+                !Yii::$app->user->can('admin') &&
+                !Yii::$app->user->can('Senior Manager')) {
+                //search leads created by this user and its subordinate
+                $creatorIdCollection = [];
+                $leadCreatorRetriever = new LeadCreatorRetriever();
+                $leadCreatorRetriever->retrieve(Yii::$app->user->id);
+                $creatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
+                $defaultQuery->andWhere(['in', 'tbl_property_record.created_by', $creatorIdCollection]);
+            }
             $dataProvider = new ActiveDataProvider(['query' => $defaultQuery]);
-
-//            $filterModel->setQueryObject(PropertyRecord::find());
-//            $queryObject = $filterModel->getQueryObject();
-//            $queryObject->andWhere(['in', 'tbl_property_record.created_by', $creatorIdCollection]);
-//            $dataProvider = $filterModel->search();
         }
 
 

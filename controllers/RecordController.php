@@ -56,7 +56,7 @@ class RecordController extends Controller
                     [
                         'actions' => ['create'],
                         'allow' => true,
-                        'roles' => ['Manager','Consultant'],
+                        'roles' => ['Manager','Consultant','Senior Manager'],
                     ],
                     [
                         'actions' => ['update'],
@@ -164,10 +164,6 @@ class RecordController extends Controller
         }
         $isOwner = Yii::$app->user->id != $propertyRecord->created_by;
         $isSubordinate = UserCreator::isSubordinate(Yii::$app->getUser()->id, $propertyRecord->created_by);
-
-//        var_dump($isOwner);
-//        var_dump($isSubordinate);
-//        die;
 
         if(!$isOwner && !$isSubordinate){
             throw new ForbiddenHttpException();
