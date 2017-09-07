@@ -23,10 +23,12 @@ class CavityController extends Controller
         $cavityForm = new Cavity();
         if ($cavityForm->load(\Yii::$app->getRequest()->post())) {
             if ($cavityForm->save()) {
+
                 return Json::encode([
                     'id' => $cavityForm->id
                 ]);
             } else {
+                Yii::error(Html::errorSummary($cavityForm));
                 return Json::encode($cavityForm->getErrors());
             }
         } else {

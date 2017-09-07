@@ -5,8 +5,16 @@ use yii\helpers\Url;
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-$userCount = \dektrium\user\models\User::find()->count();
-$userCollection = \dektrium\user\models\User::find()->all();
+$userCount = 0;
+$userCreated = [];
+/**
+ * @var $leadCreatorRetriever \app\components\LeadCreatorRetriever
+ */
+$leadCreatorRetriever = Yii::$app->leadCreatorRetriever;
+$leadCreatorRetriever->retrieve(Yii::$app->user->id);
+$userCreated = $leadCreatorRetriever->getLeadCreatorIdCollection();
+$userCollection = \dektrium\user\models\User::find()->andWhere(['in', 'id', $userCreated])->all();
+$userCount = count($userCollection);
 
 
 
@@ -28,7 +36,7 @@ $userCollection = \dektrium\user\models\User::find()->all();
             <ul class="nav navbar-nav">
 
                 <!-- Messages: style can be found in dropdown.less-->
-                <li class="dropdown messages-menu <?= (Yii::$app->user->can('Admin') || Yii::$app->user->can('admin'))  ? "":"hidden" ?> ">
+                <li class="dropdown messages-menu <?= (!Yii::$app->user->can('Consultant'))  ? "":"hidden" ?> ">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-user-o"></i>
                         <span class="label label-success"> <?= $userCount ?> </span>
@@ -40,7 +48,7 @@ $userCollection = \dektrium\user\models\User::find()->all();
                             <ul class="menu">
                                 <?php foreach ($userCollection as $curreentUser): ?>
                                     <li>
-                                        <a href="#">
+                                        <a href="<?= Url::to(['/user/admin/update','id'=>$curreentUser->id])?>">
                                             <div class="pull-left">
                                                 <img src="/img/user.png" class="img-circle" alt="User Image" />
                                             </div>

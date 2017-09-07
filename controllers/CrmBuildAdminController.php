@@ -13,6 +13,7 @@ use dektrium\user\controllers\AdminController;
 use dektrium\user\filters\AccessRule;
 use dektrium\user\models\User;
 use dektrium\user\models\UserSearch;
+use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -78,10 +79,12 @@ class CrmBuildAdminController extends AdminController
         if ( !\Yii::$app->user->can('Admin') && !\Yii::$app->user->can('admin')) {
             /*get all user that this user created*/
             $createrUsers = [];
-            $userIds = UserCreator::find()->where(['creator_id' => \Yii::$app->user->id])->asArray()->all();
-            foreach ($userIds as $currUserCreated) {
-                $createrUsers[] = $currUserCreated['agent_id'];
-            }
+            /**
+             * @var $leadCreatorRetriever \app\components\LeadCreatorRetriever
+             */
+            $leadCreatorRetriever = \Yii::$app->leadCreatorRetriever;
+            $leadCreatorRetriever->retrieve(Yii::$app->user->id);
+            $createrUsers = $leadCreatorRetriever->getLeadCreatorIdCollection();
             $newQuery = User::find();
             $newQuery->andWhere(['in', 'id', $createrUsers]);
             $dataProvider->query = $newQuery;

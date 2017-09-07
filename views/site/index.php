@@ -41,14 +41,10 @@ $gridColumns = [
         'attribute' => 'id',
         'format' => 'html'
     ],
-    'date_created:date',
     'status',
-    'appraisal_completed:date',
-    'address1',
-    'postcode',
-    'insulation_type',
+    'date_created:date',
     [
-        'label' => 'Created by',
+        'label' => 'Agent ID',
         'value' => function ($currentModel) {
             /* @var $currentModel \app\models\PropertyRecord */
             $createdByName = 'n/a';
@@ -66,6 +62,10 @@ $gridColumns = [
         },
         'attribute' => 'created_by'
     ],
+//    'appraisal_completed:date',
+//    'address1',
+    'postcode',
+//    'insulation_type',
     [
         'label' => 'Latest Note',
         'value' => function ($currentModel) {
@@ -84,28 +84,28 @@ $gridColumns = [
         'format'=>'raw'
     ],
     
-    [
-        'label' => 'Clients',
-        'value' => function ($currentModel) {
-            /* @var $currentModel \app\models\PropertyRecord */
-            /* @var $currentPropertyOwner \app\models\PropertyOwner */
-            $propertyOwnersCollection = [];
-            $propertyOwners = $currentModel->getPropertyOwners()->all();
-            foreach ($propertyOwners as $currentPropertyOwner) {
-                $currentOwner = $currentPropertyOwner->getOwner()->one();
-                if ($currentOwner) {
-                    $ownerFullName = '';
-                    if (!empty($currentOwner->title)) {
-                        $ownerFullName = sprintf("%s %s %s", $currentOwner->title, $currentOwner->firstname, $currentOwner->lastname);
-                    }
-                    $tempContainer = Html::a($ownerFullName, ['/owner/view', 'id' => $currentOwner->id]);
-                    $propertyOwnersCollection[] = $tempContainer;
-                }
-            }
-            return implode(",<br>", $propertyOwnersCollection);
-        },
-        'format' => 'raw'
-    ],
+//    [
+//        'label' => 'Clients',
+//        'value' => function ($currentModel) {
+//            /* @var $currentModel \app\models\PropertyRecord */
+//            /* @var $currentPropertyOwner \app\models\PropertyOwner */
+//            $propertyOwnersCollection = [];
+//            $propertyOwners = $currentModel->getPropertyOwners()->all();
+//            foreach ($propertyOwners as $currentPropertyOwner) {
+//                $currentOwner = $currentPropertyOwner->getOwner()->one();
+//                if ($currentOwner) {
+//                    $ownerFullName = '';
+//                    if (!empty($currentOwner->title)) {
+//                        $ownerFullName = sprintf("%s %s %s", $currentOwner->title, $currentOwner->firstname, $currentOwner->lastname);
+//                    }
+//                    $tempContainer = Html::a($ownerFullName, ['/owner/view', 'id' => $currentOwner->id]);
+//                    $propertyOwnersCollection[] = $tempContainer;
+//                }
+//            }
+//            return implode(",<br>", $propertyOwnersCollection);
+//        },
+//        'format' => 'raw'
+//    ],
 ];
 if(Yii::$app->user->can('admin') || Yii::$app->user->can('Admin')){
     $gridColumns[] = [
