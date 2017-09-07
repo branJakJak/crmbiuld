@@ -48,9 +48,14 @@ class CavityController extends Controller
                 'only' => ['index', 'view', 'create', 'update', 'delete','accept'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'create', 'update', 'delete','accept'],
+                        'actions' => ['index', 'view', 'create', 'update', 'accept'],
                         'allow' => true,
                         'roles' => ['@']
+                    ],
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => ['Admin','admin']
                     ]
                 ],
             ]
