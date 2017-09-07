@@ -53,7 +53,7 @@ echo PanelWidget::begin([
         'accept' => 'image/*'
     ],
     'clientOptions' => [
-        'maxFileSize' => 2000000
+        'maxFileSize' => 100000000
     ],
     'clientEvents' => [
         'fileuploaddone' => 'function(e, data) {
