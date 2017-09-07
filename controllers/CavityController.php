@@ -45,7 +45,7 @@ class CavityController extends Controller
             ],
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'view', 'create', 'update', 'delete','accept'],
+                'only' => ['index', 'view', 'create', 'update', 'delete','accept','decline'],
                 'rules' => [
                     [
                         'actions' => ['index', 'view', 'create', 'update', 'accept'],
@@ -56,7 +56,7 @@ class CavityController extends Controller
                         'actions' => ['delete'],
                         'allow' => true,
                         'roles' => ['Admin','admin']
-                    ]
+                    ],
                 ],
             ]
         ];

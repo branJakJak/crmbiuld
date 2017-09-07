@@ -54,7 +54,7 @@ $gridCols = [
     // 'date_updated',
     // ['class' => 'yii\grid\ActionColumn'],
 ];
-if (!Yii::$app->user->can('Manager') && !Yii::$app->user->can('Agent')) {
+if (!Yii::$app->user->can('Manager') && !Yii::$app->user->can('Agent') && !Yii::$app->user->can('Consultant')) {
     $gridCols[] =
         [
             'class' => 'yii\grid\ActionColumn',
