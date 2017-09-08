@@ -9,6 +9,7 @@
 namespace app\controllers;
 
 
+use app\models\Cavity;
 use app\models\Owner;
 use app\models\PropertyDocuments;
 use app\models\PropertyImages;
@@ -164,9 +165,16 @@ class RecordController extends Controller
         }
         $isOwner = Yii::$app->user->id != $propertyRecord->created_by;
         $isSubordinate = UserCreator::isSubordinate(Yii::$app->getUser()->id, $propertyRecord->created_by);
-
         if(!$isOwner && !$isSubordinate){
             throw new ForbiddenHttpException();
+        }
+
+        /*Cavity model*/
+        $questionairePropertyReoord = QuestionairePropertyRecord::find()->where(['property_record_id'=>$id])->one();
+        $cavityModel = null;
+        if ($questionairePropertyReoord) {
+            $cavity_form_id = intval($questionairePropertyReoord->cavity_form_id);
+            $cavityModel = Cavity::find()->where(['id' => $cavity_form_id])->one();
         }
 
 //        if (
@@ -360,7 +368,8 @@ class RecordController extends Controller
             'triageDocumentDataProvider' => $triageDocumentDataProvider,
             'triageDocument' => $triageDocument,
             'propertyImagesDataProvider' => $propertyImagesDataProvider,
-            'triageNotesDataProvider' => $triageNotesDataProvider
+            'triageNotesDataProvider' => $triageNotesDataProvider,
+            'cavityModel' => $cavityModel
         ]);
     }
     public function actionTransferToTriage($propertyId){

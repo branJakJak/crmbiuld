@@ -104,6 +104,18 @@ echo TabsX::widget([
                 ]
             ],
             [
+                'label' => 'Other Information',
+                'content' => $this->render(
+                    '_other_information_panel',
+                    [
+                        'cavityModel'=>$cavityModel
+                    ]
+                ),
+                [
+                    'id'=>'cavityModel'
+                ]
+            ],
+            [
                 'label' => 'Documents',
                 'content' => $this->render(
                     '_documents_panel',

@@ -59,7 +59,7 @@ foreach ($allSupportingDocuments as $currentSupportingDocument) {
         <div class="cavity-view">
             <?php
                 echo PanelWidget::begin([
-                    'title' => 'Personal Information',
+                    'title' => "{$model->title}. {$model->firstname} {$model->lastname}",
                     'type' => 'default',
                     'widget' => false,
                 ])
