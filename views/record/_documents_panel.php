@@ -14,6 +14,52 @@ use yii\widgets\Pjax;
 /* @var $propertyRecord \app\models\PropertyRecord */
 /* @var $propertyDocument \app\models\PropertyDocuments */
 
+$gridColumns = [
+    'dataProvider' => $propertyDocumentDataProvider,
+    'columns' => [
+        // 'document_name',
+        // 'date_created:date',
+        // [
+        //     'label'=>' ',
+        //     'value'=>function($currentModel){
+        //         return Html::a("Download", ['/property-documents/download','property'=>$currentModel->id]);
+        //     },
+        //     'attribute'=>'id',
+        //     'format'=>'html'
+        // ],
+        [
+            'label' => ' ',
+            'value' => function ($currentModel) {
+                /*publish the image*/
+                if (isset($currentModel->document_name) && !empty($currentModel->document_name)) {
+                    $publishedImageUrl = '';
+                    $uploadImagePath = Yii::getAlias("@upload_document_path") . DIRECTORY_SEPARATOR . $currentModel->document_name;
+                    /*get the url of published image*/
+                    $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
+                    return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
+                }
+            },
+            'attribute' => 'document_name',
+            'format' => 'html'
+        ]
+    ],
+];
+
+if(Yii::$app->user->can('Admin') || Yii::$app->user->can('admin')) {
+    $gridColumns['columns'][] = [
+        'class' => 'yii\grid\ActionColumn',
+        'template' => '{delete}',
+        'buttons' => [
+            'delete' => function ($url, $model) {
+                return Html::a('<span class="glyphicon glyphicon-trash"></span>', '/property-documents/delete?id=' . $model->id, [
+                    'title' => Yii::t('yii', 'Delete'),
+                    'data-pjax' => 'w0',
+                ]);
+            }
+        ]
+    ];
+}
+
 ?>
 <style type="text/css">
     #w9 > div.panel-heading {
@@ -64,53 +110,7 @@ use yii\widgets\Pjax;
         <br >
         <?php Pjax::begin(['id' => 'propertyDocumentsPjax','timeout'=>10000]) ?>
         <?=
-        \yii\grid\GridView::widget([
-            'dataProvider' => $propertyDocumentDataProvider,
-            'columns' => [
-                // 'document_name',
-                // 'date_created:date',
-                // [
-                //     'label'=>' ',
-                //     'value'=>function($currentModel){
-                //         return Html::a("Download", ['/property-documents/download','property'=>$currentModel->id]);
-                //     },
-                //     'attribute'=>'id',
-                //     'format'=>'html'
-                // ],
-                [
-                    'label' => ' ',
-                    'value' => function ($currentModel) {
-                        /*publish the image*/
-                        if (isset($currentModel->document_name) && !empty($currentModel->document_name)) {
-                            $publishedImageUrl = '';
-                            $uploadImagePath = Yii::getAlias("@upload_document_path") . DIRECTORY_SEPARATOR . $currentModel->document_name;
-                            /*get the url of published image*/
-                            $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
-//                            return Html::a(Html::img($publishedImageUrl[1], ['style' => 'height:250px']), $publishedImageUrl[1],['target'=>'_blank']);
-                            return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
-                        }
-                    },
-                    'attribute' => 'document_name',
-                    'format' => 'html'
-                ],
-
-                
-                [
-                        'class' => 'yii\grid\ActionColumn',
-                        'template' => '{delete}',
-                        'buttons' => [
-                            'delete' => function ($url, $model) {
-                                return Html::a('<span class="glyphicon glyphicon-trash"></span>', '/property-documents/delete?id='.$model->id, [
-                                    'title' => Yii::t('yii', 'Delete'),
-                                    'data-pjax'=>'w0',
-                                ]);
-                            }
-                        ]
-                ],
-
-
-            ],
-        ]);
+            \yii\grid\GridView::widget($gridColumns);
         ?>
         <?php Pjax::end() ?>
 
