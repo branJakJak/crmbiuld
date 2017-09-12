@@ -49,11 +49,13 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+        /* @var $dataProvider ActiveDataProvider */
         $filterModel = new FilterPropertyRecordForm();
         $propertRecordModel = new PropertyRecord();
         $insulationCollection = PropertyRecord::find()->select('insulation_type')->distinct()->all();
         $availableUsers = User::find()->select('username')->distinct()->all();
-
+        $defaultQuery = PropertyRecord::find()->orderBy(['date_updated' => SORT_DESC, 'date_created' => SORT_DESC]);
+        $dataProvider = new ActiveDataProvider(['query' => $defaultQuery]);
         if ($filterModel->load(Yii::$app->request->post())) {
             if ($filterModel->validate()) {
                 //search and return the result
@@ -61,20 +63,22 @@ class SiteController extends Controller
                     $filterModel->scenario = $_POST['scenario'];
                 }
                 $dataProvider = $filterModel->search();
+                $defaultQuery = $dataProvider->query;
             }
-        } else {
-            $defaultQuery = PropertyRecord::find()->orderBy(['date_updated' => SORT_DESC, 'date_created' => SORT_DESC]);
-            if (!Yii::$app->user->can('Admin') &&
-                !Yii::$app->user->can('admin')) {
-                //search leads created by this user and its subordinate
-                $creatorIdCollection = [];
-                $leadCreatorRetriever = new LeadCreatorRetriever();
-                $leadCreatorRetriever->retrieve(Yii::$app->user->id);
-                $creatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
-                $defaultQuery->andWhere(['in', 'tbl_property_record.created_by', $creatorIdCollection]);
-            }
+        }
+        if (!Yii::$app->user->can('Admin') &&
+            !Yii::$app->user->can('Senior Manager') &&
+            !Yii::$app->user->can('admin')) {
+            //search leads created by this user and its subordinate
+            $creatorIdCollection = [];
+            $leadCreatorRetriever = new LeadCreatorRetriever();
+            $leadCreatorRetriever->retrieve(Yii::$app->user->id);
+            $creatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
+            $defaultQuery->andWhere(['in', 'tbl_property_record.created_by', $creatorIdCollection]);
             $dataProvider = new ActiveDataProvider(['query' => $defaultQuery]);
         }
+
+
 
 
 

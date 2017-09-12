@@ -60,6 +60,10 @@ class FilterPropertyRecordForm extends Model
             ['filterQuery','safe']
         ];
     }
+
+    /**
+     * @return ActiveDataProvider
+     */
     public function search()
     {
         if ($this->status === 'All Jobs') {
@@ -105,7 +109,6 @@ class FilterPropertyRecordForm extends Model
                 $this->queryObject->andWhere(['tbl_property_record.status'=> $this->status ] );
             }
         }
-
         /*created by user and all its subordinate*/
         /**
          * @var $leadCreatorRetriever LeadCreatorRetriever
