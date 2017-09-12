@@ -78,7 +78,6 @@ class CavityController extends Controller
 
         /*can view the leads submitted by him/her or his/her agents*/
         if (Yii::$app->user->can('Manager') ||
-            Yii::$app->user->can('Senior Manager') ||
             Yii::$app->user->can('Agent')) {
             $allowedUsername = [];
             $allowedUsername[] = \Yii::$app->user->identity->username;
