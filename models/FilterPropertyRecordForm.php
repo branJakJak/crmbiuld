@@ -29,6 +29,9 @@ class FilterPropertyRecordForm extends Model
     public $current_user_logged_in;
     public $latest_note;
     public $status;
+    /**
+     * @var $queryObject ActiveQuery
+     */
     protected $queryObject;
 
     public function attributeLabels()
@@ -70,12 +73,13 @@ class FilterPropertyRecordForm extends Model
         if ($this->status === 'All Jobs') {
             $this->status='';
         }
+        $this->queryObject->groupBy('tbl_property_record.id');
         $this->queryObject->leftJoin('tbl_property_notes','tbl_property_notes.property_id = tbl_property_record.id');
         $this->queryObject->leftJoin('user','user.id = tbl_property_record.created_by');
         $this->queryObject->leftJoin('profile','profile.user_id = user.id');
         if ( $this->scenario === 'quick-filter-form') {
             $this->queryObject->andFilterWhere([
-                'or',
+                'OR',
                 ['like', 'tbl_property_record.date_created', $this->filterQuery],
                 ['like', 'tbl_property_record.appraisal_completed', $this->filterQuery],
                 ['like', 'tbl_property_record.status', $this->filterQuery],
@@ -123,9 +127,6 @@ class FilterPropertyRecordForm extends Model
             $leadCreatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
             $this->queryObject->andWhere(['in', 'tbl_property_record.created_by', $leadCreatorIdCollection]);
         }
-
-
-
         if ($this->status === '') {
             $this->status='All Jobs';
         }
