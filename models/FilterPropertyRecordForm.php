@@ -12,6 +12,7 @@ namespace app\models;
 
 use app\components\LeadCreatorRetriever;
 use DateTime;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
@@ -109,14 +110,21 @@ class FilterPropertyRecordForm extends Model
                 $this->queryObject->andWhere(['tbl_property_record.status'=> $this->status ] );
             }
         }
-        /*created by user and all its subordinate*/
-        /**
-         * @var $leadCreatorRetriever LeadCreatorRetriever
-         */
-        $leadCreatorRetriever = \Yii::$app->leadCreatorRetriever;
-        $leadCreatorRetriever->retrieve($this->current_user_logged_in);
-        $leadCreatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
-        $this->queryObject->andWhere(['in', 'tbl_property_record.created_by', $leadCreatorIdCollection]);
+        if (!Yii::$app->user->can('Admin') &&
+            !Yii::$app->user->can('Senior Manager') &&
+            !Yii::$app->user->can('admin')) {
+
+            /*created by user and all its subordinate*/
+            /**
+             * @var $leadCreatorRetriever LeadCreatorRetriever
+             */
+            $leadCreatorRetriever = \Yii::$app->leadCreatorRetriever;
+            $leadCreatorRetriever->retrieve($this->current_user_logged_in);
+            $leadCreatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
+            $this->queryObject->andWhere(['in', 'tbl_property_record.created_by', $leadCreatorIdCollection]);
+        }
+
+
 
         if ($this->status === '') {
             $this->status='All Jobs';

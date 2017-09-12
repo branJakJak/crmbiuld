@@ -63,7 +63,6 @@ class SiteController extends Controller
                     $filterModel->scenario = $_POST['scenario'];
                 }
                 $dataProvider = $filterModel->search();
-                $defaultQuery = $dataProvider->query;
             }
         }
         if (!Yii::$app->user->can('Admin') &&
@@ -77,12 +76,6 @@ class SiteController extends Controller
             $defaultQuery->andWhere(['in', 'tbl_property_record.created_by', $creatorIdCollection]);
             $dataProvider = new ActiveDataProvider(['query' => $defaultQuery]);
         }
-
-
-
-
-
-
         return $this->render('index', [
             'filterModel' => $filterModel,
             'dataProvider' => $dataProvider,
