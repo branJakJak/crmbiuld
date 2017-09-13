@@ -66,7 +66,7 @@ use yii\widgets\DetailView;
                     'second_application_telephone',
                     'second_application_mobile_landline',
                     'second_application_email_address',
-//                    'date_time_callback:datetime',
+                    'property_history',
                     'date_created:datetime',
 //                    'date_updated:date',
                 ],

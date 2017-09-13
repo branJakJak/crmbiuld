@@ -2,10 +2,42 @@
 
 namespace app\models;
 
+use app\components\LeadChangeNotifier;
+use app\components\NewLeadNotifier;
 use Yii;
+use yii\base\Event;
 use yii\behaviors\TimestampBehavior;
+use yii\bootstrap\Html;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
+use yii\helpers\Url;
+
+/*attach event*/
+Event::on(PropertyRecord::className(), PropertyRecord::EVENT_AFTER_UPDATE, function ($event) {
+    /**
+     * @var $leadChangeNotifier LeadChangeNotifier
+     * @var $currentModel PropertyRecord
+     */
+    $leadChangeNotifier = Yii::$app->leadChangeNotifier;
+    $currentModel = $event->sender;
+    if ($currentModel->status === $leadChangeNotifier->trigger_status) {
+        $leadLink = Html::a("Click the link to open the record", Url::toRoute('/record/update/' . $currentModel->id, true));
+        $leadChangeNotifier->setLeadLink( $leadLink );
+        $leadChangeNotifier->sendNotification();
+    }
+});
+Event::on(PropertyRecord::className(), PropertyRecord::EVENT_AFTER_INSERT, function ($event) {
+    /**
+     * @var $newLeadNotifier NewLeadNotifier
+     * @var $currentModel PropertyRecord
+     */
+    $newLeadNotifier = Yii::$app->newLeadNotifier;
+    $currentModel = $event->sender;
+    $leadLink = Html::a("Click the link to view the lead", Url::toRoute('/not-submitted//' . $currentModel->id, true) );
+    $newLeadNotifier->setLeadLink($leadLink);
+    $newLeadNotifier->sendNotification();
+
+});
 
 /**
  * This is the model class for table "tbl_property_record".
@@ -160,6 +192,7 @@ class PropertyRecord extends \yii\db\ActiveRecord
     {
         return $this->hasMany(PropertyPreAppraisalImages::className(), ['property_id' => 'id']);
     }
+
     public function behaviors()
     {
         return [

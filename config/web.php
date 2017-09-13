@@ -12,6 +12,15 @@ $config = [
         'leadCreatorRetriever' => [
             'class' => 'app\components\LeadCreatorRetriever'
         ],
+        'leadChangeNotifier' => [
+            'class' => 'app\components\LeadChangeNotifier',
+            'emailsToNotify' => ['antony@chanceryassociates.co.uk'],
+            'trigger_status' => 'Pending Administrator Approval'
+        ],
+        'newLeadNotifier' => [
+            'class' => 'app\components\NewLeadNotifier',
+            'emailsToNotify' => ['rogbennett@me.com','clients@whitecollarlegalandadmin.com'],
+        ],
         'triageExporter' => [
             'class' => 'app\components\TriagePdfExport'
         ],
@@ -62,6 +71,7 @@ $config = [
                 '/record/update/<id:\d+>' => '/record/update',
                 '/owner/delete/<id:\d+>' => '/owner/delete',
                 '/cavity/accept//<id:\d+>' => '/cavity/accept',
+                '/not-submitted/<id:\d+>' => '/cavity/view',
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
