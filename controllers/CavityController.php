@@ -7,6 +7,7 @@ use app\models\CavitySupportingDocument;
 use app\models\Owner;
 use app\models\PropertyDocuments;
 use app\models\PropertyImages;
+use app\models\PropertyNotes;
 use app\models\PropertyOwner;
 use app\models\PropertyPreAppraisalImages;
 use app\models\PropertyRecord;
@@ -337,6 +338,16 @@ class CavityController extends Controller
         $propertyRecord->installer = $modelFound->CWI_installer;
         $propertyRecord->product_installed = $modelFound->construction_type;
         $propertyRecord->save();
+
+        /*Property Notes*/
+        $newPropertyNotes = new PropertyNotes();
+        $newPropertyNotes->note_type = PropertyNotes::NOTE_TYPE_INFO;
+        $newPropertyNotes->content = $modelFound->property_history;
+        $newPropertyNotes->property_id = $propertyRecord->id;
+        $newPropertyNotes->created_by = $propertyRecord->created_by;
+        if(!$newPropertyNotes->save()){
+            \Yii::error(Html::errorSummary($newPropertyNotes));
+        }
 
         /*create owner */
         $owner = new Owner();

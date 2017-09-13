@@ -46,6 +46,7 @@ use yii\db\Expression;
  * @property string second_application_telephone
  * @property string second_application_mobile_landline
  * @property string second_application_email_address
+ * @property string property_history
  * @property string $date_created
  * @property string $date_updated
  *
@@ -68,7 +69,7 @@ class Cavity extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['birthday','when_property_moved', 'CWI_installation_date', 'date_created', 'date_updated'], 'safe'],
+            [['birthday','when_property_moved', 'CWI_installation_date','property_history' ,'date_created', 'date_updated'], 'safe'],
             [['telephone_number', 'address_postcode_cavity_installation'], 'unique', 'targetAttribute' => ['telephone_number', 'address_postcode_cavity_installation']],
             [['CWI_payment','telephone_number'], 'number'],
             [['email_address'], 'email'],
@@ -119,6 +120,7 @@ class Cavity extends \yii\db\ActiveRecord
             'second_application_telephone' => 'Telephone (second applicant)',
             'second_application_mobile_landline' => 'Other contact number (second applicant)',
             'second_application_email_address' => 'Email Address (second applicant)',
+            'property_history' => 'Property History',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
         ];

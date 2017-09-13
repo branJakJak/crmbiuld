@@ -32,6 +32,11 @@ use yii\widgets\Pjax;
         }
 
     </style>
+    <script type="text/javascript">
+        function refreshGrid(){
+            $.pjax.reload({container:"#pre_appraisal_pjax"});
+        }
+    </script>
 <?php
 $downloadAllBtn = Html::a("Download All", \yii\helpers\Url::to(["/record/download-images", "record_id" => $propertyRecord->id]), ['class' => 'pull-right btn btn-success']);
 echo PanelWidget::begin([
@@ -93,6 +98,18 @@ echo PanelWidget::begin([
             'attribute' => 'image_name',
             'format' => 'html'
         ],
+        [
+            'class' => 'yii\grid\ActionColumn',
+            'template' => '{delete}',
+            'buttons' => [
+                'delete' => function ($url, $model) {
+                    return Html::a('<span class="glyphicon glyphicon-trash"></span>', '/property-pre-appraisal-images/delete?id=' . $model->id, [
+                        'title' => Yii::t('yii', 'Delete'),
+                        'data-pjax' => '0'
+                    ]);
+                }
+            ]
+        ]
     ],
 ]);
 ?>

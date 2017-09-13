@@ -50,6 +50,25 @@ $this->params['breadcrumbs'][] = $this->title;
             },
             'format' => 'html',
         ],
+        [
+            'label' => 'Created by',
+            'value' => function ($model) {
+                $creatorName = 'none';
+                if(!\app\models\UserCreator::isCreator($model->id)){
+                    $creatorName = 'none';
+                    //get creator
+                    $modelFound = \app\models\UserCreator::find()->where(['agent_id' => $model->id])->one();
+                    if($modelFound){
+                        $userModel = \dektrium\user\models\User::find()->where(['id' => $modelFound->creator_id])->one();
+                        if ($userModel) {
+                            $creatorName = $userModel->username;
+                        }
+                    }
+                }
+                return $creatorName;
+            },
+            'format' => 'html',
+        ],
         'email:email',
         [
             'attribute' => 'registration_ip',
