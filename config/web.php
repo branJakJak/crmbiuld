@@ -19,7 +19,10 @@ $config = [
         ],
         'newLeadNotifier' => [
             'class' => 'app\components\NewLeadNotifier',
-            'emailsToNotify' => ['rogbennett@me.com','clients@whitecollarlegalandadmin.com'],
+            'emailsToNotify' => ['rogbennett@me.com', 'clients@whitecollarlegalandadmin.com'],
+        ],
+        'settings' => [
+            'class' => 'pheme\settings\components\Settings'
         ],
         'triageExporter' => [
             'class' => 'app\components\TriagePdfExport'
@@ -225,12 +228,13 @@ $config['modules']['api'] = [
 
 $config['modules']['notifyuser'] = [
     'class' => 'app\modules\notifyuser\Module',
-//    'controllerMap' => [
-//        'registration' => [
-//            'class' =>  DefaultControl,
-//            'layout' => '@app/views/layouts/main-login.php',
-//        ]
-//    ],
 ];
+
+
+$config['modules']['settings'] = [
+    'class' => 'pheme\settings\Module',
+    'sourceLanguage' => 'en'
+];
+
 
 return $config;

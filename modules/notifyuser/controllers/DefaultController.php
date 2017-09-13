@@ -2,6 +2,9 @@
 
 namespace app\modules\notifyuser\controllers;
 
+use app\modules\notifyuser\form\SettingsForm;
+use Yii;
+use yii\validators\EmailValidator;
 use yii\web\Controller;
 
 /**
@@ -15,6 +18,38 @@ class DefaultController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = new SettingsForm();
+        $settings = Yii::$app->settings;
+        $lead_change_notify_email = $settings->get('app.lead_change_notify');
+        $new_lead_notify_email = $settings->get('app.new_lead_notify');
+        $model->change_lead_notify = $lead_change_notify_email;
+        $model->new_lead_notify = $new_lead_notify_email;
+
+        if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
+            $emailValidator = new EmailValidator();
+            $newLeadEmailsArr = explode("\r\n", $model->new_lead_notify);
+            $newLeadEmailsArr = array_filter($newLeadEmailsArr);
+            foreach ($newLeadEmailsArr as $currentEmail) {
+                if (!$emailValidator->validate($currentEmail)) {
+                    $model->addError('new_lead_notify', 'There is an email that is not valid . ');
+                }
+            }
+            $changeLeadEmailsArr = explode("\r\n", $model->change_lead_notify);
+            $changeLeadEmailsArr = array_filter($changeLeadEmailsArr);
+            foreach ($changeLeadEmailsArr as $currentEmail) {
+                if (!$emailValidator->validate($currentEmail)) {
+                    $model->addError('change_lead_notify', 'There is an email that is not valid . ');
+                }
+            }
+            if (!$model->hasErrors()) {
+                $model->new_lead_notify = implode("\r\n", $newLeadEmailsArr);
+                $model->change_lead_notify = implode("\r\n", $changeLeadEmailsArr);
+                $model->saveSettings();
+            }
+
+        }
+        return $this->render('index',[
+            'model'=>$model
+        ]);
     }
 }

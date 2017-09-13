@@ -7,9 +7,11 @@ use app\models\FilterPropertyRecordForm;
 use app\models\PropertyRecord;
 use app\models\UserCreator;
 use dektrium\user\models\User;
+use pheme\settings\components\Settings;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
@@ -84,13 +86,15 @@ class SiteController extends Controller
             'availableUsers' => $availableUsers,
         ]);
     }
-//
+
 //    public function actionTest()
 //    {
-//        $creatorIdCollection = [];
-//        $leadCreatorRetriever = new LeadCreatorRetriever();
-//        $leadCreatorRetriever->retrieve(Yii::$app->user->id);
-//        $creatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
+//        /* @var $settings Settings */
+//        $settings = Yii::$app->settings;
+//        $settings->set('app.new_lead_notify', Json::encode([ 'email1@gmail.com' ]));
+//        $settings->set('app.lead_change_notify', Json::encode([ 'email1@gmail.com' ]));
+//        $new_lead_notify_email = $settings->get('app.new_lead_notify_email');
+//        $lead_change_notify_email = $settings->get('app.lead_change_notify');
 //    }
     public function actionLogin()
     {

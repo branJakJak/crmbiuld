@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\components\LeadChangeNotifier;
 use app\components\NewLeadNotifier;
+use pheme\settings\components\Settings;
 use Yii;
 use yii\base\Event;
 use yii\behaviors\TimestampBehavior;
@@ -17,8 +18,14 @@ Event::on(PropertyRecord::className(), PropertyRecord::EVENT_AFTER_UPDATE, funct
     /**
      * @var $leadChangeNotifier LeadChangeNotifier
      * @var $currentModel PropertyRecord
+     * @var $settings Settings
      */
+    $settings = Yii::$app->settings;
+    $lead_change_notify_email = $settings->get('app.lead_change_notify');
+    $lead_change_notify_email = explode("\r\n", $lead_change_notify_email);
+
     $leadChangeNotifier = Yii::$app->leadChangeNotifier;
+    $leadChangeNotifier->emailsToNotify = $lead_change_notify_email;
     $currentModel = $event->sender;
     if ($currentModel->status === $leadChangeNotifier->trigger_status) {
         $leadLink = Html::a("Click the link to open the record", Url::toRoute('/record/update/' . $currentModel->id, true));
@@ -30,11 +37,16 @@ Event::on(PropertyRecord::className(), PropertyRecord::EVENT_AFTER_INSERT, funct
     /**
      * @var $newLeadNotifier NewLeadNotifier
      * @var $currentModel PropertyRecord
+     * @var $settings Settings
      */
     $newLeadNotifier = Yii::$app->newLeadNotifier;
+    $settings = Yii::$app->settings;
+    $new_lead_notify_email = $settings->get('app.new_lead_notify');
+    $lead_change_notify_email = explode("\r\n", $new_lead_notify_email);
     $currentModel = $event->sender;
     $leadLink = Html::a("Click the link to view the lead", Url::toRoute('/not-submitted//' . $currentModel->id, true) );
     $newLeadNotifier->setLeadLink($leadLink);
+    $newLeadNotifier->emailsToNotify = $lead_change_notify_email;
     $newLeadNotifier->sendNotification();
 
 });
