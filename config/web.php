@@ -222,4 +222,15 @@ $config['modules']['api'] = [
     'class' => "app\modules\api\Module"
 ];
 
+
+$config['modules']['notifyuser'] = [
+    'class' => 'app\modules\notifyuser\Module',
+//    'controllerMap' => [
+//        'registration' => [
+//            'class' =>  DefaultControl,
+//            'layout' => '@app/views/layouts/main-login.php',
+//        ]
+//    ],
+];
+
 return $config;

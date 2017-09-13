@@ -20,6 +20,8 @@ class NewLeadNotifier
      */
     public $emailsToNotify;
 
+    protected $leadLink;
+
     public function sendNotification(){
         /* @var $mailer Mailer */
         $mailer = \Yii::$app->mailer;
@@ -27,8 +29,13 @@ class NewLeadNotifier
             ->setFrom('crmbuild@whitecollarclaim.co.uk')
             ->setTo($this->emailsToNotify)
             ->setSubject('New lead arrived')
-            ->setHtmlBody('')
+            ->setHtmlBody($this->leadLink)
             ->send();
 
+    }
+
+    public function setLeadLink($leadLink)
+    {
+        $this->leadLink = $leadLink;
     }
 }
