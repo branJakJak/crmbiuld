@@ -4,6 +4,7 @@ namespace app\modules\notifyuser\controllers;
 
 use app\modules\notifyuser\form\SettingsForm;
 use Yii;
+use yii\filters\AccessControl;
 use yii\validators\EmailValidator;
 use yii\web\Controller;
 
@@ -28,7 +29,7 @@ class DefaultController extends Controller
             ]
         ];
     }
-    
+
     /**
      * Renders the index view for the module
      * @return string
