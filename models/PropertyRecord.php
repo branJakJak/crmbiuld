@@ -14,7 +14,7 @@ use yii\db\Expression;
 use yii\helpers\Url;
 
 /*attach event*/
-Event::on(PropertyRecord::className(), PropertyRecord::EVENT_AFTER_UPDATE, function ($event) {
+Event::on(PropertyRecord::className(), PropertyRecord::EVENT_AFTER_INSERT, function ($event) {
     /**
      * @var $leadChangeNotifier LeadChangeNotifier
      * @var $currentModel PropertyRecord
@@ -27,11 +27,9 @@ Event::on(PropertyRecord::className(), PropertyRecord::EVENT_AFTER_UPDATE, funct
     $leadChangeNotifier = Yii::$app->leadChangeNotifier;
     $leadChangeNotifier->emailsToNotify = $lead_change_notify_email;
     $currentModel = $event->sender;
-    if ($currentModel->status === $leadChangeNotifier->trigger_status) {
-        $leadLink = Html::a("Click the link to open the record", Url::toRoute('/record/update/' . $currentModel->id, true));
-        $leadChangeNotifier->setLeadLink( $leadLink );
-        $leadChangeNotifier->sendNotification();
-    }
+    $leadLink = Html::a("Click the link to open the record", Url::toRoute('/record/update/' . $currentModel->id, true));
+    $leadChangeNotifier->setLeadLink( $leadLink );
+    $leadChangeNotifier->sendNotification();
 });
 
 /**
