@@ -5,6 +5,7 @@ namespace app\models;
 use app\components\NewLeadNotifier;
 use pheme\settings\components\Settings;
 use Yii;
+use yii\base\Event;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 use yii\helpers\Html;
