@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
-    'filterModel'  => $searchModel,
+    // 'filterModel'  => $searchModel,
     'layout'       => "{items}\n{pager}",
     'columns' => [
         [
@@ -115,18 +115,18 @@ $this->params['breadcrumbs'][] = $this->title;
         //     },
         // ],
 
-        [
-          'attribute' => 'last_login_at',
-          'value' => function ($model) {
-            if (!$model->last_login_at || $model->last_login_at == 0) {
-                return Yii::t('user', 'Never');
-            } else if (extension_loaded('intl')) {
-                return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->last_login_at]);
-            } else {
-                return date('Y-m-d G:i:s', $model->last_login_at);
-            }
-          },
-        ],
+        // [
+        //   'attribute' => 'last_login_at',
+        //   'value' => function ($model) {
+        //     if (!$model->last_login_at || $model->last_login_at == 0) {
+        //         return Yii::t('user', 'Never');
+        //     } else if (extension_loaded('intl')) {
+        //         return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->last_login_at]);
+        //     } else {
+        //         return date('Y-m-d G:i:s', $model->last_login_at);
+        //     }
+        //   },
+        // ],
         [
             'header' => Yii::t('user', 'Confirmation'),
             'value' => function ($model) {
