@@ -4,7 +4,7 @@ use derekisbusy\panel\PanelWidget;
 
 ?>
 <div class="row">
-    <div class="col-md-1 col-lg-1">
+    <div class="col-md-2 col-lg-2">
         
     </div>
     <div class="col-md-8 col-lg-8">
