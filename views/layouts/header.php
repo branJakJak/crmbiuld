@@ -226,7 +226,7 @@ $userCount = count($userCollection);
                         </li>
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            <div class="pull-left ">
+                            <div class="pull-left  <?= (Yii::$app->user->can('admin') || Yii::$app->user->can('Admin')) ? '':'hidden' ?>">
                                 <a href="<?= Url::to('/notifyuser') ?>" class="btn btn-default btn-flat">User Notification</a>
                             </div>
                             <div class="pull-right">
