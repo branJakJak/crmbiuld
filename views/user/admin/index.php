@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
     'columns' => [
         [
             'class' => 'yii\grid\ActionColumn',
-            'label' => 'Action',
+            'header' => 'Action',
             // 'template' => '{switch} {resend_password} {update} {delete}',
             'template' => '{update} {delete}',
             'buttons' => [
