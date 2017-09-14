@@ -39,6 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
     'columns' => [
         [
             'class' => 'yii\grid\ActionColumn',
+            'label' => 'Action',
             // 'template' => '{switch} {resend_password} {update} {delete}',
             'template' => '{update} {delete}',
             'buttons' => [
@@ -94,25 +95,25 @@ $this->params['breadcrumbs'][] = $this->title;
             'format' => 'html',
         ],
         'email:email',
-        [
-            'attribute' => 'registration_ip',
-            'value' => function ($model) {
-                return $model->registration_ip == null
-                    ? '<span class="not-set">' . Yii::t('user', '(not set)') . '</span>'
-                    : $model->registration_ip;
-            },
-            'format' => 'html',
-        ],
-        [
-            'attribute' => 'created_at',
-            'value' => function ($model) {
-                if (extension_loaded('intl')) {
-                    return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]);
-                } else {
-                    return date('Y-m-d G:i:s', $model->created_at);
-                }
-            },
-        ],
+        // [
+        //     'attribute' => 'registration_ip',
+        //     'value' => function ($model) {
+        //         return $model->registration_ip == null
+        //             ? '<span class="not-set">' . Yii::t('user', '(not set)') . '</span>'
+        //             : $model->registration_ip;
+        //     },
+        //     'format' => 'html',
+        // ],
+        // [
+        //     'attribute' => 'created_at',
+        //     'value' => function ($model) {
+        //         if (extension_loaded('intl')) {
+        //             return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]);
+        //         } else {
+        //             return date('Y-m-d G:i:s', $model->created_at);
+        //         }
+        //     },
+        // ],
 
         [
           'attribute' => 'last_login_at',
