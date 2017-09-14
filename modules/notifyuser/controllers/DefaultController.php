@@ -64,6 +64,7 @@ class DefaultController extends Controller
                 $model->change_lead_notify = implode("\r\n", $changeLeadEmailsArr);
                 $model->saveSettings();
                 \Yii::$app->session->set("success", "Record saved");
+                return $this->refresh();
             }
 
         }
