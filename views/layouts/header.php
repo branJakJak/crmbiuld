@@ -213,21 +213,21 @@ $userCount = count($userCollection);
                             </p>
                         </li>
                         <!-- Menu Body -->
-                        <li class="user-body hidden">
+                        <li class="user-body  hidden">
                             <div class="col-xs-4 text-center">
                                 <a href="#">Followers</a>
                             </div>
-                            <div class="col-xs-4 text-center">
+                            <div class="col-xs-4 text-center hidden">
                                 <a href="#">Sales</a>
                             </div>
-                            <div class="col-xs-4 text-center">
+                            <div class="col-xs-4 text-center hidden">
                                 <a href="#">Friends</a>
                             </div>
                         </li>
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            <div class="pull-left hidden">
-                                <a href="#" class="btn btn-default btn-flat">Profile</a>
+                            <div class="pull-left ">
+                                <a href="<?= Url::to('/notifyuser') ?>" class="btn btn-default btn-flat">User Notification</a>
                             </div>
                             <div class="pull-right">
                                 <a href="<?= Url::to(['/site/logout'])?>" data-method="post" class='btn btn-default btn-flat'>

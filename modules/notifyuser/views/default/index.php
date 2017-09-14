@@ -1,6 +1,7 @@
 <?php
 /* @var $model SettingsForm */
 use derekisbusy\panel\PanelWidget;
+
 ?>
 <div class="col-md-8 col-lg-8">
     <?php
