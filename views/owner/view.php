@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Owner */
 
-$this->title = sprintf("%s. %s %s",$model->title,$model->firstname,$model->lastname) ;
+$this->title = sprintf("%s %s %s",$model->title,$model->firstname,$model->lastname) ;
 $this->params['breadcrumbs'][] = ['label' => 'Owners', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
