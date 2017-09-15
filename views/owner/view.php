@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="owner-view">
 
-    <h3> Property owner : <?= Html::encode($this->title) ?></h3>
+    <!-- <h3> Property owner : <?= Html::encode($this->title) ?></h3> -->
     <p class="">
         <?php if(Yii::$app->user->can('admin')): ?>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
