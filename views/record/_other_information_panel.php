@@ -21,6 +21,9 @@ use yii\widgets\DetailView;
 <div class="row">
     <div class="col-lg-12">
         <div class="cavity-view">
+            <?php if (is_null($cavityModel) || empty($cavityModel)): ?>
+                No other information provided. These lead is created within crmbuild. Please re-enter details at <a href="http://crmlead.whitecollarclaim.co.uk">http://crmlead.whitecollarclaim.co.uk</a>
+            <?php endif ?>
             <?php if ($cavityModel): ?>
                 
             
