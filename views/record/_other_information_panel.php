@@ -21,6 +21,9 @@ use yii\widgets\DetailView;
 <div class="row">
     <div class="col-lg-12">
         <div class="cavity-view">
+            <?php if ($cavityModel): ?>
+                
+            
             <?php
             echo PanelWidget::begin([
                 'title' => "{$cavityModel->title}. {$cavityModel->firstname} {$cavityModel->lastname}",
@@ -72,8 +75,9 @@ use yii\widgets\DetailView;
                 ],
             ]) ?>
             <?php
-            PanelWidget::end()
+                PanelWidget::end();
             ?>
+            <?php endif ?>
         </div>
 
     </div>
