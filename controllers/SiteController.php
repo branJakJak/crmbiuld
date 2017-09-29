@@ -2,12 +2,16 @@
 
 namespace app\controllers;
 
+use app\components\LeadCreatorRetriever;
 use app\models\FilterPropertyRecordForm;
 use app\models\PropertyRecord;
+use app\models\UserCreator;
 use dektrium\user\models\User;
+use pheme\settings\components\Settings;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
@@ -47,16 +51,13 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+        /* @var $dataProvider ActiveDataProvider */
         $filterModel = new FilterPropertyRecordForm();
-        $defaultQuery = PropertyRecord::find()->orderBy(['date_updated'=>SORT_DESC,'date_created'=>SORT_DESC]);
         $propertRecordModel = new PropertyRecord();
-        if (Yii::$app->user->can('Agent')) {
-            // filter the query to only the data he/she created
-            $defaultQuery->andWhere(['created_by' => \Yii::$app->user->id]);
-        }
-        $dataProvider = new ActiveDataProvider(['query'=>$defaultQuery]);
         $insulationCollection = PropertyRecord::find()->select('insulation_type')->distinct()->all();
         $availableUsers = User::find()->select('username')->distinct()->all();
+        $defaultQuery = PropertyRecord::find()->orderBy(['date_updated' => SORT_DESC, 'date_created' => SORT_DESC]);
+        $dataProvider = new ActiveDataProvider(['query' => $defaultQuery]);
         if ($filterModel->load(Yii::$app->request->post())) {
             if ($filterModel->validate()) {
                 //search and return the result
@@ -66,15 +67,35 @@ class SiteController extends Controller
                 $dataProvider = $filterModel->search();
             }
         }
+        if (!Yii::$app->user->can('Admin') &&
+            !Yii::$app->user->can('Senior Manager') &&
+            !Yii::$app->user->can('admin')) {
+            //search leads created by this user and its subordinate
+            $creatorIdCollection = [];
+            $leadCreatorRetriever = new LeadCreatorRetriever();
+            $leadCreatorRetriever->retrieve(Yii::$app->user->id);
+            $creatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
+            $defaultQuery->andWhere(['in', 'tbl_property_record.created_by', $creatorIdCollection]);
+            $dataProvider = new ActiveDataProvider(['query' => $defaultQuery]);
+        }
         return $this->render('index', [
             'filterModel' => $filterModel,
-            'dataProvider'=> $dataProvider,
-            'propertRecordModel'=>$propertRecordModel,
-            'insulationCollection'=>$insulationCollection,
-            'availableUsers'=>$availableUsers,
+            'dataProvider' => $dataProvider,
+            'propertRecordModel' => $propertRecordModel,
+            'insulationCollection' => $insulationCollection,
+            'availableUsers' => $availableUsers,
         ]);
     }
 
+//    public function actionTest()
+//    {
+//        /* @var $settings Settings */
+//        $settings = Yii::$app->settings;
+//        $settings->set('app.new_lead_notify', Json::encode([ 'email1@gmail.com' ]));
+//        $settings->set('app.lead_change_notify', Json::encode([ 'email1@gmail.com' ]));
+//        $new_lead_notify_email = $settings->get('app.new_lead_notify_email');
+//        $lead_change_notify_email = $settings->get('app.lead_change_notify');
+//    }
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {

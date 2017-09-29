@@ -34,95 +34,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
-    'filterModel'  => $searchModel,
+    // 'filterModel'  => $searchModel,
     'layout'       => "{items}\n{pager}",
     'columns' => [
-        'username',
-        [
-            'label' => 'Role',
-            'value' => function ($model) {
-                $roles = Yii::$app->authManager->getRolesByUser($model->id);
-                $rolesArr = [];
-                foreach ($roles as $currentRole) {
-                    $rolesArr[] = $currentRole->name;
-                }
-                return implode(',',$rolesArr);
-            },
-            'format' => 'html',
-        ],
-        'email:email',
-        [
-            'attribute' => 'registration_ip',
-            'value' => function ($model) {
-                return $model->registration_ip == null
-                    ? '<span class="not-set">' . Yii::t('user', '(not set)') . '</span>'
-                    : $model->registration_ip;
-            },
-            'format' => 'html',
-        ],
-        [
-            'attribute' => 'created_at',
-            'value' => function ($model) {
-                if (extension_loaded('intl')) {
-                    return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]);
-                } else {
-                    return date('Y-m-d G:i:s', $model->created_at);
-                }
-            },
-        ],
-
-        [
-          'attribute' => 'last_login_at',
-          'value' => function ($model) {
-            if (!$model->last_login_at || $model->last_login_at == 0) {
-                return Yii::t('user', 'Never');
-            } else if (extension_loaded('intl')) {
-                return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->last_login_at]);
-            } else {
-                return date('Y-m-d G:i:s', $model->last_login_at);
-            }
-          },
-        ],
-        [
-            'header' => Yii::t('user', 'Confirmation'),
-            'value' => function ($model) {
-                if ($model->isConfirmed) {
-                    return '<div class="text-center">
-                                <span class="text-success">' . Yii::t('user', 'Confirmed') . '</span>
-                            </div>';
-                } else {
-                    return Html::a(Yii::t('user', 'Confirm'), ['confirm', 'id' => $model->id], [
-                        'class' => 'btn btn-xs btn-success btn-block',
-                        'data-method' => 'post',
-                        'data-confirm' => Yii::t('user', 'Are you sure you want to confirm this user?'),
-                    ]);
-                }
-            },
-            'format' => 'raw',
-            'visible' => Yii::$app->getModule('user')->enableConfirmation,
-        ],
-        [
-            'header' => Yii::t('user', 'Block status'),
-            'value' => function ($model) {
-                if ($model->isBlocked) {
-                    return Html::a(Yii::t('user', 'Unblock'), ['block', 'id' => $model->id], [
-                        'class' => 'btn btn-xs btn-success btn-block',
-                        'data-method' => 'post',
-                        'data-confirm' => Yii::t('user', 'Are you sure you want to unblock this user?'),
-                    ]);
-                } else {
-                    return Html::a(Yii::t('user', 'Block'), ['block', 'id' => $model->id], [
-                        'class' => 'btn btn-xs btn-danger btn-block',
-                        'data-method' => 'post',
-                        'data-confirm' => Yii::t('user', 'Are you sure you want to block this user?'),
-                    ]);
-                }
-            },
-            'format' => 'raw',
-        ],
         [
             'class' => 'yii\grid\ActionColumn',
-            'template' => '{switch} {resend_password} {update} {delete}',
+            'header' => 'Action',
+            // 'template' => '{switch} {resend_password} {update} {delete}',
+            'template' => '{update} {delete}',
             'buttons' => [
                 'resend_password' => function ($url, $model, $key) {
                     if (!$model->isAdmin) {
@@ -143,6 +62,106 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ]
         ],
+        'username',
+        [
+            'label' => 'Role',
+            'value' => function ($model) {
+                $roles = Yii::$app->authManager->getRolesByUser($model->id);
+                $rolesArr = [];
+                foreach ($roles as $currentRole) {
+                    $rolesArr[] = $currentRole->name;
+                }
+                return implode(',',$rolesArr);
+            },
+            'format' => 'html',
+        ],
+        [
+            'label' => 'Created by',
+            'value' => function ($model) {
+                $creatorName = 'none';
+                //get creator
+                $modelFound = \app\models\UserCreator::find()->where(['agent_id' => $model->id])->one();
+                if($modelFound){
+                    $userModel = \dektrium\user\models\User::find()->where(['id' => $modelFound->creator_id])->one();
+                    if ($userModel) {
+                        $creatorName = $userModel->username;
+                    }
+                }
+                return $creatorName;
+            },
+            'format' => 'html',
+        ],
+        'email:email',
+        // [
+        //     'attribute' => 'registration_ip',
+        //     'value' => function ($model) {
+        //         return $model->registration_ip == null
+        //             ? '<span class="not-set">' . Yii::t('user', '(not set)') . '</span>'
+        //             : $model->registration_ip;
+        //     },
+        //     'format' => 'html',
+        // ],
+        // [
+        //     'attribute' => 'created_at',
+        //     'value' => function ($model) {
+        //         if (extension_loaded('intl')) {
+        //             return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->created_at]);
+        //         } else {
+        //             return date('Y-m-d G:i:s', $model->created_at);
+        //         }
+        //     },
+        // ],
+
+        // [
+        //   'attribute' => 'last_login_at',
+        //   'value' => function ($model) {
+        //     if (!$model->last_login_at || $model->last_login_at == 0) {
+        //         return Yii::t('user', 'Never');
+        //     } else if (extension_loaded('intl')) {
+        //         return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->last_login_at]);
+        //     } else {
+        //         return date('Y-m-d G:i:s', $model->last_login_at);
+        //     }
+        //   },
+        // ],
+        [
+            'header' => Yii::t('user', 'Confirmation'),
+            'value' => function ($model) {
+                if ($model->isConfirmed) {
+                    return '<div class="text-center">
+                                <span class="text-success">' . Yii::t('user', 'Confirmed') . '</span>
+                            </div>';
+                } else {
+                    return Html::a(Yii::t('user', 'Confirm'), ['confirm', 'id' => $model->id], [
+                        'class' => 'btn btn-xs btn-success btn-block',
+                        'data-method' => 'post',
+                        'data-confirm' => Yii::t('user', 'Are you sure you want to confirm this user?'),
+                    ]);
+                }
+            },
+            'format' => 'raw',
+            'visible' => Yii::$app->getModule('user')->enableConfirmation,
+        ],
+        // [
+        //     'header' => Yii::t('user', 'Block status'),
+        //     'value' => function ($model) {
+        //         if ($model->isBlocked) {
+        //             return Html::a(Yii::t('user', 'Unblock'), ['block', 'id' => $model->id], [
+        //                 'class' => 'btn btn-xs btn-success btn-block',
+        //                 'data-method' => 'post',
+        //                 'data-confirm' => Yii::t('user', 'Are you sure you want to unblock this user?'),
+        //             ]);
+        //         } else {
+        //             return Html::a(Yii::t('user', 'Block'), ['block', 'id' => $model->id], [
+        //                 'class' => 'btn btn-xs btn-danger btn-block',
+        //                 'data-method' => 'post',
+        //                 'data-confirm' => Yii::t('user', 'Are you sure you want to block this user?'),
+        //             ]);
+        //         }
+        //     },
+        //     'format' => 'raw',
+        // ],
+
     ],
 ]); ?>
 

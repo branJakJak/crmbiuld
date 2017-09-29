@@ -41,14 +41,10 @@ $gridColumns = [
         'attribute' => 'id',
         'format' => 'html'
     ],
-    'date_created:date',
     'status',
-    'appraisal_completed:date',
-    'address1',
-    'postcode',
-    'insulation_type',
+    'date_created:date',
     [
-        'label' => 'Created by',
+        'label' => 'Agent ID',
         'value' => function ($currentModel) {
             /* @var $currentModel \app\models\PropertyRecord */
             $createdByName = 'n/a';
@@ -56,12 +52,42 @@ $gridColumns = [
             if ($modelFound) {
                 $profileObj = $modelFound->getProfile();
                 $profileObj = $profileObj->one();
-                $createdByName = $profileObj->name;
+                if ($profileObj) {
+                    $createdByName = $profileObj->name;
+                }else{
+                    $createdByName = $modelFound->username;
+                }
             }
             return $createdByName;
         },
         'attribute' => 'created_by'
     ],
+   [
+       'label' => 'Clients',
+       'value' => function ($currentModel) {
+           /* @var $currentModel \app\models\PropertyRecord */
+           /* @var $currentPropertyOwner \app\models\PropertyOwner */
+           $propertyOwnersCollection = [];
+           $propertyOwners = $currentModel->getPropertyOwners()->all();
+           foreach ($propertyOwners as $currentPropertyOwner) {
+               $currentOwner = $currentPropertyOwner->getOwner()->one();
+               if ($currentOwner) {
+                   $ownerFullName = '';
+                   if (!empty($currentOwner->title)) {
+                       $ownerFullName = sprintf("%s %s %s", $currentOwner->title, $currentOwner->firstname, $currentOwner->lastname);
+                   }
+                   $tempContainer = Html::a($ownerFullName, ['/owner/view', 'id' => $currentOwner->id]);
+                   $propertyOwnersCollection[] = $tempContainer;
+               }
+           }
+           return implode(",<br>", $propertyOwnersCollection);
+       },
+       'format' => 'raw'
+   ],    
+//    'appraisal_completed:date',
+//    'address1',
+    'postcode',
+//    'insulation_type',
     [
         'label' => 'Latest Note',
         'value' => function ($currentModel) {
@@ -71,30 +97,18 @@ $gridColumns = [
             if (isset($propertyNotes) && !empty($propertyNotes)) {
                 $lastNoteObj = $propertyNotes[count($propertyNotes) - 1];
                 $lastNote = $lastNoteObj->content;
+                if (strlen($lastNote) >= 250) {
+                    $lastNote = substr($lastNote, 0, 250).'...'.Html::a('Read more', "/record/update/{$currentModel->id}#w28-tab4" , []);
+                }
             }
             return $lastNote;
         },
+        'format'=>'raw'
     ],
     
-    [
-        'label' => 'Clients',
-        'value' => function ($currentModel) {
-            /* @var $currentModel \app\models\PropertyRecord */
-            /* @var $currentPropertyOwner \app\models\PropertyOwner */
-            $propertyOwnersCollection = [];
-            $propertyOwners = $currentModel->getPropertyOwners()->all();
-            foreach ($propertyOwners as $currentPropertyOwner) {
-                $currentOwner = $currentPropertyOwner->getOwner()->one();
-                $ownerFullName = sprintf("%s. %s %s", $currentOwner->title, $currentOwner->firstname, $currentOwner->lastname);
-                $tempContainer = Html::a($ownerFullName, ['/owner/view', 'id' => $currentOwner->id]);
-                $propertyOwnersCollection[] = $tempContainer;
-            }
-            return implode(",<br>", $propertyOwnersCollection);
-        },
-        'format' => 'raw'
-    ],
+
 ];
-if(Yii::$app->user->can('Admin') || Yii::$app->user->can('Admin')){
+if(Yii::$app->user->can('admin') || Yii::$app->user->can('Admin')){
     $gridColumns[] = [
         'class' => 'yii\grid\ActionColumn',
         'template' => '{delete}',//{view}{update}
@@ -119,6 +133,8 @@ if(Yii::$app->user->can('Admin') || Yii::$app->user->can('Admin')){
 }
 
 
+
+
 ?>
 <style type="text/css">
     #select2-filterpropertyrecordform-status-container {
@@ -131,11 +147,23 @@ if(Yii::$app->user->can('Admin') || Yii::$app->user->can('Admin')){
 </style>
 <div class="site-index">
 
+    <?php if (!Yii::$app->user->can('Manager') && !Yii::$app->user->can('Agent')): ?>
     <div class="row">
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
             <?= Html::a("Create a New Record", \yii\helpers\Url::to("/record/create"), ['class' => 'btn btn-info btn-lg']) ?>
         </div>
     </div>
+    <?php endif ?>
+
+    <?php if (Yii::$app->user->can('Agent') || Yii::$app->user->can('Manager')): ?>
+    <div class="row">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+            <?php echo $filterModel->status ?>
+        </div>
+    </div>
+    <?php endif ?>
+
+    
     <div class="row">
         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
             <?php $form = ActiveForm::begin(['id' => 'status-filter-form']); ?>
@@ -159,8 +187,9 @@ if(Yii::$app->user->can('Admin') || Yii::$app->user->can('Admin')){
             <?php ActiveForm::end(); ?>
         </div>
         <br>
-
     </div>
+    
+
     <br>
     <?php
     echo PanelWidget::begin([
@@ -317,7 +346,7 @@ if(Yii::$app->user->can('Admin') || Yii::$app->user->can('Admin')){
 
 
     <?php
-    PanelWidget::end()
+        PanelWidget::end()
     ?>
 
 </div>

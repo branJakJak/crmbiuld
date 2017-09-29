@@ -2,10 +2,35 @@
 
 namespace app\models;
 
+use app\components\LeadChangeNotifier;
+use app\components\NewLeadNotifier;
+use pheme\settings\components\Settings;
 use Yii;
+use yii\base\Event;
 use yii\behaviors\TimestampBehavior;
+use yii\bootstrap\Html;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
+use yii\helpers\Url;
+
+/*attach event*/
+Event::on(PropertyRecord::className(), PropertyRecord::EVENT_AFTER_INSERT, function ($event) {
+    /**
+     * @var $leadChangeNotifier LeadChangeNotifier
+     * @var $currentModel PropertyRecord
+     * @var $settings Settings
+     */
+    $settings = Yii::$app->settings;
+    $lead_change_notify_email = $settings->get('app.lead_change_notify');
+    $lead_change_notify_email = explode("\r\n", $lead_change_notify_email);
+
+    $leadChangeNotifier = Yii::$app->leadChangeNotifier;
+    $leadChangeNotifier->emailsToNotify = $lead_change_notify_email;
+    $currentModel = $event->sender;
+    $leadLink = Html::a("Click the link to open the record", Url::toRoute('/record/update/' . $currentModel->id, true));
+    $leadChangeNotifier->setLeadLink( $leadLink );
+    $leadChangeNotifier->sendNotification();
+});
 
 /**
  * This is the model class for table "tbl_property_record".
@@ -49,6 +74,7 @@ class PropertyRecord extends \yii\db\ActiveRecord
     const PROPERTY_STATUS_NOT_SUBMITTED = 'Not Submitted';
     const PROPERTY_STATUS_PENDING_SUPERVISOR_APPROVAL = 'Pending Supervisor Approval';
     const PROPERTY_STATUS_PENDING_ADMIN_APPROVAL = 'Pending Administrator Approval';
+    const PROPERTY_STATUS_PICS_BOOKED = 'Pics Booked';
     const PROPERTY_STATUS_REJECTED = 'Rejected';
     const PROPERTY_STATUS_APPROVED = 'Approved';
     const PROPERTY_STATUS_WORK_IN_PROGRESS = 'Work in Progress';
@@ -159,6 +185,7 @@ class PropertyRecord extends \yii\db\ActiveRecord
     {
         return $this->hasMany(PropertyPreAppraisalImages::className(), ['property_id' => 'id']);
     }
+
     public function behaviors()
     {
         return [

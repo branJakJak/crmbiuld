@@ -1,6 +1,7 @@
 CRMBUILD
 ============================
 
+<<<<<<< HEAD
 
 DIRECTORY STRUCTURE
 -------------------
@@ -32,3 +33,15 @@ yii migrate/up --migrationPath=@vendor/dektrium/yii2-user/migrations
 yii migrate
 ```
 
+=======
+Yii 2 Basic Project Template is a skeleton [Yii 2](http://www.yiiframework.com/) application best for
+rapidly creating small projects.
+
+The template contains the basic features including user login/logout and a contact page.
+It includes all commonly used configurations that would allow you to focus on adding new
+features to your application.
+
+Installation
+
+yii migrate/up --migrationPath=@vendor/pheme/yii2-settings/migrations
+>>>>>>> 257b526d1409664ba946c2dd3df7740b611e91ca

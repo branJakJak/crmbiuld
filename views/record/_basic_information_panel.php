@@ -53,7 +53,9 @@ $propertyType = [
         <?= $form->field($propertyRecord, 'property_type')->dropDownList($propertyType) ?>
         <?= $form->field($propertyRecord, 'number_of_bedrooms') ?>
         <?= $form->field($propertyRecord, 'approximate_build') ?>
-        <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
+        <?php if (!Yii::$app->user->can('Manager') && !Yii::$app->user->can('Consultant') && !Yii::$app->user->can('Agent')): ?>
+            <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
+        <?php endif ?>
         <?php \yii\widgets\ActiveForm::end() ?>
 
         <?php
@@ -179,7 +181,6 @@ $propertyType = [
                     if ($tempProfile) {
                         $tempNoteCreatorProfile = $tempProfile->one();
                         $noteCreator = $tempNoteCreatorProfile->name;
-                        $noteCreator = $tempNoteCreatorProfile->name;
                     }
                 }
                 $noteContent = $lastNote->content;
@@ -189,7 +190,24 @@ $propertyType = [
         ?>
         <?php if ($lastNote): ?>
             <?= $noteCreator ?> -<?= Yii::$app->formatter->asDate(new DateTime($noteDatePublished)) ?> <br>
-            <?= Html::encode($noteContent) ?>
+            <?php if (strlen($noteContent) >= 250): ?>
+                <?php 
+                \yii\bootstrap\Modal::begin([
+                    'header' => '<h2>Latest Note</h2>',
+                    'toggleButton' => [
+                        'label' => substr(Html::encode($noteContent), 0, 250).'..',
+                        'tag'=>'a'
+                    ],
+                ]);
+                echo Html::encode($noteContent);
+                \yii\bootstrap\Modal::end();
+                ?>
+            <?php endif ?>
+            <?php if (strlen($noteContent) < 250): ?>
+                <?php echo Html::encode($noteContent); ?>
+            <?php endif ?>
+
+
         <?php endif ?>
         <?php if (!$lastNote): ?>
             <strong>No notes created yet</strong>
@@ -229,7 +247,10 @@ $propertyType = [
         ])
         ?>
         <br>
-        <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
+        <?php if (!Yii::$app->user->can('Manager') && !Yii::$app->user->can('Consultant') && !Yii::$app->user->can('Agent')): ?>
+            <?= Html::submitButton('Submit', ['class' => 'btn btn-primary']) ?>
+        <?php endif ?>
+
         <?php \yii\widgets\ActiveForm::end() ?>
         <?php
         PanelWidget::end()

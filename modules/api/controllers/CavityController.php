@@ -27,6 +27,7 @@ class CavityController extends Controller
                     'id' => $cavityForm->id
                 ]);
             } else {
+                Yii::error(Html::errorSummary($cavityForm));
                 return Json::encode($cavityForm->getErrors());
             }
         } else {

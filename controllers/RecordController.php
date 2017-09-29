@@ -9,6 +9,7 @@
 namespace app\controllers;
 
 
+use app\models\Cavity;
 use app\models\Owner;
 use app\models\PropertyDocuments;
 use app\models\PropertyImages;
@@ -16,9 +17,12 @@ use app\models\PropertyNotes;
 use app\models\PropertyOwner;
 use app\models\PropertyPreAppraisalImages;
 use app\models\PropertyRecord;
+use app\models\QuestionairePropertyRecord;
 use app\models\Triage;
 use app\models\TriageNote;
+use app\models\UserCreator;
 use DateTime;
+use dektrium\user\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\debug\models\timeline\DataProvider;
@@ -46,24 +50,19 @@ class RecordController extends Controller
                 'only' => ['create','update','downloadDocument','transferToTriage'],
                 'rules' => [
                     [
-                        'actions' => ['create','update','downloadDocument','transferToTriage'],
+                        'actions' => ['create','downloadDocument','transferToTriage'],
                         'allow' => true,
                         'roles' => ['admin','Admin'],
                     ],
                     [
-                        'actions' => ['update'],
-                        'allow' => true,
-                        'roles' => ['Senior Manager'],
-                    ],
-                    [
                         'actions' => ['create'],
                         'allow' => true,
-                        'roles' => ['Manager','Consultant'],
+                        'roles' => ['Manager','Consultant','Senior Manager'],
                     ],
                     [
                         'actions' => ['update'],
                         'allow' => true,
-                        'roles' => ['Manager','Agent'],
+                        'roles' => ['admin','Admin','Manager','Agent','Senior Manager'],
                     ]
                 ],
             ],
@@ -161,28 +160,38 @@ class RecordController extends Controller
         /* @var $propertyRecord PropertyRecord */
         /*property record*/
         $propertyRecord = PropertyRecord::findOne(['id' => $id]);
-
-        if (Yii::$app->user->can('Agent')) {
-            /*check if he/she owns this record*/
-            if (Yii::$app->user->id != $propertyRecord->created_by) {
-                throw new ForbiddenHttpException();
-            }
-        }
-
-
         if(!$propertyRecord){
             new NotFoundHttpException('Sorry that record doesnt exists');
         }
-        if ( Yii::$app->user->can('Manager')) {
-            if(!Yii::$app->user->can('managerPermission',['property_record' => $propertyRecord])) {
-                throw new UnauthorizedHttpException("You are not allowed to edit this record");
-            }
+        $isOwner = Yii::$app->user->id != $propertyRecord->created_by;
+        $isSubordinate = UserCreator::isSubordinate(Yii::$app->getUser()->id, $propertyRecord->created_by);
+        if(!$isOwner && !$isSubordinate){
+            throw new ForbiddenHttpException();
         }
-        if ( Yii::$app->user->can('Consultant')) {
-            if(!Yii::$app->user->can('editOwnRecordPermission',['property_record' => $propertyRecord])) {
-                throw new UnauthorizedHttpException("You are not allowed to edit this record");
-            }
+
+        /*Cavity model*/
+        $questionairePropertyReoord = QuestionairePropertyRecord::find()->where(['property_record_id'=>$id])->one();
+        $cavityModel = null;
+        if ($questionairePropertyReoord) {
+            $cavity_form_id = intval($questionairePropertyReoord->cavity_form_id);
+            $cavityModel = Cavity::find()->where(['id' => $cavity_form_id])->one();
         }
+
+//        if (
+//            (
+//                Yii::$app->user->can('Manager') ||
+//                Yii::$app->user->can('Consultant') ||
+//                Yii::$app->user->can('Agent')
+//            )
+//            && Yii::$app->request->isPost) {
+//            throw new UnauthorizedHttpException("You are not allowed to edit this record");
+//        }
+
+//        if ( Yii::$app->user->can('Consultant')) {
+//            if(!Yii::$app->user->can('editOwnRecordPermission',['property_record' => $propertyRecord])) {
+//                throw new UnauthorizedHttpException("You are not allowed to edit this record");
+//            }
+//        }
 
 
         if ($propertyRecord->load(\Yii::$app->request->post())) {
@@ -195,10 +204,14 @@ class RecordController extends Controller
             }
             return $this->refresh("#basicInformationTab");
         }
-        $dtTemp = new DateTime($propertyRecord->date_of_cwi);
-        $propertyRecord->date_of_cwi = $dtTemp->format("m/d/Y");
-        $dtTemp = new DateTime($propertyRecord->date_guarantee_issued);
-        $propertyRecord->date_guarantee_issued = $dtTemp->format("m/d/Y");
+        if (isset($propertyRecord->date_of_cwi)) {
+            $dtTemp = new DateTime($propertyRecord->date_of_cwi);
+            $propertyRecord->date_of_cwi = $dtTemp->format("m/d/Y");
+        }
+        if ($propertyRecord->date_guarantee_issued) {
+            $dtTemp = new DateTime($propertyRecord->date_guarantee_issued);
+            $propertyRecord->date_guarantee_issued = $dtTemp->format("m/d/Y");
+        }
 
         /*property owner*/
         $owner = new Owner();
@@ -355,7 +368,8 @@ class RecordController extends Controller
             'triageDocumentDataProvider' => $triageDocumentDataProvider,
             'triageDocument' => $triageDocument,
             'propertyImagesDataProvider' => $propertyImagesDataProvider,
-            'triageNotesDataProvider' => $triageNotesDataProvider
+            'triageNotesDataProvider' => $triageNotesDataProvider,
+            'cavityModel' => $cavityModel
         ]);
     }
     public function actionTransferToTriage($propertyId){
@@ -398,6 +412,14 @@ class RecordController extends Controller
     {
         $modelFound = $this->findModel($id);
         if ($modelFound) {
+            /*delete cavitypropertyrecord*/
+            $qp = QuestionairePropertyRecord::find()->where(['property_record_id' => $id]);
+            if ($qp->exists()) {
+                /* @var $obj QuestionairePropertyRecord*/
+                $obj = $qp->one();
+                $obj->cavityForm->delete();
+                $obj->delete();
+            }
             $modelFound->delete();
             Yii::$app->session->addFlash('success', 'Record deleted');
             return $this->redirect(\Yii::$app->getRequest()->getReferrer());

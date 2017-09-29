@@ -5,8 +5,19 @@ use yii\helpers\Url;
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-$userCount = \dektrium\user\models\User::find()->count();
-$userCollection = \dektrium\user\models\User::find()->all();
+$userCount = 0;
+$userCreated = [];
+/**
+ * @var $leadCreatorRetriever \app\components\LeadCreatorRetriever
+ */
+$leadCreatorRetriever = Yii::$app->leadCreatorRetriever;
+$leadCreatorRetriever->retrieve(Yii::$app->user->id);
+$userCreated = $leadCreatorRetriever->getLeadCreatorIdCollection();
+$userCollection = \dektrium\user\models\User::find()->andWhere(['in', 'id', $userCreated])->all();
+$userCount = count($userCollection);
+
+
+
 ?>
 
 <header class="main-header">
@@ -25,7 +36,7 @@ $userCollection = \dektrium\user\models\User::find()->all();
             <ul class="nav navbar-nav">
 
                 <!-- Messages: style can be found in dropdown.less-->
-                <li class="dropdown messages-menu <?= (Yii::$app->user->can('Admin') || Yii::$app->user->can('admin')) ? "":"hidden" ?> ">
+                <li class="dropdown messages-menu <?= (!Yii::$app->user->can('Consultant'))  ? "":"hidden" ?> ">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-user-o"></i>
                         <span class="label label-success"> <?= $userCount ?> </span>
@@ -37,7 +48,7 @@ $userCollection = \dektrium\user\models\User::find()->all();
                             <ul class="menu">
                                 <?php foreach ($userCollection as $curreentUser): ?>
                                     <li>
-                                        <a href="#">
+                                        <a href="<?= Url::to(['/user/admin/update','id'=>$curreentUser->id])?>">
                                             <div class="pull-left">
                                                 <img src="/img/user.png" class="img-circle" alt="User Image" />
                                             </div>
@@ -202,21 +213,21 @@ $userCollection = \dektrium\user\models\User::find()->all();
                             </p>
                         </li>
                         <!-- Menu Body -->
-                        <li class="user-body hidden">
+                        <li class="user-body  hidden">
                             <div class="col-xs-4 text-center">
                                 <a href="#">Followers</a>
                             </div>
-                            <div class="col-xs-4 text-center">
+                            <div class="col-xs-4 text-center hidden">
                                 <a href="#">Sales</a>
                             </div>
-                            <div class="col-xs-4 text-center">
+                            <div class="col-xs-4 text-center hidden">
                                 <a href="#">Friends</a>
                             </div>
                         </li>
                         <!-- Menu Footer-->
                         <li class="user-footer">
-                            <div class="pull-left hidden">
-                                <a href="#" class="btn btn-default btn-flat">Profile</a>
+                            <div class="pull-left  <?= (Yii::$app->user->can('admin') || Yii::$app->user->can('Admin')) ? '':'hidden' ?>">
+                                <a href="<?= Url::to('/notifyuser') ?>" class="btn btn-default btn-flat">User Notification</a>
                             </div>
                             <div class="pull-right">
                                 <a href="<?= Url::to(['/site/logout'])?>" data-method="post" class='btn btn-default btn-flat'>

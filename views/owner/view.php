@@ -6,13 +6,13 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Owner */
 
-$this->title = sprintf("%s. %s %s",$model->title,$model->firstname,$model->lastname) ;
+$this->title = sprintf("%s %s %s",$model->title,$model->firstname,$model->lastname) ;
 $this->params['breadcrumbs'][] = ['label' => 'Owners', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="owner-view">
 
-    <h3> Property owner : <?= Html::encode($this->title) ?></h3>
+    <!-- <h3> Property owner : <?= Html::encode($this->title) ?></h3> -->
     <p class="">
         <?php if(Yii::$app->user->can('admin')): ?>
         <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>

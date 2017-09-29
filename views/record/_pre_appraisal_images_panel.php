@@ -32,6 +32,11 @@ use yii\widgets\Pjax;
         }
 
     </style>
+    <script type="text/javascript">
+        function refreshGrid(){
+            $.pjax.reload({container:"#pre_appraisal_pjax"});
+        }
+    </script>
 <?php
 $downloadAllBtn = Html::a("Download All", \yii\helpers\Url::to(["/record/download-images", "record_id" => $propertyRecord->id]), ['class' => 'pull-right btn btn-success']);
 echo PanelWidget::begin([
@@ -40,6 +45,7 @@ echo PanelWidget::begin([
     'widget' => false,
 ])
 ?>
+
 
 <?php $form = \yii\widgets\ActiveForm::begin(['action' => \yii\helpers\Url::to(['/record/transfer-to-triage', 'propertyId' => $propertyRecord->id])]) ?>
 
@@ -52,7 +58,7 @@ echo PanelWidget::begin([
         'accept' => 'image/*'
     ],
     'clientOptions' => [
-        'maxFileSize' => 2000000
+        'maxFileSize' => 100000000
     ],
     'clientEvents' => [
         'fileuploaddone' => 'function(e, data) {
@@ -92,12 +98,28 @@ echo PanelWidget::begin([
             'attribute' => 'image_name',
             'format' => 'html'
         ],
+        [
+            'class' => 'yii\grid\ActionColumn',
+            'template' => '{delete}',
+            'buttons' => [
+                'delete' => function ($url, $model) {
+                    return Html::a('<span class="glyphicon glyphicon-trash"></span>', '/property-pre-appraisal-images/delete?id=' . $model->id, [
+                        'title' => Yii::t('yii', 'Delete'),
+                        'data-pjax' => '0'
+                    ]);
+                }
+            ]
+        ]
     ],
 ]);
 ?>
+<?php if (!Yii::$app->user->can('Manager') && !Yii::$app->user->can('Consultant') && !Yii::$app->user->can('Agent')): ?>
     <div>
         <?= Html::submitButton('Transfer to Triage', ['class' => 'btn btn-success']) ?>
     </div>
+<?php endif ?>
+
+
 
 
 <?php ActiveForm::end(); ?>

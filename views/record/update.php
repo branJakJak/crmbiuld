@@ -47,7 +47,13 @@ $this->title = $propertyRecord->status;
     .select2-container .select2-selection--single .select2-selection__rendered {
         padding-top: 4px;
     }
+    #w6 > div.panel-body > a {
+        cursor: pointer !important;
+    }
 </style>
+
+<?php if (!Yii::$app->user->can('Manager')): ?>
+    
 
 <div class="row">
     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -71,7 +77,7 @@ $this->title = $propertyRecord->status;
         <?php \yii\widgets\ActiveForm::end() ?>
     </div>
 </div>
-
+<?php endif ?>
 
 <br />
 <br />
@@ -95,6 +101,18 @@ echo TabsX::widget([
                 ),
                 [
                         'id'=>'basicInformationTab'
+                ]
+            ],
+            [
+                'label' => 'Other Information',
+                'content' => $this->render(
+                    '_other_information_panel',
+                    [
+                        'cavityModel'=>$cavityModel
+                    ]
+                ),
+                [
+                    'id'=>'cavityModel'
                 ]
             ],
             [

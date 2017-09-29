@@ -10,14 +10,15 @@ namespace app\models;
 
 
 
+use app\components\LeadCreatorRetriever;
 use DateTime;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
 
 class FilterPropertyRecordForm extends Model
 {
-
     public $filterQuery;
     public $date_created;
     public $appraisal_completed;
@@ -25,8 +26,13 @@ class FilterPropertyRecordForm extends Model
     public $postcode;
     public $insulation_type;
     public $created_by_username;
+    public $current_user_logged_in;
     public $latest_note;
     public $status;
+    /**
+     * @var $queryObject ActiveQuery
+     */
+    protected $queryObject;
 
     public function attributeLabels()
     {
@@ -43,6 +49,13 @@ class FilterPropertyRecordForm extends Model
         ];
     }
 
+    public function init()
+    {
+        parent::init();
+        $this->current_user_logged_in = \Yii::$app->user->id;
+        $this->queryObject = PropertyRecord::find();
+    }
+
 
     public function rules()
     {
@@ -51,16 +64,22 @@ class FilterPropertyRecordForm extends Model
             ['filterQuery','safe']
         ];
     }
+
+    /**
+     * @return ActiveDataProvider
+     */
     public function search()
     {
-        $dbQuery = PropertyRecord::find();
-        $dbQuery->leftJoin('tbl_property_notes','tbl_property_notes.property_id = tbl_property_record.id');
-        $dbQuery->leftJoin('user','user.id = tbl_property_record.created_by');
-        $dbQuery->leftJoin('profile','profile.user_id = user.id');
-
+        if ($this->status === 'All Jobs') {
+            $this->status='';
+        }
+        $this->queryObject->groupBy('tbl_property_record.id');
+        $this->queryObject->leftJoin('tbl_property_notes','tbl_property_notes.property_id = tbl_property_record.id');
+        $this->queryObject->leftJoin('user','user.id = tbl_property_record.created_by');
+        $this->queryObject->leftJoin('profile','profile.user_id = user.id');
         if ( $this->scenario === 'quick-filter-form') {
-            $dbQuery->andFilterWhere([
-                'or',
+            $this->queryObject->andFilterWhere([
+                'OR',
                 ['like', 'tbl_property_record.date_created', $this->filterQuery],
                 ['like', 'tbl_property_record.appraisal_completed', $this->filterQuery],
                 ['like', 'tbl_property_record.status', $this->filterQuery],
@@ -79,7 +98,7 @@ class FilterPropertyRecordForm extends Model
                 $tempDt = new DateTime($this->date_created);
                 $this->date_created = $tempDt->format("Y-m-d");
             }
-            $dbQuery->andFilterWhere([
+            $this->queryObject->andFilterWhere([
                 'or',
                 ['like', 'tbl_property_record.status', $this->status],
                 ['like', 'tbl_property_record.address1', $this->address1],
@@ -88,14 +107,47 @@ class FilterPropertyRecordForm extends Model
                 ['like', 'tbl_property_notes.content', $this->latest_note],
                 ['like', 'profile.name', $this->created_by_username]
             ]);
-            $dbQuery->orWhere(['date(tbl_property_record.appraisal_completed)' => $this->appraisal_completed]);
-            $dbQuery->orWhere(['date(tbl_property_record.date_created)' => $this->date_created]);
+            $this->queryObject->orWhere(['date(tbl_property_record.appraisal_completed)' => $this->appraisal_completed]);
+            $this->queryObject->orWhere(['date(tbl_property_record.date_created)' => $this->date_created]);
         } else if( $this->scenario === 'status-filter-form') {
             if(!empty($this->status)){
-                $dbQuery->where(['status'=> $this->status ] );
+                $this->queryObject->andWhere(['tbl_property_record.status'=> $this->status ] );
             }
         }
-        return new ActiveDataProvider(['query'=>$dbQuery]);
+        if (!Yii::$app->user->can('Admin') &&
+            !Yii::$app->user->can('Senior Manager') &&
+            !Yii::$app->user->can('admin')) {
+
+            /*created by user and all its subordinate*/
+            /**
+             * @var $leadCreatorRetriever LeadCreatorRetriever
+             */
+            $leadCreatorRetriever = \Yii::$app->leadCreatorRetriever;
+            $leadCreatorRetriever->retrieve($this->current_user_logged_in);
+            $leadCreatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
+            $this->queryObject->andWhere(['in', 'tbl_property_record.created_by', $leadCreatorIdCollection]);
+        }
+        if ($this->status === '') {
+            $this->status='All Jobs';
+        }
+        
+        return new ActiveDataProvider(['query'=>$this->queryObject]);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getQueryObject()
+    {
+        return $this->queryObject;
+    }
+
+    /**
+     * @param mixed $queryObject
+     */
+    public function setQueryObject($queryObject)
+    {
+        $this->queryObject = $queryObject;
     }
 
 

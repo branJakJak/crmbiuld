@@ -1,0 +1,1 @@
+ssh uks84996@crmbuild.whitecollarclaim.co.uk -p 50022 -t 'pushd html/crmbuild && git pull origin master'
