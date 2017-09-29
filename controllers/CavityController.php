@@ -49,7 +49,7 @@ class CavityController extends Controller
                 'only' => ['index', 'view', 'create', 'update', 'delete','accept','decline'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'create', 'update', 'accept'],
+                        'actions' => ['index', 'view', 'create', 'update', 'accept','decline'],
                         'allow' => true,
                         'roles' => ['@']
                     ],
@@ -239,7 +239,16 @@ class CavityController extends Controller
     }
     public function actionDecline($id)
     {
-        /* Create QuestionairePropertyRecord record*/
+        /**
+         * @var $leadCreatorRetriever LeadCreatorRetriever
+         */
+        $leadCreatorRetriever = Yii::$app->leadCreatorRetriever;
+        $leadCreatorRetriever->retrieve(Yii::$app->user->id);
+        $allowedUserId = $leadCreatorRetriever->getLeadCreatorIdCollection();
+        if (!in_array(\Yii::$app->user->id, $allowedUserId)) {
+            throw new \yii\web\UnauthorizedHttpException('You are not allwoed to decline this lead');
+        }
+        
         /*get cavity record*/
         $modelFound = $this->findModel($id);
         /*create property record*/
@@ -309,12 +318,13 @@ class CavityController extends Controller
             $questionairePropertyRecord->property_record_id = $propertyRecord->id;
             $questionairePropertyRecord->save();
         }
-        return $this->redirect(Url::to(['/record/update', 'id' => $propertyRecord->id]));
+        return $this->redirect(Url::to(['/not-submitted']));
     }
 
 
     public function actionAccept($id)
     {
+       
         /* Create QuestionairePropertyRecord record*/
         /*get cavity record*/
         $modelFound = $this->findModel($id);
