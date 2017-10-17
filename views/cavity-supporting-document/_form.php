@@ -18,6 +18,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'document_name')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'document_description')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'date_created')->textInput() ?>
 
     <?= $form->field($model, 'date_updated')->textInput() ?>
