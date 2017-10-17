@@ -54,7 +54,6 @@ if (Yii::$app->user->can('Admin') || Yii::$app->user->can('Senior Manager')) {
                     },
                 ],
                 'material_file_description',
-                'date_created:datetime',
             ]
         ])
         ?>
@@ -123,6 +122,7 @@ if (Yii::$app->user->can('Admin') || Yii::$app->user->can('Senior Manager')) {
                     'attribute' => 'image_name',
                     'format' => 'html'
                 ],
+                'material_file_description'
             ],
         ]);
         ?>
