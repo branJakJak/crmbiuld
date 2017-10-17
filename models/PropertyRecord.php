@@ -13,24 +13,34 @@ use yii\db\ActiveRecord;
 use yii\db\Expression;
 use yii\helpers\Url;
 
-/*attach event*/
+/*attach event on after creating the record*/
 Event::on(PropertyRecord::className(), PropertyRecord::EVENT_AFTER_INSERT, function ($event) {
     /**
      * @var $leadChangeNotifier LeadChangeNotifier
      * @var $currentModel PropertyRecord
      * @var $settings Settings
      */
-    $settings = Yii::$app->settings;
-    $lead_change_notify_email = $settings->get('app.lead_change_notify');
-    $lead_change_notify_email = explode("\r\n", $lead_change_notify_email);
-
     $leadChangeNotifier = Yii::$app->leadChangeNotifier;
-    $leadChangeNotifier->emailsToNotify = $lead_change_notify_email;
-    $currentModel = $event->sender;
-    $leadLink = Html::a("Click the link to open the record", Url::toRoute('/record/update/' . $currentModel->id, true));
-    $leadChangeNotifier->setLeadLink( $leadLink );
+    $leadChangeNotifier->model = $event->sender;
     $leadChangeNotifier->sendNotification();
 });
+
+/**
+ * Attach an event when lead status changed
+ */
+Event::on(PropertyRecord::className(), PropertyRecord::EVENT_AFTER_UPDATE, function ($event) {
+    /**
+     * @var $leadChangeNotifier LeadChangeNotifier
+     * @var $currentModel PropertyRecord
+     * @var $settings Settings
+     */
+    $leadChangeNotifier = Yii::$app->leadChangeNotifier;
+    $leadChangeNotifier->model = $event->sender;
+    $leadChangeNotifier->sendNotification();
+});
+
+
+
 
 /**
  * This is the model class for table "tbl_property_record".

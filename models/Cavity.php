@@ -12,21 +12,10 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 Event::on(Cavity::className(), Cavity::EVENT_AFTER_INSERT, function ($event) {
-    /**
-     * @var $newLeadNotifier NewLeadNotifier
-     * @var $currentModel PropertyRecord
-     * @var $settings Settings
-     */
     $newLeadNotifier = Yii::$app->newLeadNotifier;
-    $settings = Yii::$app->settings;
-    $new_lead_notify_email = $settings->get('app.new_lead_notify');
-    $lead_change_notify_email = explode("\r\n", $new_lead_notify_email);
-    $currentModel = $event->sender;
-    $leadLink = Html::a("Click the link to view the lead", Url::toRoute('/not-submitted/' . $currentModel->id, true) );
-    $newLeadNotifier->setLeadLink($leadLink);
-    $newLeadNotifier->emailsToNotify = $lead_change_notify_email;
+    $newLeadNotifier = new NewLeadNotifier();
+    $newLeadNotifier->setModel($event->sender);
     $newLeadNotifier->sendNotification();
-
 });
 
 /**

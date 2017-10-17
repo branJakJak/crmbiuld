@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: kevin
@@ -8,34 +9,38 @@
 
 namespace app\components;
 
-
 use app\models\PropertyRecord;
 use yii\helpers\Html;
 use yii\swiftmailer\Mailer;
+use yii\helpers\Url;
 
-class NewLeadNotifier
-{
-    /**
-     * @var $emailsToNotify array
-     */
-    public $emailsToNotify;
+class NewLeadNotifier {
 
-    protected $leadLink;
-
-    public function sendNotification(){
+    protected $model;
+    
+    public function sendNotification() {
         /* @var $mailer Mailer */
+        $settings = \Yii::$app->settings;
+        $new_lead_notify_email = $settings->get('app.new_lead_notify', 'app');
+        $emailToNotify = explode("\r\n", $new_lead_notify_email);
+        $leadLink = Html::a("Click the link to view the lead", Url::toRoute('/not-submitted/' . $this->model->id, true));
         $mailer = \Yii::$app->mailer;
         $mailer->compose()
-            ->setFrom('crmbuild@whitecollarclaim.co.uk')
-            ->setTo($this->emailsToNotify)
-            ->setSubject('New lead arrived')
-            ->setHtmlBody($this->leadLink)
-            ->send();
-
+                ->setFrom('crmbuild@whitecollarclaim.co.uk')
+                ->setTo($emailToNotify)
+                ->setSubject('New lead arrived')
+                ->setHtmlBody($leadLink)
+                ->send();
     }
 
-    public function setLeadLink($leadLink)
-    {
-        $this->leadLink = $leadLink;
+    function getModel() {
+        return $this->model;
     }
+
+    function setModel(\app\models\Cavity $model) {
+        $this->model = $model;
+    }
+
+
+
 }

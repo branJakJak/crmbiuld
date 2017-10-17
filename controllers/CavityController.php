@@ -342,7 +342,7 @@ class CavityController extends Controller
             $userModel = User::find()->where(['username' => $modelFound->created_by_user])->one();
             $propertyRecord->created_by = $userModel->id;
         }
-        $propertyRecord->status = 'Pending Administrators Approval';
+        $propertyRecord->status = 'Pending Surveyors Approval';
         /* CWI information */
         $propertyRecord->date_of_cwi = $modelFound->CWI_installation_date;
         $propertyRecord->installer = $modelFound->CWI_installer;
