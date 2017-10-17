@@ -412,6 +412,7 @@ class CavityController extends Controller
 
                 $propertyDocument = new PropertyDocuments();
                 $propertyDocument->property_id = $propertyRecord->id;
+                $propertyDocument->document_description = $currentSupportingDocuments->document_description;
                 $propertyDocument->document_name = $currentSupportingDocuments->document_name;
                 $propertyDocument->save();
             } else {
@@ -422,6 +423,7 @@ class CavityController extends Controller
                 copy($copyFrom, $finalUploadName);
                 $preAppraisalImage->property_id = $propertyRecord->id;
                 $preAppraisalImage->image_name = $currentSupportingDocuments->document_name;
+                $preAppraisalImage->image_description = $currentSupportingDocuments->document_description;
                 $preAppraisalImage->save();
             }
             $questionairePropertyRecord = new QuestionairePropertyRecord();

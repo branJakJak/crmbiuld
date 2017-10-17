@@ -53,6 +53,7 @@ if (Yii::$app->user->can('Admin') || Yii::$app->user->can('Senior Manager')) {
                         return $creatorName;
                     },
                 ],
+                'material_file_description',
                 'date_created:datetime',
             ]
         ])

@@ -380,7 +380,7 @@ class RecordController extends Controller
             $successMessage = "";
             $warningMessage = "";
             $numProcessedFile = 0;
-            /* @var $currentPreAppraisalImage PropertyImages */
+            /* @var $currentPreAppraisalImage PropertyPreAppraisalImages */
             foreach ($preAppraisalImages as $currentPreAppraisalImage) {
                 $fileToCopy = $uploadImagePath . DIRECTORY_SEPARATOR . $currentPreAppraisalImage->image_name;
                 $destination = $triagePath . DIRECTORY_SEPARATOR . $currentPreAppraisalImage->image_name;
@@ -389,6 +389,7 @@ class RecordController extends Controller
                     copy($fileToCopy, $destination);
                     $triageFile = new Triage();
                     $triageFile->property_record = intval($_POST['property_record']);
+                    $triageFile->material_file_description = $currentPreAppraisalImage->image_description;
                     $triageFile->material_file_name = $currentPreAppraisalImage->image_name;
                     if ($triageFile->save()) {
                         $numProcessedFile++;

@@ -41,7 +41,8 @@ $gridColumns = [
             },
             'attribute' => 'document_name',
             'format' => 'html'
-        ]
+        ],
+         'document_description',
     ],
 ];
 

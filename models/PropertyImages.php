@@ -12,6 +12,7 @@ use yii\db\Expression;
  * @property integer $id
  * @property integer $property_id
  * @property string $image_name
+ * @property string $image_description
  * @property string $date_created
  * @property string $date_updated
  *
@@ -34,7 +35,7 @@ class PropertyImages extends \yii\db\ActiveRecord
     {
         return [
             [['property_id'], 'integer'],
-            [['date_created', 'date_updated'], 'safe'],
+            [['image_description','date_created', 'date_updated'], 'safe'],
             [['image_name'], 'string', 'max' => 255],
             [['property_id'], 'exist', 'skipOnError' => true, 'targetClass' => PropertyRecord::className(), 'targetAttribute' => ['property_id' => 'id']],
         ];
@@ -49,6 +50,7 @@ class PropertyImages extends \yii\db\ActiveRecord
             'id' => 'ID',
             'property_id' => 'Property ID',
             'image_name' => 'Image Name',
+            'image_description' => 'Image Description',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
         ];
