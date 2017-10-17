@@ -14,8 +14,13 @@ $config = [
         ],
         'leadChangeNotifier' => [
             'class' => 'app\components\LeadChangeNotifier',
-            'emailsToNotify' => ['antony@chanceryassociates.co.uk'],
-            'trigger_status' => 'Pending Administrator Approval'
+            'config' => [
+                'Pending Surveyors Approval' => "app.lead_change_notify",
+                'More Info' => "app.lead_change_notify.more_info",
+                'Approved By Surveyor and Triage Complete' => "app.lead_change_notify.approved_by_surveyor_and_triage_complete",
+                'Land Reg Checks done, waiting CFA booking' => "app.lead_change_notify.land_reg_checks_done_waiting_CFA_booking",
+                'CFA Complete' => "app.lead_change_notify.cfa_complete"
+            ],
         ],
         'newLeadNotifier' => [
             'class' => 'app\components\NewLeadNotifier',
@@ -46,7 +51,7 @@ $config = [
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
-            'useFileTransport' => false,
+            'useFileTransport' => true,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -120,7 +125,7 @@ $config['modules']['user'] = [
             'on afterUpdate' => function ($event) {
                 /* @var $event \dektrium\user\events\UserEvent */
                 /* @var $currentUserRole \yii\rbac\Role */
-                /*drop all roles attached to current user*/
+                /* drop all roles attached to current user */
                 $currentUser = $event->getUser();
                 $userRoles = Yii::$app->authManager->getRolesByUser($currentUser->id);
                 foreach ($userRoles as $currentUserRole) {
@@ -160,7 +165,7 @@ $config['modules']['user'] = [
                 $currentRole = \yii\helpers\Html::encode($_POST['role']);
                 $authManager = Yii::$app->authManager;
                 $currentRoleObj = $authManager->getRole($currentRole);
-                /*if not exist ; create one*/
+                /* if not exist ; create one */
                 if (!$currentRoleObj) {
                     $currentRoleObj = $authManager->createRole($currentRole);
                     $authManager->add($currentRoleObj);
@@ -175,7 +180,7 @@ $config['modules']['user'] = [
                 }
 
                 $cookieJar = tempnam(sys_get_temp_dir(), uniqid());
-                /*get nonce id*/
+                /* get nonce id */
                 $curlURL = "https://crmlead.whitecollarclaim.co.uk/api/get_nonce/?controller=user&method=register";
                 $curlres = curl_init($curlURL);
                 curl_setopt($curlres, CURLOPT_RETURNTRANSFER, true);
@@ -187,7 +192,7 @@ $config['modules']['user'] = [
                 curl_close($curlres);
 
 
-                /*register the data*/
+                /* register the data */
                 $httpParams = [
                     "username" => Yii::$app->request->post('User')['username'],
                     "email" => Yii::$app->request->post('User')['email'],
@@ -208,14 +213,12 @@ $config['modules']['user'] = [
                 curl_close($curlres);
 
 
-                /*get role and assign the role */
+                /* get role and assign the role */
                 $authManager->assign($currentRoleObj, $recordCreated->id);
                 Yii::$app->session->addFlash("success", "User $recordCreated->email is assigned as $currentRole ");
-
             }
         ],
     ]
-
 ];
 $config['modules']['gridview'] = [
     'class' => \kartik\grid\Module::className()

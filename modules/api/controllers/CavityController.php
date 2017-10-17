@@ -45,6 +45,7 @@ class CavityController extends Controller
             $supportingDocument->cavity_form_id = intval($_POST['cavity_form_id']);
             /* save the file to supporting documents*/
             $supportingDocument->document_name = uniqid() . '-' . $originalFileName;
+            $supportingDocument->document_description = @$_POST['supportingDocumentDescription'];
             $finalUploadName = Yii::getAlias('@supporting_document_path') . DIRECTORY_SEPARATOR . $supportingDocument->document_name;
             $downloadCommand = sprintf("wget -O %s %s", $finalUploadName, $_POST['supportingDocument']);
             shell_exec($downloadCommand);

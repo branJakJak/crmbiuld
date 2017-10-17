@@ -98,6 +98,7 @@ echo PanelWidget::begin([
             'attribute' => 'image_name',
             'format' => 'html'
         ],
+        'image_description',
         [
             'class' => 'yii\grid\ActionColumn',
             'template' => '{delete}',

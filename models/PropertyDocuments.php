@@ -13,6 +13,7 @@ use yii\db\Expression;
  * @property integer $property_id
  * @property integer $uploaded_by
  * @property string $document_name
+ * @property string $document_description
  * @property string $date_created
  * @property string $date_updated
  *
@@ -36,7 +37,7 @@ class PropertyDocuments extends \yii\db\ActiveRecord
     {
         return [
             [['property_id','uploaded_by'], 'integer'],
-            [['date_created', 'date_updated'], 'safe'],
+            [['date_created', 'date_updated','document_description'], 'safe'],
             [['document_name'], 'string', 'max' => 255],
             [['property_id'], 'exist', 'skipOnError' => true, 'targetClass' => PropertyRecord::className(), 'targetAttribute' => ['property_id' => 'id']],
         ];
@@ -52,6 +53,7 @@ class PropertyDocuments extends \yii\db\ActiveRecord
             'property_id' => 'Property ID',
             'uploaded_by' => 'Uploaded by',
             'document_name' => 'Document Name',
+            'document_description' => 'Document Desciption',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
         ];

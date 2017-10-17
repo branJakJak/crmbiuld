@@ -13,6 +13,7 @@ use yii\db\Expression;
  * @property integer $cavity_form_id
  * @property string $type
  * @property string $document_name
+ * @property string $document_description
  * @property string $date_created
  * @property string $date_updated
  *
@@ -39,7 +40,7 @@ class CavitySupportingDocument extends \yii\db\ActiveRecord
     {
         return [
             [['cavity_form_id'], 'integer'],
-            [['date_created', 'date_updated'], 'safe'],
+            [['date_created', 'date_updated','document_description'], 'safe'],
             [['type', 'document_name'], 'string', 'max' => 255],
             [['cavity_form_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cavity::className(), 'targetAttribute' => ['cavity_form_id' => 'id']],
         ];
@@ -55,6 +56,7 @@ class CavitySupportingDocument extends \yii\db\ActiveRecord
             'cavity_form_id' => 'Cavity Form ID',
             'type' => 'Type',
             'document_name' => 'Document Name',
+            'document_description' => 'Document Description',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
         ];

@@ -11,6 +11,7 @@ use yii\db\Expression;
  *
  * @property integer $id
  * @property string $material_file_name
+ * @property string $material_file_description
  * @property integer $property_record
  * @property string $date_created
  * @property string $date_updated
@@ -34,7 +35,7 @@ class Triage extends \yii\db\ActiveRecord
     {
         return [
             [['property_record'], 'integer'],
-            [['date_created', 'date_updated'], 'safe'],
+            [['date_created', 'date_updated','material_file_description'], 'safe'],
             [['material_file_name'], 'string', 'max' => 255],
             [['property_record'], 'exist', 'skipOnError' => true, 'targetClass' => PropertyRecord::className(), 'targetAttribute' => ['property_record' => 'id']],
         ];
@@ -48,6 +49,7 @@ class Triage extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'material_file_name' => 'Material File Name',
+            'material_file_description' => 'Material File Description',
             'property_record' => 'Property Record',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: kevin
@@ -8,42 +9,57 @@
 
 namespace app\components;
 
-
 use app\models\PropertyRecord;
 use yii\base\Component;
 use yii\swiftmailer\Mailer;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
-class LeadChangeNotifier extends Component
-{
+class LeadChangeNotifier extends Component {
+
     /**
-     * @var $emailsToNotify array
+     * @var $config array 
      */
-    public $emailsToNotify;
+    public $config;
+
     /**
-     * @var $trigger_status string
+     * @var PropertyRecord $model 
      */
-    public $trigger_status;
-    /**
-     * @var $leadLink string
-     */
-    protected $leadLink;
+    public $model;
+
+//    /**
+//     * @var $emailsToNotify array
+//     */
+//    public $emailsToNotify;
+//    /**
+//     * @var $trigger_status string
+//     */
+//    public $trigger_status;
+//    /**
+//     * @var $leadLink string
+//     */
+//    protected $leadLink;
 
     /**
      *  Sends notification to list of emails when $trigger_status is met
      */
-    public function sendNotification(){
-        /* @var $mailer Mailer */
-        $mailer = \Yii::$app->mailer;
-        $mailer->compose()
-            ->setFrom('crmbuild@whitecollarclaim.co.uk')
-            ->setTo($this->emailsToNotify)
-            ->setSubject('Lead sent to '. PropertyRecord::PROPERTY_STATUS_PENDING_ADMIN_APPROVAL)
-            ->setHtmlBody($this->leadLink)
-            ->send();
-    }
-
-    public function setLeadLink($toRoute)
-    {
-        $this->leadLink = $toRoute;
+    public function sendNotification() {
+        foreach ($this->config as $key => $val) {
+            if ($this->model->status == $key) {
+                //get the emails to notify
+                $settings = \Yii::$app->settings;
+                $emailsToNotify = $settings->get($val, 'app');
+                $emailsToNotify = explode("\r\n", $emailsToNotify);
+                $leadLink = Html::a("Click the link to open the record", Url::toRoute('/record/update/' . $this->model->id, true));
+                /* @var $mailer Mailer */
+                $mailer = \Yii::$app->mailer;
+                $mailer->compose()
+                        ->setFrom('crmbuild@whitecollarclaim.co.uk')
+                        ->setTo($emailsToNotify)
+                        ->setSubject('Lead sent to ' . $key)
+                        ->setHtmlBody($leadLink)
+                        ->send();
+            }
+        }
     }
 }
