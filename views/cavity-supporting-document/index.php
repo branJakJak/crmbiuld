@@ -25,6 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'cavity_form_id',
             'type',
             'document_name',
+            'document_description',
             'date_created',
             // 'date_updated',
 
