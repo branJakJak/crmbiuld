@@ -59,6 +59,7 @@ Event::on(Cavity::className(), Cavity::EVENT_AFTER_INSERT, function ($event) {
  * @property string second_application_mobile_landline
  * @property string second_application_email_address
  * @property string property_history
+ * @property string further_notes
  * @property string $date_created
  * @property string $date_updated
  *
@@ -81,7 +82,7 @@ class Cavity extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['birthday','when_property_moved', 'CWI_installation_date','property_history' ,'date_created', 'date_updated'], 'safe'],
+            [[ 'further_notes' , 'birthday','when_property_moved', 'CWI_installation_date','property_history' ,'date_created', 'date_updated'], 'safe'],
             [['telephone_number', 'address_postcode_cavity_installation'], 'unique', 'targetAttribute' => ['telephone_number', 'address_postcode_cavity_installation']],
             [['CWI_payment','telephone_number'], 'number'],
             [['email_address'], 'email'],
@@ -133,6 +134,7 @@ class Cavity extends \yii\db\ActiveRecord
             'second_application_mobile_landline' => 'Other contact number (second applicant)',
             'second_application_email_address' => 'Email Address (second applicant)',
             'property_history' => 'Property History',
+            'further_notes' => 'Further Notes',
             'date_created' => 'Date Created',
             'date_updated' => 'Date Updated',
         ];

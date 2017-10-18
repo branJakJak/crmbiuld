@@ -324,10 +324,17 @@ class CavityController extends Controller
 
     public function actionAccept($id)
     {
-       
         /* Create QuestionairePropertyRecord record*/
         /*get cavity record*/
         $modelFound = $this->findModel($id);
+        $userCreatorId = 1;
+        if(User::find()->where(['username' => $modelFound->created_by_user])->exists()){
+            /* @var $userModel User */
+            $userModel = User::find()->where(['username' => $modelFound->created_by_user])->one();
+            $userCreatorId = $userModel->id;
+        }
+
+
         /*create property record*/
         $propertyRecord = new PropertyRecord();
         $propertyRecord->postcode = $modelFound->address_postcode_cavity_installation;
@@ -337,11 +344,7 @@ class CavityController extends Controller
         $propertyRecord->town = $modelFound->address_town_cavity_installation;
         $propertyRecord->country = $modelFound->address_country_cavity_installation;
         $propertyRecord->installer = $modelFound->CWI_installer;
-        
-        if(User::find()->where(['username' => $modelFound->created_by_user])->exists()){
-            $userModel = User::find()->where(['username' => $modelFound->created_by_user])->one();
-            $propertyRecord->created_by = $userModel->id;
-        }
+        $propertyRecord->created_by = $userCreatorId ;
         $propertyRecord->status = 'Pending Surveyors Approval';
         /* CWI information */
         $propertyRecord->date_of_cwi = $modelFound->CWI_installation_date;
@@ -349,6 +352,13 @@ class CavityController extends Controller
         $propertyRecord->product_installed = $modelFound->construction_type;
         $propertyRecord->save();
 
+        /* Property Note*/
+        $propertyNote = new PropertyNotes();
+        $propertyNote->content = $modelFound->further_notes;
+        $propertyNote->created_by = $userCreatorId;
+        $propertyNote->note_type = PropertyNotes::NOTE_TYPE_INFO;
+        $propertyNote->property_id = $propertyRecord->id;
+        $propertyNote->save();
 
         /*create owner */
         $owner = new Owner();
