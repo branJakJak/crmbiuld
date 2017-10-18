@@ -103,6 +103,7 @@ foreach ($allSupportingDocuments as $currentSupportingDocument) {
                     'second_application_mobile_landline',
                     'second_application_email_address',
                     'property_history:text',
+                    'further_notes:text',
                     'date_time_callback:datetime',
                     'date_created:date',
                     'date_updated:date',
