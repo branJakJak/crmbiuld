@@ -39,6 +39,7 @@ class LeadChangeNotifier extends Component
                 $settings = \Yii::$app->settings;
                 $emailsToNotify = $settings->get($val, 'app');
                 $emailsToNotify = explode("\r\n", $emailsToNotify);
+                $emailsToNotify = array_filter($emailsToNotify);//remove empty
                 $leadLink = Html::a("Click the link to open the record", Url::toRoute('/record/update/' . $this->model->id, true));
                 /* @var $mailer Mailer */
                 $mailer = \Yii::$app->mailer;
