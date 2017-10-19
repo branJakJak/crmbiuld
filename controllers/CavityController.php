@@ -345,7 +345,7 @@ class CavityController extends Controller
         $propertyRecord->country = $modelFound->address_country_cavity_installation;
         $propertyRecord->installer = $modelFound->CWI_installer;
         $propertyRecord->created_by = $userCreatorId ;
-        $propertyRecord->status = 'Pending Surveyors Approval';
+        $propertyRecord->status = 'Accepted on System';
         /* CWI information */
         $propertyRecord->date_of_cwi = $modelFound->CWI_installation_date;
         $propertyRecord->installer = $modelFound->CWI_installer;
