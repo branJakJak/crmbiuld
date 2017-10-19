@@ -43,6 +43,7 @@ class DefaultController extends Controller {
         $approved_by_surveyor_and_triage_complet = $settings->get('app.lead_change_notify.approved_by_surveyor_and_triage_complete', 'app');
         $land_reg_checks_done_waiting_CFA_bookin = $settings->get('app.lead_change_notify.land_reg_checks_done_waiting_CFA_booking', 'app');
         $cfa_complet = $settings->get('app.lead_change_notify.cfa_complete', 'app');
+        $system_accepted = $settings->get('app.lead_change_notify.system_accepted', 'app');
 
         $model->change_lead_notify = $lead_change_notify_email;
         $model->new_lead_notify = $new_lead_notify_email;
@@ -50,6 +51,7 @@ class DefaultController extends Controller {
         $model->approved_by_surveyor_and_triage_complete = $approved_by_surveyor_and_triage_complet;
         $model->land_reg_checks_done_waiting_CFA_booking = $land_reg_checks_done_waiting_CFA_bookin;
         $model->cfa_complete = $cfa_complet;
+        $model->system_accepted = $system_accepted;
 
 
         if ($model->load(\Yii::$app->request->post()) && $model->validate()) {
