@@ -5,6 +5,7 @@ return [
     'solicitor_name' => 'White Collar Legal',
     'statusCollection' => [
             'Not Submitted' =>'Not Submitted',
+            'Accepted on System' =>'Accepted on System',
             'Pending Surveyors Approval' =>'Pending Surveyors Approval',
             'Pics Booked' =>'Pics Booked',
             'Rejected' =>'Rejected',

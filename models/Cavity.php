@@ -12,8 +12,8 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 Event::on(Cavity::className(), Cavity::EVENT_AFTER_INSERT, function ($event) {
+    /* @var $newLeadNotifier NewLeadNotifier */
     $newLeadNotifier = Yii::$app->newLeadNotifier;
-    $newLeadNotifier = new NewLeadNotifier();
     $newLeadNotifier->setModel($event->sender);
     $newLeadNotifier->sendNotification();
 });

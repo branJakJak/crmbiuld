@@ -54,6 +54,10 @@ $statusNotify = [
                     'label' => 'CFA Complete',
                     'content' => $form->field($model, 'cfa_complete')->textarea(['rows' => 6])->label('A lead changed status to CFA Complete')->hint('One email address per line')
                 ],
+                [
+                    'label' => 'Accepted on System',
+                    'content' => $form->field($model, 'system_accepted')->textarea(['rows' => 6])->label('Lead accepted in the system')->hint('One email address per line')
+                ],
             ]
         ]);
         ?>
