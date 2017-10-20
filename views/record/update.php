@@ -17,7 +17,6 @@ use kartik\widgets\Select2;
 /* @var $triageDocumentDataProvider \yii\data\ActiveDataProvider */
 
 
-
 $statusCollection = [
     \app\models\PropertyRecord::PROPERTY_STATUS_NOT_SUBMITTED,
     \app\models\PropertyRecord::PROPERTY_STATUS_PENDING_SUPERVISOR_APPROVAL,
@@ -34,31 +33,131 @@ $adjustPjaxSettings = <<<EOL
     $.pjax.defaults.timeout = 5000;
 EOL;
 
-
-
-
-$this->registerJs($adjustPjaxSettings,\yii\web\View::POS_READY);
-
+$this->registerJs($adjustPjaxSettings, \yii\web\View::POS_READY);
 
 $this->title = $propertyRecord->status;
+
+$tabItems = [
+    [
+        'label' => 'Basic Information',
+        'content' => $this->render(
+            '_basic_information_panel',
+            [
+                'propertyRecord' => $propertyRecord,
+                'statusCollection' => $statusCollection,
+                'owner' => $owner,
+                'propertyNote' => $propertyNote,
+                'propertyOwnerDataProvider' => $propertyOwnerDataProvider
+            ]
+        ),
+        [
+            'id' => 'basicInformationTab'
+        ]
+    ],
+    [
+        'label' => 'Other Information',
+        'content' => $this->render(
+            '_other_information_panel',
+            [
+                'cavityModel' => $cavityModel
+            ]
+        ),
+        [
+            'id' => 'cavityModel'
+        ]
+    ],
+    [
+        'label' => 'Documents',
+        'content' => $this->render(
+            '_documents_panel',
+            [
+                'propertyDocumentDataProvider' => $propertyDocumentDataProvider,
+                'propertyDocument' => $propertyDocument,
+                'propertyRecord' => $propertyRecord
+            ]
+        ),
+        [
+            'id' => 'documentsTab'
+        ]
+    ],
+    [
+        'label' => 'Pre appraisal images',
+        'content' => $this->render(
+            '_pre_appraisal_images_panel',
+            [
+                'preappraisalImage' => $preappraisalImage,
+                'propertyRecord' => $propertyRecord,
+                'preappraisalImageDataProvider' => $preappraisalImageDataProvider,
+            ]
+        ),
+        [
+            'id' => 'preAppraisalImagesTab'
+        ]
+
+    ],
+    [
+        'label' => 'Images',
+        'content' => $this->render('_property_images_panel', [
+            'propertyRecord' => $propertyRecord,
+        ]),
+        [
+            'id' => 'imagesTab'
+        ]
+
+    ],
+    [
+        'label' => 'Notes',
+        'content' => $this->render('_notes_panel', [
+            'propertyNote' => $propertyNote,
+            'propertyNotesDataProvider' => $propertyNotesDataProvider
+        ]),
+        [
+            'id' => 'notesTab'
+        ]
+
+    ],
+    [
+        'label' => 'Triage',
+        'content' => $this->render('_triage', [
+            'propertyRecord' => $propertyRecord,
+            'triageDocument' => $triageDocument,
+            'triageDocumentDataProvider' => $triageDocumentDataProvider,
+            'triageNotesDataProvider' => $triageNotesDataProvider,
+            'propertyNote' => $propertyNote,
+        ]),
+        [
+            'id' => 'triageTab'
+        ]
+
+    ]
+];
+
+if (!Yii::$app->user->can('Admin') &&
+    !Yii::$app->user->can('Senior Manager') &&
+    !Yii::$app->user->can('admin')) {
+
+    array_pop($tabItems);//remove the last item
+}
+
 
 ?>
 <style type="text/css">
     .select2-container .select2-selection--single .select2-selection__rendered {
         padding-top: 4px;
     }
+
     #w6 > div.panel-body > a {
         cursor: pointer !important;
     }
 </style>
 
 <?php if (!Yii::$app->user->can('Manager')): ?>
-    
 
-<div class="row">
-    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-        <?php $form = \yii\widgets\ActiveForm::begin(['id'=>'updateStatusForm']) ?>
-        <?=
+
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <?php $form = \yii\widgets\ActiveForm::begin(['id' => 'updateStatusForm']) ?>
+            <?=
             Select2::widget([
                 'model' => $propertyRecord,
                 'attribute' => 'status',
@@ -67,118 +166,25 @@ $this->title = $propertyRecord->status;
                 'pluginOptions' => [
                     'allowClear' => true,
                 ],
-                'pluginEvents'=>[
-                    'change'=>'function(e){
+                'pluginEvents' => [
+                    'change' => 'function(e){
                         jQuery("#updateStatusForm").submit()
                   }'
                 ],
             ]);
-        ?>
-        <?php \yii\widgets\ActiveForm::end() ?>
+            ?>
+            <?php \yii\widgets\ActiveForm::end() ?>
+        </div>
     </div>
-</div>
 <?php endif ?>
 
-<br />
-<br />
+<br/>
+<br/>
 
 <?php
 
 echo TabsX::widget([
-        'enableStickyTabs' => true,
-        'items' => [
-            [
-                'label' => 'Basic Information',
-                'content' => $this->render(
-                    '_basic_information_panel',
-                    [
-                        'propertyRecord'=>$propertyRecord,
-                        'statusCollection'=>$statusCollection,
-                        'owner'=>$owner,
-                        'propertyNote'=>$propertyNote,
-                        'propertyOwnerDataProvider'=>$propertyOwnerDataProvider
-                    ]
-                ),
-                [
-                        'id'=>'basicInformationTab'
-                ]
-            ],
-            [
-                'label' => 'Other Information',
-                'content' => $this->render(
-                    '_other_information_panel',
-                    [
-                        'cavityModel'=>$cavityModel
-                    ]
-                ),
-                [
-                    'id'=>'cavityModel'
-                ]
-            ],
-            [
-                'label' => 'Documents',
-                'content' => $this->render(
-                    '_documents_panel',
-                    [
-                        'propertyDocumentDataProvider'=>$propertyDocumentDataProvider,
-                        'propertyDocument'=>$propertyDocument,
-                        'propertyRecord'=>$propertyRecord
-                    ]
-                ),
-                [
-                    'id'=>'documentsTab'
-                ]
-            ],
-            [
-                'label' => 'Pre appraisal images',
-                'content' => $this->render(
-                    '_pre_appraisal_images_panel',
-                    [
-                        'preappraisalImage'=>$preappraisalImage,
-                        'propertyRecord'=>$propertyRecord,
-                        'preappraisalImageDataProvider'=>$preappraisalImageDataProvider,
-                    ]
-                ),
-                [
-                    'id'=>'preAppraisalImagesTab'
-                ]
-
-            ],
-            [
-                'label' => 'Images',
-                'content' => $this->render('_property_images_panel',[
-                        'propertyRecord'=>$propertyRecord,
-                    ]),
-                [
-                    'id'=>'imagesTab'
-                ]
-
-            ],
-            [
-                'label' => 'Notes',
-                'content' => $this->render('_notes_panel',[
-                    'propertyNote'=>$propertyNote,
-                    'propertyNotesDataProvider'=>$propertyNotesDataProvider
-                ]),
-                [
-                    'id'=>'notesTab'
-                ]
-
-            ],
-            [
-                'label' => 'Triage',
-                'content' => $this->render('_triage',[
-                    'propertyRecord'=>$propertyRecord,
-                    'triageDocument'=>$triageDocument,
-                    'triageDocumentDataProvider'=>$triageDocumentDataProvider,
-                    'triageNotesDataProvider'=>$triageNotesDataProvider,
-                    'propertyNote'=>$propertyNote,
-                ]),
-                [
-                    'id'=>'triageTab'
-                ]
-
-            ]
-        ]
-    ]);
+    'enableStickyTabs' => true,
+    'items' => $tabItems
+]);
 ?>
