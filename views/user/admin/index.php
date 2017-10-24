@@ -41,7 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => 'yii\grid\ActionColumn',
             'header' => 'Action',
             // 'template' => '{switch} {resend_password} {update} {delete}',
-            'template' => '{update} {delete}',
+            'template' => '{switch} {update} {delete}',
             'buttons' => [
                 'resend_password' => function ($url, $model, $key) {
                     if (!$model->isAdmin) {
