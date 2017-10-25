@@ -12,7 +12,7 @@ return [
             'Rejected' =>'Rejected',
             'More Info' =>'More Info',
             'Approved By Surveyor and Triage Complete' =>'Approved By Surveyor and Triage Complete',
-            'Land Reg Checks done, waiting CFA booking' =>'Land Reg Checks done, waiting CFA booking',
+            'Land Reg Checks required / CFA booking in process' =>'Land Reg Checks required / CFA booking in process',
             'CFA Complete' =>'CFA Complete',
             'Passed To Funder' =>'Passed To Funder',
             'Funding Accepted' =>'Funding Accepted',

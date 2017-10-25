@@ -18,7 +18,7 @@ $config = [
                 'Pending Surveyors Approval' => "app.lead_change_notify",
                 'More Info' => "app.lead_change_notify.more_info",
                 'Approved By Surveyor and Triage Complete' => "app.lead_change_notify.approved_by_surveyor_and_triage_complete",
-                'Land Reg Checks done, waiting CFA booking' => "app.lead_change_notify.land_reg_checks_done_waiting_CFA_booking",
+                'Land Reg Checks required / CFA booking in process' => "app.lead_change_notify.land_reg_checks_done_waiting_CFA_booking",
                 'CFA Complete' => "app.lead_change_notify.cfa_complete",
                 'Accepted on System' => "app.lead_change_notify.system_accepted"
             ],
