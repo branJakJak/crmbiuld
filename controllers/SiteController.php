@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\DropdownItemRetriever;
 use app\components\LeadCreatorRetriever;
 use app\models\FilterPropertyRecordForm;
 use app\models\PropertyRecord;
@@ -70,26 +71,15 @@ class SiteController extends Controller
             $filterModel->scenario = 'status-filter-form';
             $filterModel->status = 'All Jobs';
             $dataProvider = $filterModel->search();
-//            if (!Yii::$app->user->can('Admin') &&
-//                !Yii::$app->user->can('Senior Manager') &&
-//                !Yii::$app->user->can('admin')
-//            ) {
-//                //search leads created by this user and its subordinate
-//                $creatorIdCollection = [];
-//                $leadCreatorRetriever = new LeadCreatorRetriever();
-//                $leadCreatorRetriever->retrieve(Yii::$app->user->id);
-//                $creatorIdCollection = $leadCreatorRetriever->getLeadCreatorIdCollection();
-//                $defaultQuery->andWhere(['in', 'tbl_property_record.created_by', $creatorIdCollection]);
-//                $dataProvider = new ActiveDataProvider(['query' => $defaultQuery]);
-//            }
         }
-
+        $dropDownItems = DropdownItemRetriever::getItems();
         return $this->render('index', [
             'filterModel' => $filterModel,
             'dataProvider' => $dataProvider,
             'propertRecordModel' => $propertRecordModel,
             'insulationCollection' => $insulationCollection,
             'availableUsers' => $availableUsers,
+            'dropDownItems' => $dropDownItems,
         ]);
     }
 
