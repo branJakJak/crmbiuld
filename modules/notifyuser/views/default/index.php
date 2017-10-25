@@ -47,7 +47,7 @@ $statusNotify = [
                     'content' => $form->field($model, 'approved_by_surveyor_and_triage_complete')->textarea(['rows' => 6])->label('A lead changed status to Approved By Surveyor and Triage Complete')->hint('One email address per line')
                 ],
                 [
-                    'label' => 'Land Reg Checks done, waiting CFA booking',
+                    'label' => 'Land Reg Checks required / CFA booking in process',
                     'content' => $form->field($model, 'land_reg_checks_done_waiting_CFA_booking')->textarea(['rows' => 6])->label('A lead changed status to Land Reg Checks done, waiting CFA booking')->hint('One email address per line')
                 ],
                 [
