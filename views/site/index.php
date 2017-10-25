@@ -316,8 +316,8 @@ if(Yii::$app->user->can('admin') || Yii::$app->user->can('Admin')){
         </div>
     </div>
     <hr>
+    <?php if(Yii::$app->user->can('admin') || Yii::$app->user->can('Admin') || Yii::$app->user->can('Senior Manager')): ?>
     <div class="row">
-
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <strong style="font-size: 28px;">
                 Export Data
@@ -329,9 +329,8 @@ if(Yii::$app->user->can('admin') || Yii::$app->user->can('Admin')){
             ]);
             ?>
         </div>
-
-
     </div>
+    <?php endif; ?>
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <?php
