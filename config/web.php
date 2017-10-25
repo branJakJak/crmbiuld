@@ -110,6 +110,7 @@ if (YII_ENV === 'dev') {
  */
 $config['modules']['user'] = [
     'class' => 'dektrium\user\Module',
+    'enableImpersonateUser' => true,
     'enableRegistration' => false,
     'enableConfirmation' => false,
     'admins' => ['admin'],

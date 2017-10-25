@@ -1,5 +1,6 @@
 <?php
 
+
 return [
     'adminEmail' => 'admin@whitecollarclaim.co.uk',
     'solicitor_name' => 'White Collar Legal',

@@ -161,7 +161,7 @@ if (!Yii::$app->user->can('Admin') &&
             Select2::widget([
                 'model' => $propertyRecord,
                 'attribute' => 'status',
-                'data' => Yii::$app->params['statusCollection'],
+                'data' => \app\components\DropdownItemRetriever::getItems(),
                 'options' => ['placeholder' => 'Update status'],
                 'pluginOptions' => [
                     'allowClear' => true,

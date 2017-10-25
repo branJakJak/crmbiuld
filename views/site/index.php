@@ -172,7 +172,7 @@ if(Yii::$app->user->can('admin') || Yii::$app->user->can('Admin')){
             Select2::widget([
                 'model' => $filterModel,
                 'attribute' => 'status',
-                'data' => Yii::$app->params['statusCollection'],
+                'data' => $dropDownItems,
                 'options' => ['placeholder' => 'Filter as you type ...'],
                 'pluginOptions' => [
                     'allowClear' => true,
