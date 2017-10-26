@@ -22,21 +22,15 @@ use app\models\Triage;
 use app\models\TriageNote;
 use app\models\UserCreator;
 use DateTime;
-use dektrium\user\models\User;
 use Yii;
 use yii\data\ActiveDataProvider;
-use yii\debug\models\timeline\DataProvider;
 use yii\filters\AccessControl;
-use yii\helpers\FileHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
-use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotFoundHttpException;
-use yii\web\Response;
-use yii\web\UnauthorizedHttpException;
 use yii\web\UploadedFile;
 use ZipArchive;
 
@@ -173,8 +167,42 @@ class RecordController extends Controller
         $questionairePropertyReoord = QuestionairePropertyRecord::find()->where(['property_record_id'=>$id])->one();
         $cavityModel = null;
         if ($questionairePropertyReoord) {
+            /* @var $cavityModel Cavity */
             $cavity_form_id = intval($questionairePropertyReoord->cavity_form_id);
             $cavityModel = Cavity::find()->where(['id' => $cavity_form_id])->one();
+            if ($cavityModel->load(Yii::$app->request->post())) {
+                /*Parse and format CWI installation date , CWI Installation Date and second applicant birthday*/
+                $tempDate = new DateTime($cavityModel->CWI_installation_date);
+                if ($tempDate && isset($cavityModel->second_application_birthday)) {
+                    $cavityModel->CWI_installation_date = $tempDate->format("Y-m-d H:i:s");
+                }
+                $tempDate = new DateTime($cavityModel->after_CWI_installation_date);
+                if ($tempDate && isset($cavityModel->second_application_birthday)) {
+                    $cavityModel->after_CWI_installation_date = $tempDate->format("Y-m-d H:i:s");
+                }
+                $tempDate = new DateTime($cavityModel->second_application_birthday);
+                if ($tempDate && isset($cavityModel->second_application_birthday)  ) {
+                    $cavityModel->second_application_birthday = $tempDate->format("Y-m-d H:i:s");
+                }
+                $cavityModel->save();
+                if ($cavityModel->save()) {
+                    Yii::$app->getSession()->setFlash('success', 'Record updated');
+                    return $this->refresh("#w29-tab1");
+                }
+            }
+
+            $tempDate = new DateTime($cavityModel->CWI_installation_date);
+            if ($tempDate && isset($cavityModel->CWI_installation_date) ) {
+                $cavityModel->CWI_installation_date = $tempDate->format("m/d/Y");
+            }
+            $tempDate = new DateTime($cavityModel->after_CWI_installation_date);
+            if ($tempDate && isset($cavityModel->after_CWI_installation_date)) {
+                $cavityModel->after_CWI_installation_date = $tempDate->format("m/d/Y");
+            }
+            $tempDate = new DateTime($cavityModel->second_application_birthday);
+            if ($tempDate && isset($cavityModel->second_application_birthday)) {
+                $cavityModel->second_application_birthday = $tempDate->format("m/d/Y");
+            }
         }
 
 //        if (
@@ -234,8 +262,6 @@ class RecordController extends Controller
                 $propertyOwner->save();
                 $owner = new Owner();//clear attribs
             }
-
-
             return $this->refresh("#ownersTab");
         }
         /*property documents*/
