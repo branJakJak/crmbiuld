@@ -9,6 +9,9 @@
  * file that was distributed with this source code.
  */
 
+use app\models\CrmLeadLoginLog;
+use derekisbusy\panel\PanelWidget;
+use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -24,6 +27,13 @@ use yii\widgets\Pjax;
 
 $this->title = Yii::t('user', 'Manage users');
 $this->params['breadcrumbs'][] = $this->title;
+
+
+$crmleadLog = new ActiveDataProvider([
+    'query' => CrmLeadLoginLog::find(),
+]);
+
+
 ?>
 
 
@@ -32,10 +42,18 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php Pjax::begin() ?>
 
+<?php
+echo PanelWidget::begin([
+    'title' => 'CRMBuild Log History',
+    'type' => 'default',
+    'widget' => false,
+])
+?>
+
 <?= GridView::widget([
     'dataProvider' => $dataProvider,
     // 'filterModel'  => $searchModel,
-    'layout'       => "{items}\n{pager}",
+    'layout' => "{items}\n{pager}",
     'columns' => [
         [
             'class' => 'yii\grid\ActionColumn',
@@ -52,7 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 },
                 'switch' => function ($url, $model) {
-                    if($model->id != Yii::$app->user->id && Yii::$app->getModule('user')->enableImpersonateUser) {
+                    if ($model->id != Yii::$app->user->id && Yii::$app->getModule('user')->enableImpersonateUser) {
                         return Html::a('<span class="glyphicon glyphicon-user"></span>', ['/user/admin/switch', 'id' => $model->id], [
                             'title' => Yii::t('user', 'Become this user'),
                             'data-confirm' => Yii::t('user', 'Are you sure you want to switch to this user for the rest of this Session?'),
@@ -71,7 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 foreach ($roles as $currentRole) {
                     $rolesArr[] = $currentRole->name;
                 }
-                return implode(',',$rolesArr);
+                return implode(',', $rolesArr);
             },
             'format' => 'html',
         ],
@@ -81,7 +99,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 $creatorName = 'none';
                 //get creator
                 $modelFound = \app\models\UserCreator::find()->where(['agent_id' => $model->id])->one();
-                if($modelFound){
+                if ($modelFound) {
                     $userModel = \dektrium\user\models\User::find()->where(['id' => $modelFound->creator_id])->one();
                     if ($userModel) {
                         $creatorName = $userModel->username;
@@ -112,18 +130,18 @@ $this->params['breadcrumbs'][] = $this->title;
         //     },
         // ],
 
-         [
-           'attribute' => 'last_login_at',
-           'value' => function ($model) {
-             if (!$model->last_login_at || $model->last_login_at == 0) {
-                 return Yii::t('user', 'Never');
-             } else if (extension_loaded('intl')) {
-                 return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->last_login_at]);
-             } else {
-                 return Yii::$app->formatter->asDatetime($model->last_login_at);
-             }
-           },
-         ],
+        [
+            'attribute' => 'last_login_at',
+            'value' => function ($model) {
+                if (!$model->last_login_at || $model->last_login_at == 0) {
+                    return Yii::t('user', 'Never');
+                } else if (extension_loaded('intl')) {
+                    return Yii::t('user', '{0, date, MMMM dd, YYYY HH:mm}', [$model->last_login_at]);
+                } else {
+                    return Yii::$app->formatter->asDatetime($model->last_login_at);
+                }
+            },
+        ],
         [
             'header' => Yii::t('user', 'Confirmation'),
             'value' => function ($model) {
@@ -164,5 +182,53 @@ $this->params['breadcrumbs'][] = $this->title;
 
     ],
 ]); ?>
+
+
+<?php
+PanelWidget::end()
+?>
+
+
+<?php
+echo PanelWidget::begin([
+    'title' => 'CRMLead Log History',
+    'type' => 'default',
+    'widget' => false,
+])
+?>
+
+<?= GridView::widget([
+    'dataProvider' => $crmleadLog,
+    'layout' => "{items}\n{pager}",
+    'columns' => [
+        [
+            'label' => 'User',
+            'value' => function ($model) {
+                /* @var $user \dektrium\user\models\User */
+                $user = \dektrium\user\models\User::find()->where(['id' => $model->user_id])->one();
+                $userLogged = '';
+                if ($user) {
+                    $userLogged = $user->username;
+                }
+                return $userLogged;
+            },
+            'format' => 'html',
+        ],
+        [
+            'label' => 'Last logged in',
+            'value' => function ($model) {
+                /* @var $model \dektrium\user\models\User */
+                return Yii::$app->formatter->asDatetime($model->created_at);
+            },
+            'format' => 'html',
+        ],
+    ],
+]); ?>
+
+
+<?php
+PanelWidget::end()
+?>
+
 
 <?php Pjax::end() ?>
