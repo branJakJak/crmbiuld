@@ -22,7 +22,7 @@ class CavityController extends Controller
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $cavityForm = new Cavity();
         if ($cavityForm->load(\Yii::$app->getRequest()->post())) {
-            if ($cavityForm->save()) {
+            if ($cavityForm->save(false)) {
                 return Json::encode([
                     'id' => $cavityForm->id
                 ]);
@@ -49,7 +49,7 @@ class CavityController extends Controller
             $finalUploadName = Yii::getAlias('@supporting_document_path') . DIRECTORY_SEPARATOR . $supportingDocument->document_name;
             $downloadCommand = sprintf("wget -O %s %s", $finalUploadName, $_POST['supportingDocument']);
             shell_exec($downloadCommand);
-            if ($supportingDocument->save()) {
+            if ($supportingDocument->save(false)) {
                 return Json::encode([
                     'id' => $supportingDocument->id
                 ]);

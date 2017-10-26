@@ -84,7 +84,7 @@ class Cavity extends \yii\db\ActiveRecord
         return [
             [[ 'further_notes' , 'birthday','when_property_moved', 'CWI_installation_date','property_history' ,'date_created', 'date_updated'], 'safe'],
             [['telephone_number', 'address_postcode_cavity_installation'], 'unique', 'targetAttribute' => ['telephone_number', 'address_postcode_cavity_installation']],
-            [['CWI_payment','telephone_number'], 'number'],
+            [['CWI_payment'], 'number'],
             [['email_address'], 'email'],
             [['title', 'firstname', 'lastname','address1_cavity_installation', 'address2_cavity_installation', 'address3_cavity_installation', 'address_postcode_cavity_installation', 'address_town_cavity_installation', 'address_country_cavity_installation', 'CWI_installer', 'construction_type', 'property_exposure', 'after_CWI_installation_date', 'suffered_issues_prior_to_CWI', 'work_to_rectify_CWI', 'incured_financial_expenses', 'document_copy', 'reported_issue_to_house_insurer', 'advice_about_suitability', 'date_time_callback','is_in_IVA_or_Bankrupt','created_by_user','mobile_landline','second_application_title','second_application_firstname','second_application_lastname','second_application_birthday','second_application_telephone','second_application_mobile_landline','second_application_email_address'], 'string', 'max' => 255],
         ];
