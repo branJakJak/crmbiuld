@@ -53,12 +53,14 @@ class CrmLeadLoginLog extends \yii\db\ActiveRecord
 
     public function behaviors()
     {
+        $dateToday = new \DateTime();
+
         return [
             [
                 'class' => TimestampBehavior::className(),
                 'createdAtAttribute' => 'created_at',
                 'updatedAtAttribute' => 'updated_at',
-                'value' => time()
+                'value' => strtotime('now')
             ]
         ];
     }
