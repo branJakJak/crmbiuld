@@ -218,7 +218,12 @@ echo PanelWidget::begin([
             'label' => 'Last logged in',
             'value' => function ($model) {
                 /* @var $model \dektrium\user\models\User */
-                return Yii::$app->formatter->asDatetime($model->created_at);
+                $datetime = date_create_from_format("Y-m-d H:i:s", $model->created_at);
+                $retVal = '';
+                if($datetime){
+                    $retVal=Yii::$app->formatter->asDatetime($datetime);
+                }
+                return $retVal;
             },
             'format' => 'html',
         ],
