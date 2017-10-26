@@ -3,15 +3,18 @@
 namespace app\controllers;
 
 use dektrium\user\models\User;
+use Dompdf\Exception;
 use Yii;
 use app\models\CrmLeadLoginLog;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\filters\AccessRule;
 use yii\helpers\Html;
+use yii\helpers\Json;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * CrmLeadLoginLogController implements the CRUD actions for CrmLeadLoginLog model.
@@ -32,7 +35,7 @@ class CrmLeadLoginLogController extends Controller
             ],
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'create', 'update', 'update-profile', 'info', 'switch', 'assignment', 'delete', 'block', 'resend-password', 'log'],
+                'only' => ['index', 'create', 'update', 'update-profile', 'info', 'switch', 'assignment', 'delete', 'block', 'resend-password'],
                 'ruleConfig' => [
                     'class' => AccessRule::className(),
                 ],
@@ -40,7 +43,7 @@ class CrmLeadLoginLogController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'create', 'update', 'view', 'delete'],
-                        'roles' => ['*'],
+                        'roles' => ['@'],
                     ],
 
                 ],
@@ -51,6 +54,7 @@ class CrmLeadLoginLogController extends Controller
     public function actionLog($username)
     {
         /* @var $userFound User */
+        Yii::$app->response->format = Response::FORMAT_JSON;
         $crmLeadLoginLog = new CrmLeadLoginLog();
         //check if user exists
         $userFound = User::find()->where(['username' => $username])->one();
@@ -58,11 +62,17 @@ class CrmLeadLoginLogController extends Controller
             /*check if crmlead log exists for this user*/
             $crmLeadLoginLog->user_id = $userFound->id;
             $crmLeadLoginLog->other_information = Html::encode(Yii::$app->request->post('other_information', ''));
-
-        } else {
-            throw new NotFoundHttpException('That username doesnt exists');
+            if(!$crmLeadLoginLog->save()){
+                throw new Exception((Html::errorSummary($crmLeadLoginLog)));
+            }else{
+                return [
+                    'status'=>'success',
+                    'message'=>'Record saved',
+                    'log'=>$crmLeadLoginLog->id
+                ];
+            }
         }
-
+        throw new NotFoundHttpException('That username doesnt exists');
     }
 
     /**
