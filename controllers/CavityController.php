@@ -350,7 +350,7 @@ class CavityController extends Controller
         $propertyRecord->date_of_cwi = $modelFound->CWI_installation_date;
         $propertyRecord->installer = $modelFound->CWI_installer;
         $propertyRecord->product_installed = $modelFound->construction_type;
-        $propertyRecord->save();
+        $propertyRecord->save(false);
 
         /* Property Note*/
         $propertyNote = new PropertyNotes();
@@ -358,7 +358,7 @@ class CavityController extends Controller
         $propertyNote->created_by = $userCreatorId;
         $propertyNote->note_type = PropertyNotes::NOTE_TYPE_INFO;
         $propertyNote->property_id = $propertyRecord->id;
-        $propertyNote->save();
+        $propertyNote->save(false);
 
         /*create owner */
         $owner = new Owner();
@@ -379,7 +379,7 @@ class CavityController extends Controller
         }
         $owner->phone_number = $modelFound->telephone_number;
         $owner->date_of_birth = $modelFound->birthday;
-        $owner->save();
+        $owner->save(false);
 
         $owner2 = new Owner();
         $owner2->title = $modelFound->second_application_title;
@@ -395,17 +395,17 @@ class CavityController extends Controller
             $owner2->phone_number = $modelFound->second_application_telephone;
         }
         $owner2->email_address = $modelFound->second_application_email_address;
-        $owner2->save();
+        $owner2->save(false);
 
         $propertOwner = new PropertyOwner();
         $propertOwner->owner_id = $owner->id;
         $propertOwner->property_id = $propertyRecord->id;
-        $propertOwner->save();
+        $propertOwner->save(false);
 
         $propertOwner2 = new PropertyOwner();
         $propertOwner2->owner_id = $owner2->id;
         $propertOwner2->property_id = $propertyRecord->id;
-        $propertOwner2->save();
+        $propertOwner2->save(false);
 
 
         /*import the images and documents*/
@@ -424,7 +424,7 @@ class CavityController extends Controller
                 $propertyDocument->property_id = $propertyRecord->id;
                 $propertyDocument->document_description = $currentSupportingDocuments->document_description;
                 $propertyDocument->document_name = $currentSupportingDocuments->document_name;
-                $propertyDocument->save();
+                $propertyDocument->save(false);
             } else {
                 /*save it to pre appraisal images */
                 $preAppraisalImage = new PropertyPreAppraisalImages();
@@ -434,12 +434,12 @@ class CavityController extends Controller
                 $preAppraisalImage->property_id = $propertyRecord->id;
                 $preAppraisalImage->image_name = $currentSupportingDocuments->document_name;
                 $preAppraisalImage->image_description = $currentSupportingDocuments->document_description;
-                $preAppraisalImage->save();
+                $preAppraisalImage->save(false);
             }
             $questionairePropertyRecord = new QuestionairePropertyRecord();
             $questionairePropertyRecord->cavity_form_id = $modelFound->id;
             $questionairePropertyRecord->property_record_id = $propertyRecord->id;
-            $questionairePropertyRecord->save();
+            $questionairePropertyRecord->save(false);
         }
         return $this->redirect(Url::to(['/record/update', 'id' => $propertyRecord->id]));
     }
