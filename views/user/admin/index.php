@@ -188,6 +188,7 @@ echo PanelWidget::begin([
 PanelWidget::end()
 ?>
 
+<?php if(Yii::$app->user->can('Admin') || Yii::$app->user->can('admin') || Yii::$app->user->can('Senior Manager')): ?>
 
 <?php
 echo PanelWidget::begin([
@@ -235,5 +236,6 @@ echo PanelWidget::begin([
 PanelWidget::end()
 ?>
 
+<?php endif; ?>
 
 <?php Pjax::end() ?>
