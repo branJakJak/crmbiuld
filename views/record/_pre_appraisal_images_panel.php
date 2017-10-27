@@ -97,6 +97,7 @@ echo PanelWidget::begin([
                         return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
                     } else {
                         $pdfSource = Url::to($publishedImageUrl[1], true);
+                        $pdfSource = Html::encode($pdfSource);
                         return \yii2assets\pdfjs\PdfJs::widget([
                             'url' => Url::to($publishedImageUrl[1],true)
                         ]);
