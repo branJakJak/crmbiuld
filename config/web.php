@@ -225,20 +225,21 @@ $config['modules']['user'] = [
 $config['modules']['gridview'] = [
     'class' => \kartik\grid\Module::className()
 ];
-
 $config['modules']['api'] = [
     'class' => "app\modules\api\Module"
 ];
-
-
 $config['modules']['notifyuser'] = [
     'class' => 'app\modules\notifyuser\Module',
 ];
-
-
 $config['modules']['settings'] = [
     'class' => 'pheme\settings\Module',
     'sourceLanguage' => 'en'
+];
+
+
+/* Yii2 Pdf Viewer*/
+$config['modules']['pdfjs'] = [
+    'class' => '\yii2assets\pdfjs\Module'
 ];
 
 

@@ -8,25 +8,16 @@
 use derekisbusy\panel\PanelWidget;
 use dosamigos\fileupload\FileUploadUI;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $propertyRecord \app\models\PropertyRecord */
 /* @var $propertyDocument \app\models\PropertyDocuments */
 
-$gridColumns = [
+$imageGridColumns = [
     'dataProvider' => $propertyDocumentDataProvider,
     'columns' => [
-        // 'document_name',
-        // 'date_created:date',
-        // [
-        //     'label'=>' ',
-        //     'value'=>function($currentModel){
-        //         return Html::a("Download", ['/property-documents/download','property'=>$currentModel->id]);
-        //     },
-        //     'attribute'=>'id',
-        //     'format'=>'html'
-        // ],
         [
             'label' => ' ',
             'value' => function ($currentModel) {
@@ -36,18 +27,28 @@ $gridColumns = [
                     $uploadImagePath = Yii::getAlias("@upload_document_path") . DIRECTORY_SEPARATOR . $currentModel->document_name;
                     /*get the url of published image*/
                     $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
-                    return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
+                    $fileType = mime_content_type($uploadImagePath);
+                    if (strpos($fileType, "pdf") === false) {
+                        return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
+                    } else {
+                        $pdfSource = Url::to($publishedImageUrl[1], true);
+                        return \yii2assets\pdfjs\PdfJs::widget([
+                            'url' => Url::to($publishedImageUrl[1],true)
+                        ]);
+                    }
                 }
             },
             'attribute' => 'document_name',
-            'format' => 'html'
+            'format' => 'raw'
         ],
-         'document_description',
+        'document_description',
     ],
 ];
 
-if(Yii::$app->user->can('Admin') || Yii::$app->user->can('admin')) {
-    $gridColumns['columns'][] = [
+$pdfDocs = [];
+
+if (Yii::$app->user->can('Admin') || Yii::$app->user->can('admin')) {
+    $imageGridColumns['columns'][] = [
         'class' => 'yii\grid\ActionColumn',
         'template' => '{delete}',
         'buttons' => [
@@ -71,14 +72,14 @@ if(Yii::$app->user->can('Admin') || Yii::$app->user->can('admin')) {
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
         <?php
-            $downloadAllBtn = Html::a("Download All", \yii\helpers\Url::to(["/record/download-document", "record_id" => $propertyRecord->id]), ['class' => 'pull-right btn btn-success']);
-            echo PanelWidget::begin([
-                'title' => 'File Upload '.$downloadAllBtn,
-                'type' => 'default',
-                'widget' => false,
-            ]);
+        $downloadAllBtn = Html::a("Download All", \yii\helpers\Url::to(["/record/download-document", "record_id" => $propertyRecord->id]), ['class' => 'pull-right btn btn-success']);
+        echo PanelWidget::begin([
+            'title' => 'File Upload ' . $downloadAllBtn,
+            'type' => 'default',
+            'widget' => false,
+        ]);
         ?>
-        <?php $form = \yii\widgets\ActiveForm::begin()?>
+        <?php $form = \yii\widgets\ActiveForm::begin() ?>
 
         <?= FileUploadUI::widget([
             'model' => $propertyDocument,
@@ -86,7 +87,7 @@ if(Yii::$app->user->can('Admin') || Yii::$app->user->can('admin')) {
             'url' => ['/record/update', 'id' => $propertyRecord->id],
             'gallery' => false,
             'fieldOptions' => [
-        //        'accept' => '.doc,.docx'
+                //        'accept' => '.doc,.docx'
             ],
             'clientOptions' => [
                 'maxFileSize' => 100000000
@@ -97,23 +98,40 @@ if(Yii::$app->user->can('Admin') || Yii::$app->user->can('admin')) {
                                         console.log(data);
                                         $.pjax.reload({container:"#propertyDocumentsPjax"});
                                     }',
-        //        'fileuploadfail' => 'function(e, data) {
-        //                                console.log(e);
-        //                                console.log(data);
-        //                            }',
+                //        'fileuploadfail' => 'function(e, data) {
+                //                                console.log(e);
+                //                                console.log(data);
+                //                            }',
             ],
         ]); ?>
 
 
 
-        <?php \yii\widgets\ActiveForm::end()?>
+        <?php \yii\widgets\ActiveForm::end() ?>
 
-        <br >
-        <?php Pjax::begin(['id' => 'propertyDocumentsPjax','timeout'=>10000]) ?>
-        <?=
-            \yii\grid\GridView::widget($gridColumns);
-        ?>
-        <?php Pjax::end() ?>
+        <br>
+
+        <div class="col-lg-12">
+            <?php
+            echo PanelWidget::begin([
+                'title' => 'Images',
+                'type' => 'default',
+                'widget' => false,
+            ])
+            ?>
+
+            <?php Pjax::begin(['id' => 'propertyDocumentsPjax', 'timeout' => 10000]) ?>
+            <?=
+            \yii\grid\GridView::widget($imageGridColumns);
+            ?>
+            <?php Pjax::end() ?>
+
+
+            <?php
+            PanelWidget::end()
+            ?>
+
+        </div>
 
 
         <?php
