@@ -136,7 +136,7 @@ foreach ($allSupportingDocuments as $currentSupportingDocument) {
         <?php foreach ($pdfCollection as $currentPdf): ?>
             <div class="col-lg-3">
                 <?= \yii2assets\pdfjs\PdfJs::widget([
-                    'url'=> $currentPdf
+                    'url' => Html::encode($currentPdf)
                 ]); ?>
 
             </div>
