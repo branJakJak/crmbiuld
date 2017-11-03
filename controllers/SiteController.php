@@ -17,6 +17,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use yii\web\Cookie;
 
 class SiteController extends Controller
 {
@@ -50,6 +51,9 @@ class SiteController extends Controller
         ];
     }
 
+    /**
+     * @return string
+     */
     public function actionIndex()
     {
         /* @var $dataProvider ActiveDataProvider */
@@ -59,19 +63,41 @@ class SiteController extends Controller
         $availableUsers = User::find()->select('username')->distinct()->all();
         $defaultQuery = PropertyRecord::find()->orderBy(['date_updated' => SORT_DESC, 'date_created' => SORT_DESC]);
         $dataProvider = new ActiveDataProvider(['query' => $defaultQuery]);
+
+        $filterStatus = 'All Jobs';
         if ($filterModel->load(Yii::$app->request->post())) {
             if ($filterModel->validate()) {
                 //search and return the result
                 if (isset($_POST['scenario'])) {
                     $filterModel->scenario = $_POST['scenario'];
                 }
+                $filterStatus = $filterModel->status;
                 $dataProvider = $filterModel->search();
             }
         } else {
             $filterModel->scenario = 'status-filter-form';
-            $filterModel->status = 'All Jobs';
+            if (Yii::$app->request->cookies->has('filter_status') && isset($_GET['page'])) {
+                /* @var $cookie Cookie */
+                $filterModel->status = Yii::$app->request->cookies->getValue('filter_status');
+                $filterStatus = $filterModel->status;
+            } else {
+                if (!isset($_GET['page'])) {
+                    $filterStatus = 'All Jobs';
+                    if (Yii::$app->response->cookies->has('filter_status')) {
+                        $cookieToDelete = Yii::$app->response->cookies->get('filter_status');
+                        Yii::$app->response->cookies->remove($cookieToDelete);
+                    }
+                }
+                $filterModel->status = $filterStatus;
+            }
             $dataProvider = $filterModel->search();
         }
+        $cookie = new Cookie();
+        $cookie->name = 'filter_status';
+        $cookie->value = $filterStatus;
+        Yii::$app->response->cookies->add($cookie);
+
+
         $dropDownItems = DropdownItemRetriever::getItems();
         return $this->render('index', [
             'filterModel' => $filterModel,
