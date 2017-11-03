@@ -130,8 +130,8 @@ class FilterPropertyRecordForm extends Model
         if ($this->status === '') {
             $this->status='All Jobs';
         }
-        
-        return new ActiveDataProvider(['query'=>$this->queryObject]);
+
+        return new ActiveDataProvider(['query'=>$this->queryObject,'pagination'=>['pageSize'=>15]]);
     }
 
     /**
