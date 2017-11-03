@@ -32,9 +32,11 @@ $imageGridColumns = [
                         return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
                     } else {
                         $pdfSource = Url::to($publishedImageUrl[1], true);
-                        $pdfSource = Html::encode($pdfSource);
+                        $pdfSourceParts = explode("/",$pdfSource);
+                        $pdfSourceParts[count($pdfSourceParts) - 1] = str_replace("+", "%20", $pdfSourceParts[count($pdfSourceParts) - 1]);
+                        $pdfSource = implode("/", $pdfSourceParts);
                         return \yii2assets\pdfjs\PdfJs::widget([
-                            'url' => Url::to($publishedImageUrl[1],true)
+                            'url' => $pdfSource
                         ]);
                     }
                 }
