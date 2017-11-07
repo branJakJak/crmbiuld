@@ -83,7 +83,6 @@ class SiteController extends Controller
         }
 
 
-
         $dropDownItems = DropdownItemRetriever::getItems();
         return $this->render('index', [
             'filterModel' => $filterModel,
