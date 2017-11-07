@@ -9,12 +9,12 @@
 namespace app\models;
 
 
-
 use app\components\LeadCreatorRetriever;
 use DateTime;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
+use yii\data\Pagination;
 use yii\db\ActiveQuery;
 
 class FilterPropertyRecordForm extends Model
@@ -60,8 +60,8 @@ class FilterPropertyRecordForm extends Model
     public function rules()
     {
         return [
-            [['filterQuery','date_created','appraisal_completed','address1','postcode','insulation_type','created_by_username','latest_note','status'],'string'],
-            ['filterQuery','safe']
+            [['filterQuery', 'date_created', 'appraisal_completed', 'address1', 'postcode', 'insulation_type', 'created_by_username', 'latest_note', 'status'], 'string'],
+            ['filterQuery', 'safe']
         ];
     }
 
@@ -71,13 +71,13 @@ class FilterPropertyRecordForm extends Model
     public function search()
     {
         if ($this->status === 'All Jobs') {
-            $this->status='';
+            $this->status = '';
         }
         $this->queryObject->groupBy('tbl_property_record.id');
-        $this->queryObject->leftJoin('tbl_property_notes','tbl_property_notes.property_id = tbl_property_record.id');
-        $this->queryObject->leftJoin('user','user.id = tbl_property_record.created_by');
-        $this->queryObject->leftJoin('profile','profile.user_id = user.id');
-        if ( $this->scenario === 'quick-filter-form') {
+        $this->queryObject->leftJoin('tbl_property_notes', 'tbl_property_notes.property_id = tbl_property_record.id');
+        $this->queryObject->leftJoin('user', 'user.id = tbl_property_record.created_by');
+        $this->queryObject->leftJoin('profile', 'profile.user_id = user.id');
+        if ($this->scenario === 'quick-filter-form') {
             $this->queryObject->andFilterWhere([
                 'OR',
                 ['like', 'tbl_property_record.date_created', $this->filterQuery],
@@ -89,12 +89,12 @@ class FilterPropertyRecordForm extends Model
                 ['like', 'tbl_property_notes.content', $this->filterQuery],
                 ['like', 'profile.name', $this->filterQuery]
             ]);
-        } else if($this->scenario === 'fine-filter-form') {
-            if(isset($this->appraisal_completed) && !empty($this->appraisal_completed)){
+        } else if ($this->scenario === 'fine-filter-form') {
+            if (isset($this->appraisal_completed) && !empty($this->appraisal_completed)) {
                 $tempDt = new DateTime($this->appraisal_completed);
                 $this->appraisal_completed = $tempDt->format("Y-m-d");
             }
-            if( isset($this->date_created) && !empty($this->date_created)){
+            if (isset($this->date_created) && !empty($this->date_created)) {
                 $tempDt = new DateTime($this->date_created);
                 $this->date_created = $tempDt->format("Y-m-d");
             }
@@ -109,14 +109,15 @@ class FilterPropertyRecordForm extends Model
             ]);
             $this->queryObject->orWhere(['date(tbl_property_record.appraisal_completed)' => $this->appraisal_completed]);
             $this->queryObject->orWhere(['date(tbl_property_record.date_created)' => $this->date_created]);
-        } else if( $this->scenario === 'status-filter-form') {
-            if(!empty($this->status)){
-                $this->queryObject->andWhere(['tbl_property_record.status'=> $this->status ] );
+        } else if ($this->scenario === 'status-filter-form') {
+            if (!empty($this->status)) {
+                $this->queryObject->andWhere(['tbl_property_record.status' => $this->status]);
             }
         }
         if (!Yii::$app->user->can('Admin') &&
             !Yii::$app->user->can('Senior Manager') &&
-            !Yii::$app->user->can('admin')) {
+            !Yii::$app->user->can('admin')
+        ) {
 
             /*created by user and all its subordinate*/
             /**
@@ -128,10 +129,14 @@ class FilterPropertyRecordForm extends Model
             $this->queryObject->andWhere(['in', 'tbl_property_record.created_by', $leadCreatorIdCollection]);
         }
         if ($this->status === '') {
-            $this->status='All Jobs';
+            $this->status = 'All Jobs';
         }
+        $paginationConfig = new Pagination([
+            'pageSize' => 4,
+            'params'=>array_merge($_GET, ['filter-status' => $this->status])
 
-        return new ActiveDataProvider(['query'=>$this->queryObject,'pagination'=>['pageSize'=>15]]);
+        ]);
+        return new ActiveDataProvider(['query' => $this->queryObject, 'pagination' => $paginationConfig ]);
     }
 
     /**
