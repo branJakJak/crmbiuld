@@ -73,6 +73,10 @@ class SiteController extends Controller
                 }
                 $filterStatus = $filterModel->status;
                 $dataProvider = $filterModel->search();
+                $cookie = new Cookie();
+                $cookie->name = 'filter_status';
+                $cookie->value = $filterStatus;
+                Yii::$app->response->cookies->add($cookie);
             }
         } else {
             $filterModel->scenario = 'status-filter-form';
@@ -84,18 +88,17 @@ class SiteController extends Controller
                 if (!isset($_GET['page'])) {
                     $filterStatus = 'All Jobs';
                     if (Yii::$app->response->cookies->has('filter_status')) {
+                        $cookieCollection = Yii::$app->response->cookies;
                         $cookieToDelete = Yii::$app->response->cookies->get('filter_status');
                         Yii::$app->response->cookies->remove($cookieToDelete);
+                        unset($cookieCollection['filter_status']);
                     }
                 }
                 $filterModel->status = $filterStatus;
             }
             $dataProvider = $filterModel->search();
         }
-        $cookie = new Cookie();
-        $cookie->name = 'filter_status';
-        $cookie->value = $filterStatus;
-        Yii::$app->response->cookies->add($cookie);
+
 
 
         $dropDownItems = DropdownItemRetriever::getItems();
