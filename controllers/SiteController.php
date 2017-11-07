@@ -73,6 +73,10 @@ class SiteController extends Controller
                 }
                 $filterStatus = $filterModel->status;
                 $dataProvider = $filterModel->search();
+                $cookie = new Cookie();
+                $cookie->name = 'filter_status';
+                $cookie->value = $filterStatus;
+                Yii::$app->response->cookies->add($cookie);
             }
         } else {
             $filterModel->scenario = 'status-filter-form';
@@ -94,10 +98,7 @@ class SiteController extends Controller
             }
             $dataProvider = $filterModel->search();
         }
-        $cookie = new Cookie();
-        $cookie->name = 'filter_status';
-        $cookie->value = $filterStatus;
-        Yii::$app->response->cookies->add($cookie);
+
 
 
         $dropDownItems = DropdownItemRetriever::getItems();
