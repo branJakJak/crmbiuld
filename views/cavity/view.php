@@ -24,16 +24,19 @@ $imageCollection = [];
 $pdfCollection = [];
 $allSupportingDocuments = $model->getSupportingDocuments()->all();
 foreach ($allSupportingDocuments as $currentSupportingDocument) {
-    $imageToPublish = Yii::getAlias("@supporting_document_path") . DIRECTORY_SEPARATOR . $currentSupportingDocument->document_name;
-    // only image only
-    $fileType = mime_content_type($imageToPublish);
-    $published = $this->assetManager->publish($imageToPublish);
-    if (strpos($fileType, "pdf") === false) {
-        $imageCollection[] = $published[1];
-    } else {
-        $pdfCollection[] = $published[1];
+    if (isset($currentSupportingDocument->document_name) && !empty($currentSupportingDocument->document_name)) {
+        $imageToPublish = Yii::getAlias("@supporting_document_path") . DIRECTORY_SEPARATOR . $currentSupportingDocument->document_name;
+        if (file_exists($imageToPublish)) {
+            // only image only
+            $fileType = mime_content_type($imageToPublish);
+            $published = $this->assetManager->publish($imageToPublish);
+            if (strpos($fileType, "pdf") === false) {
+                $imageCollection[] = $published[1];
+            } else {
+                $pdfCollection[] = $published[1];
+            }
+        }
     }
-
 }
 
 
