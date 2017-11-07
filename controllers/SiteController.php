@@ -84,8 +84,10 @@ class SiteController extends Controller
                 if (!isset($_GET['page'])) {
                     $filterStatus = 'All Jobs';
                     if (Yii::$app->response->cookies->has('filter_status')) {
+                        $cookieCollection = Yii::$app->response->cookies;
                         $cookieToDelete = Yii::$app->response->cookies->get('filter_status');
                         Yii::$app->response->cookies->remove($cookieToDelete);
+                        unset($cookieCollection['filter_status']);
                     }
                 }
                 $filterModel->status = $filterStatus;
