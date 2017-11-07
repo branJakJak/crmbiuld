@@ -3,6 +3,7 @@
 
 return [
     'adminEmail' => 'admin@whitecollarclaim.co.uk',
+    'crm_lead_url' => 'crmlead.whitecollarclaim.win',
     'solicitor_name' => 'White Collar Legal',
     'statusCollection' => [
             'Not Submitted' =>'Not Submitted',
