@@ -46,7 +46,9 @@ class ExportController extends \yii\web\Controller
         foreach ($triageDocuments as $currentTriageDocument) {
             /* @var $currentTriageDocument Triage */
             $triagePath = \Yii::getAlias('@triage_path');
-            $propertyImageCollection[] = $triagePath.DIRECTORY_SEPARATOR.$currentTriageDocument->material_file_name;
+            if (file_exists($triagePath.DIRECTORY_SEPARATOR.$currentTriageDocument->material_file_name)) {
+                $propertyImageCollection[] = $triagePath.DIRECTORY_SEPARATOR.$currentTriageDocument->material_file_name;
+            }
         }
 
         /*get the component that handle the exporting*/
