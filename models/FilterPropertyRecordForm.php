@@ -136,6 +136,7 @@ class FilterPropertyRecordForm extends Model
             'params'=>array_merge($_GET, ['filter-status' => $this->status])
 
         ]);
+        $this->queryObject->orderBy(['date_created' => SORT_DESC]);
         return new ActiveDataProvider(['query' => $this->queryObject, 'pagination' => $paginationConfig ]);
     }
 
