@@ -86,7 +86,7 @@ $config = [
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ),
         ],
-        'db' => require(__DIR__ . '/db-prod.php'),
+        'db' => require(__DIR__ . '/db.php'),
     ],
     'params' => $params,
 ];

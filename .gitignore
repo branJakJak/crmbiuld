@@ -3,6 +3,10 @@
 
 .phpintel/
 
+.env
+
+composer.lock
+
 # netbeans project files
 nbproject
 
