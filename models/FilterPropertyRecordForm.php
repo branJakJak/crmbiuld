@@ -132,10 +132,11 @@ class FilterPropertyRecordForm extends Model
             $this->status = 'All Jobs';
         }
         $paginationConfig = new Pagination([
-            'pageSize' => 4,
+            'pageSize' => 15,
             'params'=>array_merge($_GET, ['filter-status' => $this->status])
 
         ]);
+        $this->queryObject->orderBy(['date_created' => SORT_DESC]);
         return new ActiveDataProvider(['query' => $this->queryObject, 'pagination' => $paginationConfig ]);
     }
 

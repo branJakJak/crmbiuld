@@ -297,7 +297,10 @@ class CavityController extends Controller
                 /*save to property document */
                 $copyFrom = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
                 $finalUploadName = Yii::getAlias('@upload_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
-                copy($copyFrom, $finalUploadName);
+                if (isset($currentSupportingDocuments->document_name) && !empty($currentSupportingDocuments->document_name)  && file_exists($copyFrom) ) {
+                    copy($copyFrom, $finalUploadName);
+                }
+
 
                 $propertyDocument = new PropertyDocuments();
                 $propertyDocument->property_id = $propertyRecord->id;
@@ -308,7 +311,9 @@ class CavityController extends Controller
                 $preAppraisalImage = new PropertyPreAppraisalImages();
                 $copyFrom = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
                 $finalUploadName = Yii::getAlias('@upload_image_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
-                copy($copyFrom, $finalUploadName);
+                if (isset($currentSupportingDocuments->document_name) && !empty($currentSupportingDocuments->document_name)  && file_exists($copyFrom) ) {
+                    copy($copyFrom, $finalUploadName);
+                }
                 $preAppraisalImage->property_id = $propertyRecord->id;
                 $preAppraisalImage->image_name = $currentSupportingDocuments->document_name;
                 $preAppraisalImage->save();
@@ -333,8 +338,6 @@ class CavityController extends Controller
             $userModel = User::find()->where(['username' => $modelFound->created_by_user])->one();
             $userCreatorId = $userModel->id;
         }
-
-
         /*create property record*/
         $propertyRecord = new PropertyRecord();
         $propertyRecord->postcode = $modelFound->address_postcode_cavity_installation;
@@ -418,8 +421,9 @@ class CavityController extends Controller
                 /*save to property document */
                 $copyFrom = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
                 $finalUploadName = Yii::getAlias('@upload_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
-                copy($copyFrom, $finalUploadName);
-
+                if (isset($currentSupportingDocuments->document_name) && !empty($currentSupportingDocuments->document_name) && file_exists($copyFrom)) {
+                    copy($copyFrom, $finalUploadName);
+                }
                 $propertyDocument = new PropertyDocuments();
                 $propertyDocument->property_id = $propertyRecord->id;
                 $propertyDocument->document_description = $currentSupportingDocuments->document_description;
@@ -430,7 +434,9 @@ class CavityController extends Controller
                 $preAppraisalImage = new PropertyPreAppraisalImages();
                 $copyFrom = Yii::getAlias('@supporting_document_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
                 $finalUploadName = Yii::getAlias('@upload_image_path') .  DIRECTORY_SEPARATOR.$currentSupportingDocuments->document_name;
-                copy($copyFrom, $finalUploadName);
+                if (isset($currentSupportingDocuments->document_name) && !empty($currentSupportingDocuments->document_name) && file_exists($copyFrom)) {
+                    copy($copyFrom, $finalUploadName);
+                }
                 $preAppraisalImage->property_id = $propertyRecord->id;
                 $preAppraisalImage->image_name = $currentSupportingDocuments->document_name;
                 $preAppraisalImage->image_description = $currentSupportingDocuments->document_description;

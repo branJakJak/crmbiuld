@@ -150,7 +150,9 @@ if(Yii::$app->user->can('admin') || Yii::$app->user->can('Admin')){
     <?php if (!Yii::$app->user->can('Manager') && !Yii::$app->user->can('Agent')): ?>
     <div class="row">
         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <?= Html::a("Create a New Record", \yii\helpers\Url::to("/record/create"), ['class' => 'btn btn-info btn-lg']) ?>
+            <?php if( Yii::$app->user->can('admin')  || Yii::$app->user->can('Admin') || Yii::$app->user->can('Senior Manager')): ?>
+                <?= Html::a("Create a New Record", \yii\helpers\Url::to("/record/create"), ['class' => 'btn btn-info btn-lg']) ?>
+            <?php endif; ?>
         </div>
     </div>
     <?php endif ?>
