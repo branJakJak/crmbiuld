@@ -9,6 +9,7 @@ use derekisbusy\panel\PanelWidget;
 use dosamigos\fileupload\FileUploadUI;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
@@ -93,15 +94,15 @@ echo PanelWidget::begin([
                     /*get the url of published image*/
                     $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
                     $fileType = mime_content_type($uploadImagePath);
-                    if (strpos($fileType, "pdf") === false) {
+                    if (strpos($fileType, "image") !== false) {
                         return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
                     } else {
                         $pdfSource = Url::to($publishedImageUrl[1], true);
-                        $pdfSource = Html::encode($pdfSource);
-                        return \yii2assets\pdfjs\PdfJs::widget([
-                            'url' => Url::to($publishedImageUrl[1],true)
-                        ]);
+                        $iframeTemplate = "<iframe src='https://docs.google.com/viewer?url$pdfSource=&embedded=true' frameborder='0'></iframe>";
+                        return $iframeTemplate;
                     }
+
+
                 }
             },
             'attribute' => 'image_name',
