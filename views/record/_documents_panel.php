@@ -28,16 +28,12 @@ $imageGridColumns = [
                     /*get the url of published image*/
                     $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
                     $fileType = mime_content_type($uploadImagePath);
-                    if (strpos($fileType, "pdf") === false) {
+                    if (strpos($fileType,"image/") !== false) {
                         return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
                     } else {
-                        $pdfSource = Url::to($publishedImageUrl[1], true);
-                        $pdfSourceParts = explode("/",$pdfSource);
-                        $pdfSourceParts[count($pdfSourceParts) - 1] = str_replace("+", "%20", $pdfSourceParts[count($pdfSourceParts) - 1]);
-                        $pdfSource = implode("/", $pdfSourceParts);
-                        return \yii2assets\pdfjs\PdfJs::widget([
-                            'url' => $pdfSource
-                        ]);
+                        $fileSource = Url::to($publishedImageUrl[1], true);
+                        $iframeTemplate = "<iframe src='https://docs.google.com/viewer?url$fileSource=&embedded=true' frameborder='0'></iframe>";
+                        return $iframeTemplate;
                     }
                 }
             },
