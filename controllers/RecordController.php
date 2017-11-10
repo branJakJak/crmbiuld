@@ -266,8 +266,12 @@ class RecordController extends Controller
         }
         /*property documents*/
         $propertyDocument = new PropertyDocuments();
+        $propertyDocQuery = PropertyDocuments::find()
+            ->where(['property_id' => $propertyRecord->id])
+            ->andWhere(['<>', 'document_name', ''])
+            ->orderBy(['date_created' => SORT_DESC]);
         $propertyDocumentDataProvider = new ActiveDataProvider([
-            'query' => PropertyDocuments::find()->where(['property_id'=>$propertyRecord->id])->orderBy(['date_created'=>SORT_DESC])
+            'query' =>$propertyDocQuery
         ]);
         if ($propertyDocument->load(\Yii::$app->request->post())) {
             $uploadedDocument = UploadedFile::getInstance($propertyDocument, 'document_name');
@@ -295,7 +299,9 @@ class RecordController extends Controller
         }
         /*Pre appraisal images*/
         $propertPreappraisalImageQuery = PropertyPreAppraisalImages::find()->where(['property_id'=>$propertyRecord->id]);
-        $propertPreappraisalImageQuery->andWhere(['<>','image_name','null']);
+        $propertPreappraisalImageQuery
+            ->andWhere(['<>','image_name','null'])
+            ->andWhere(['<>','image_name','']);
 
         $preappraisalImageDataProvider = new ActiveDataProvider(['query' => $propertPreappraisalImageQuery]);
         $preappraisalImage = new PropertyPreAppraisalImages();
@@ -375,8 +381,12 @@ class RecordController extends Controller
                 \Yii::$app->session->set("error", Html::errorSummary($triageDocument));
             }
         }
+        $triageDocumentQuery = Triage::find()
+            ->where(['property_record' => $propertyRecord->id])
+            ->andWhere(['<>','material_file_name','null'])
+            ->andWhere(['<>','material_file_name','']);
 
-        $triageDocumentDataProvider = new ActiveDataProvider(['query' => Triage::find()->where(['property_record'=>$propertyRecord->id])]);
+        $triageDocumentDataProvider = new ActiveDataProvider(['query' => $triageDocumentQuery]);
 
         $propertyImagesDataProvider = new ActiveDataProvider(['query' => PropertyImages::find()->where(['property_id'=>$propertyRecord->id])]);
 
