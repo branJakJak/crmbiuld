@@ -52,7 +52,7 @@ $config = [
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
-            'useFileTransport' => false,
+            'useFileTransport' => true,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -86,7 +86,7 @@ $config = [
                 '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
             ),
         ],
-        'db' => require(__DIR__ . '/db-prod.php'),
+        'db' => require(__DIR__ . '/db.php'),
     ],
     'params' => $params,
 ];

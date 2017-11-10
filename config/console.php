@@ -4,11 +4,7 @@
 Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
 
 $params = require(__DIR__ . '/params.php');
-$db = require(__DIR__ . '/db-prod.php');
-if (YII_ENV === 'dev') {
-    $db = require(__DIR__ . '/db.php');
-}
-
+$db = require(__DIR__ . '/db.php');
 $config = [
     'id' => 'basic-console',
     'basePath' => dirname(__DIR__),

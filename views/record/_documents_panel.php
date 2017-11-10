@@ -28,23 +28,30 @@ $imageGridColumns = [
                     /*get the url of published image*/
                     $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
                     $fileType = mime_content_type($uploadImagePath);
-                    if (strpos($fileType, "pdf") === false) {
+                    if (strpos($fileType,"image/") !== false) {
                         return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
                     } else {
-                        $pdfSource = Url::to($publishedImageUrl[1], true);
-                        $pdfSourceParts = explode("/",$pdfSource);
-                        $pdfSourceParts[count($pdfSourceParts) - 1] = str_replace("+", "%20", $pdfSourceParts[count($pdfSourceParts) - 1]);
-                        $pdfSource = implode("/", $pdfSourceParts);
-                        return \yii2assets\pdfjs\PdfJs::widget([
-                            'url' => $pdfSource
-                        ]);
+                        $fileSource = Url::to($publishedImageUrl[1], true);
+                        return '<iframe src="https://docs.google.com/viewer?embedded=true&url='.$fileSource.'" frameborder="no" style="width:100%;height:280px"></iframe>';
                     }
                 }
             },
             'attribute' => 'document_name',
             'format' => 'raw'
         ],
-        'document_description',
+        [
+            'label' => 'Document Note',
+            'value' => function ($currentModel) {
+                /*publish the image*/
+                $valRet = $currentModel->document_name;
+                if (!isset($currentModel->document_description) || empty($currentModel->document_description)) {
+                    $valRet = $currentModel->document_name;
+                }
+                return $valRet;
+            },
+            'attribute' => 'document_description',
+            'format' => 'raw'
+        ],
     ],
 ];
 
