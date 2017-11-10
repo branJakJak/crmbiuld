@@ -53,6 +53,10 @@ use yii\widgets\DetailView;
                 <br>
 
                 <?= $form->field($cavityModel, 'CWI_installer'); ?>
+                <?php
+                    // fix encoding issue
+                    $cavityModel->construction_type = str_replace("â€™", "'", $cavityModel->construction_type);
+                ?>
                 <?= $form->field($cavityModel, 'construction_type'); ?>
                 <?= $form->field($cavityModel, 'property_exposure'); ?>
                 <?= $form->field($cavityModel, 'CWI_payment'); ?>
