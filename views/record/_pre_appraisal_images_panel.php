@@ -101,14 +101,24 @@ echo PanelWidget::begin([
                         $iframeTemplate = "<iframe src='https://docs.google.com/viewer?url$pdfSource=&embedded=true' frameborder='0'></iframe>";
                         return $iframeTemplate;
                     }
-
-
                 }
             },
             'attribute' => 'image_name',
             'format' => 'raw'
         ],
-        'image_description',
+        [
+            'label' => 'Image Note',
+            'value' => function ($currentModel) {
+                /*publish the image*/
+                if (isset($currentModel->image_description) && !empty($currentModel->image_description)) {
+                    return $currentModel->image_description;
+                }else{
+                    return $currentModel->image_name;
+                }
+            },
+            'attribute' => 'image_description',
+            'format' => 'raw'
+        ],
         [
             'class' => 'yii\grid\ActionColumn',
             'template' => '{delete}',
