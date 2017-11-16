@@ -12,6 +12,7 @@ namespace app\components;
 use app\models\UserCreator;
 use dektrium\user\models\Profile;
 use dektrium\user\models\User;
+use Tree\Node\Node;
 use Yii;
 use yii\web\NotFoundHttpException;
 
@@ -29,34 +30,34 @@ class UserHierarchyRetriever {
 
 	}
 
-	public function retrieve($user_id) {
+	/**
+	 * @param $user_id integer
+	 * @param $parentNode Node
+	 *
+	 * @return array
+	 * @throws NotFoundHttpException
+	 */
+	public function retrieve( $user_id, $parentNode ) {
 		/* @var $user User */
 		/* @var $profile Profile */
+		/* @var $currentCreatedUser UserCreator */
 
 		if ( $this->userExists( $user_id ) ) {
-			if ( UserCreator::isCreator( $user_id ) ) {
-				// get the user that this guy created
-				$userCreationsCollection = UserCreator::getCreatedUsers( $user_id );
-				foreach ( $userCreationsCollection as $currentCreatedUser ) {
-					$this->retrieve( $currentCreatedUser->agent_id );//pass the id of user that this user created
-				}
-			}
 			$user    = $this->findUser( $user_id );
-			$profile = $user->getProfile()->one();
-
-			$roles    = Yii::$app->authManager->getRolesByUser( $user->id );
-			$rolesArr = [];
-			foreach ( $roles as $currentRole ) {
-				$rolesArr[] = $currentRole->name;
+			$newNode = new Node();
+			$newNode->setValue( [
+				'name' => $this->getName($user),
+				'role' => $this->getRole( $user->id ),
+			]);
+			$parentNode->addChild( $newNode );
+			$userCreationsCollection = UserCreator::getCreatedUsers( $user_id );
+			foreach ($userCreationsCollection as $currentCreatedUser) {
+				$this->retrieve( $currentCreatedUser->agent_id, $newNode );
 			}
-			$userRole                        = implode( ',', $rolesArr );
-			$this->leadCreatorIdCollection[] = [
-				'name' => $profile->name,
-				'role' => $userRole
-			];
 		} else {
 			throw new NotFoundHttpException( "This user doesnt exists" );
 		}
+
 		return $this->leadCreatorIdCollection;
 	}
 
@@ -101,6 +102,20 @@ class UserHierarchyRetriever {
 	 */
 	public function setLeadCreatorIdCollection( $leadCreatorIdCollection ) {
 		$this->leadCreatorIdCollection = $leadCreatorIdCollection;
+	}
+
+	public function getRole( $id ) {
+		$roles    = Yii::$app->authManager->getRolesByUser($id);
+		$rolesArr = [];
+		foreach ( $roles as $currentRole ) {
+			$rolesArr[] = $currentRole->name;
+		}
+		return implode( ',', $rolesArr );
+	}
+
+	public function getName( $user) {
+		$profile = $user->getProfile()->one();
+		return $profile->name;
 	}
 
 

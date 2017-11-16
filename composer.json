@@ -41,7 +41,8 @@
     "setasign/fpdi": "^1.6",
     "pheme/yii2-settings": "*",
     "yii2assets/yii2-pdfjs": ">=1.0",
-    "vlucas/phpdotenv": "^2.4"
+    "vlucas/phpdotenv": "^2.4",
+    "nicmart/tree": "~0.2"
   },
   "require-dev": {
     "yiisoft/yii2-debug": "*",
