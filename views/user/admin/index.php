@@ -59,7 +59,7 @@ echo PanelWidget::begin([
             'class' => 'yii\grid\ActionColumn',
             'header' => 'Action',
             // 'template' => '{switch} {resend_password} {update} {delete}',
-            'template' => '{switch} {update} {delete}',
+            'template' => '{hierarchy} {switch} {update} {delete}',
             'buttons' => [
                 'resend_password' => function ($url, $model, $key) {
                     if (!$model->isAdmin) {
@@ -77,6 +77,13 @@ echo PanelWidget::begin([
                             'data-method' => 'POST',
                         ]);
                     }
+                },
+                "hierarchy"=>function($url , $model){
+	                if ($model->id != Yii::$app->user->id && Yii::$app->getModule('user')->enableImpersonateUser) {
+		                return Html::a('<span class="glyphicon glyphicon-equalizer"></span>', ['/hierarchy/view', 'id' => $model->id], [
+			                'title' => Yii::t('user', 'View user hierarchy'),
+		                ]);
+	                }
                 }
             ]
         ],
