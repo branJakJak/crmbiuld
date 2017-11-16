@@ -2,7 +2,6 @@
 /* @var $this yii\web\View */
 $this->title = "Users created by $userCreator";
 ?>
-<h1>Users created by <?php echo $userCreator ?></h1>
 <hr>
 <div class="panel panel-info">
 	<div class="panel-heading">
