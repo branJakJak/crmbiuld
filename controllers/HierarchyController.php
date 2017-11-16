@@ -3,11 +3,14 @@
 namespace app\controllers;
 
 use app\components\UserHierarchyRetriever;
+use yii\web\NotFoundHttpException;
 
 class HierarchyController extends \yii\web\Controller
 {
     public function actionView($id)
     {
+	    throw new NotFoundHttpException();
+	    
 	    $id = intval( $id );
 	    $userHierarchy = [];
 	    $userHierarchyObj = new UserHierarchyRetriever( );
