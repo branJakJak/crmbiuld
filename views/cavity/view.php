@@ -127,29 +127,29 @@ foreach ($allSupportingDocuments as $currentSupportingDocument) {
     </div>
 
 
-    <div class="col-lg-12">
-        <?php
-        echo PanelWidget::begin([
-            'title' => 'Images',
-            'type' => 'default',
-            'widget' => false,
-        ])
-        ?>
+    <?php if (!empty($pdfCollection)): ?>    
+        <div class="col-lg-12">
+            <?php
+            echo PanelWidget::begin([
+                'title' => 'Images',
+                'type' => 'default',
+                'widget' => false,
+            ])
+            ?>
 
-        <?php foreach ($pdfCollection as $currentPdf): ?>
-            <div class="col-lg-3">
-                <?= \yii2assets\pdfjs\PdfJs::widget([
-                    'url' => Html::encode($currentPdf)
-                ]); ?>
+            <?php foreach ($pdfCollection as $currentPdf): ?>
+                <div class="col-lg-3">
+                    <?= \yii2assets\pdfjs\PdfJs::widget([
+                        'url' => Html::encode($currentPdf)
+                    ]); ?>
 
-            </div>
-        <?php endforeach; ?>
-        <?php
-        PanelWidget::end()
-        ?>
-
-    </div>
-
+                </div>
+            <?php endforeach; ?>
+            <?php
+                PanelWidget::end()
+            ?>
+        </div>
+    <?php endif ?>
 
     <div class="col-lg-12">
         <?php
