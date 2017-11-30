@@ -22,7 +22,7 @@ $userCount = count($userCollection);
 
 <header class="main-header">
 
-    <?= Html::a('<span class="logo-mini">APP</span><span class="logo-lg">' . Html::img('/img/White Collar Logo.jpg', ['style' => 'height: 49px']) . '</span>', Yii::$app->homeUrl, ['class' => 'logo','style'=>'background: white !important']) ?>
+    <?= Html::a('<span class="logo-mini">APP</span><span class="logo-lg">' . Html::img('/img/fastcavitylogo.JPG', ['style' => 'height: 49px']) . '</span>', Yii::$app->homeUrl, ['class' => 'logo','style'=>'background: white !important']) ?>
 
 
     <nav class="navbar navbar-static-top" role="navigation">

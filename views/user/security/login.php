@@ -48,7 +48,7 @@ $this->registerJs($openLoginFormBtnScript);
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <img src="/img/White Collar Logo.jpg" class="img-responsive" alt="Image" style="
+        <img src="/img/fastcavitylogo.JPG" class="img-responsive" alt="Image" style="
     margin: 0px auto;
 ">
     </div>
