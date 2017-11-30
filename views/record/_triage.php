@@ -114,9 +114,12 @@ if (Yii::$app->user->can('Admin') || Yii::$app->user->can('Senior Manager')) {
                         /*publish the image*/
                         $publishedImageUrl = '//placehold.it/150x150';
                         $uploadImagePath = Yii::getAlias("@upload_image_path") . DIRECTORY_SEPARATOR . $currentModel->material_file_name;
-                        /*get the url of published image*/
-                        $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
-                        return Html::a(Html::img($publishedImageUrl[1], ['style' => 'height:250px']), $publishedImageUrl[1]);
+                        if (file_exists($uploadImagePath)) {
+                            /*get the url of published image*/
+                            $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
+                            $publishedImageUrl = $publishedImageUrl[1];
+                        }
+                        return Html::a(Html::img($publishedImageUrl, ['style' => 'height:250px']), $publishedImageUrl);
                     },
                     'attribute' => 'image_name',
                     'format' => 'html'

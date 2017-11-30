@@ -25,14 +25,18 @@ $imageGridColumns = [
                 if (isset($currentModel->document_name) && !empty($currentModel->document_name)) {
                     $publishedImageUrl = '';
                     $uploadImagePath = Yii::getAlias("@upload_document_path") . DIRECTORY_SEPARATOR . $currentModel->document_name;
-                    /*get the url of published image*/
-                    $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
-                    $fileType = mime_content_type($uploadImagePath);
-                    if (strpos($fileType,"image/") !== false) {
-                        return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
-                    } else {
-                        $fileSource = Url::to($publishedImageUrl[1], true);
-                        return '<iframe src="https://docs.google.com/viewer?embedded=true&url='.$fileSource.'" frameborder="no" style="width:100%;height:280px"></iframe>';
+                    if (file_exists($uploadImagePath)) {                   
+                        /*get the url of published image*/
+                        $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
+                        $fileType = mime_content_type($uploadImagePath);
+                        if (strpos($fileType,"image/") !== false) {
+                            return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
+                        } else {
+                            $fileSource = Url::to($publishedImageUrl[1], true);
+                            return '<iframe src="https://docs.google.com/viewer?embedded=true&url='.$fileSource.'" frameborder="no" style="width:100%;height:280px"></iframe>';
+                        }
+                    }else {
+                        return "File not found";
                     }
                 }
             },

@@ -91,15 +91,19 @@ echo PanelWidget::begin([
                 if (isset($currentModel->image_name) && !empty($currentModel->image_name)) {
                     $publishedImageUrl = '';
                     $uploadImagePath = Yii::getAlias("@upload_image_path") . DIRECTORY_SEPARATOR . $currentModel->image_name;
-                    /*get the url of published image*/
-                    $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
-                    $fileType = mime_content_type($uploadImagePath);
-                    if (strpos($fileType, "image") !== false) {
-                        return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
-                    } else {
-                        $pdfSource = Url::to($publishedImageUrl[1], true);
-                        $iframeTemplate = "<iframe src='https://docs.google.com/viewer?url$pdfSource=&embedded=true' frameborder='0'></iframe>";
-                        return $iframeTemplate;
+                    if (file_exists($uploadImagePath)) {
+                        /*get the url of published image*/
+                        $publishedImageUrl = Yii::$app->assetManager->publish($uploadImagePath);
+                        $fileType = mime_content_type($uploadImagePath);
+                        if (strpos($fileType, "image") !== false) {
+                            return Html::img($publishedImageUrl[1], ['style' => 'height:250px']);
+                        } else {
+                            $pdfSource = Url::to($publishedImageUrl[1], true);
+                            $iframeTemplate = "<iframe src='https://docs.google.com/viewer?url$pdfSource=&embedded=true' frameborder='0'></iframe>";
+                            return $iframeTemplate;
+                        }
+                    }else{
+                        return "File not found";
                     }
                 }
             },
